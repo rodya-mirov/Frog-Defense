@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Frog_Defense.Traps;
 
 namespace Frog_Defense
 {
@@ -201,6 +202,7 @@ namespace Frog_Defense
         {
             Random ran = new Random();
 
+            //first add spike traps
             List<Trap> output = new List<Trap>();
 
             for (int x = 1; x < width; x += 2)
@@ -216,9 +218,18 @@ namespace Frog_Defense
                     int trapX = x * squareWidth + squareWidth / 2;
                     int trapY = y * squareHeight + squareHeight / 2;
 
-                    Trap t = new Trap(this, env, trapX, trapY);
+                    SpikeTrap t = new SpikeTrap(this, env, trapX, trapY);
                     output.Add(t);
                 }
+            }
+
+            //then add some gun traps
+            GunTrap gt;
+
+            for (int y = 1; y < height; y += 2)
+            {
+                gt = new GunTrap(this, env, squareWidth, squareHeight * y + squareHeight / 2, Direction.RIGHT);
+                output.Add(gt);
             }
 
             return output;
@@ -401,6 +412,19 @@ namespace Frog_Defense
                         );
                 }
             }
+        }
+
+        /// <summary>
+        /// Determines whether the specified point touches any of the fixed walls
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public bool IsInWall(Point p)
+        {
+            int xArr = p.X / squareWidth;
+            int yArr = p.Y / squareHeight;
+
+            return !passable[xArr, yArr];
         }
     }
 

@@ -5,13 +5,15 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace Frog_Defense
+namespace Frog_Defense.Traps
 {
-    class Trap
+    /// <summary>
+    /// This trap lies on the floor and passively hurts everything that walks across it.
+    /// There is no reload time, no motion, etc.
+    /// </summary>
+    class SpikeTrap : Trap
     {
         private int xPos, yPos;
-        private Arena arena;
-        private EnvironmentUpdater env;
 
         //the damage this trap inflicts on every critter that touches it
         private const float damagePerTick = 1.2f;
@@ -22,11 +24,9 @@ namespace Frog_Defense
         private const String imagePath = "Images/Traps/Spikes";
         private static Texture2D imageTexture;
 
-        public Trap(Arena arena, EnvironmentUpdater env, int x, int y)
+        public SpikeTrap(Arena arena, EnvironmentUpdater env, int x, int y)
+            : base(arena, env)
         {
-            this.arena = arena;
-            this.env = env;
-
             this.xPos = x;
             this.yPos = y;
         }
@@ -42,7 +42,7 @@ namespace Frog_Defense
         /// this trap.
         /// </summary>
         /// <param name="enemies">The collection of enemies to possibly hurt.</param>
-        public void Update(IEnumerable<Enemy> enemies)
+        public override void Update(IEnumerable<Enemy> enemies)
         {
             int minX = xPos - imageWidth / 2;
             int maxX = xPos + imageWidth / 2;
@@ -57,7 +57,7 @@ namespace Frog_Defense
             }
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
+        public override void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
         {
             batch.Draw(
                 imageTexture,

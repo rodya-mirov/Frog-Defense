@@ -60,6 +60,16 @@ namespace Frog_Defense
         private const int hitFlashFrames = 3;
         private int framesSinceHit = 3;
 
+        public bool containsPoint(Point p)
+        {
+            return (xPos - imageWidth / 2 <= p.X && p.X <= xPos + imageWidth / 2 && yPos - imageHeight / 2 <= p.Y && p.Y <= yPos + imageHeight / 2);
+        }
+
+        /// <summary>
+        /// Reduces health by the specified amount and flashes red.  Note there
+        /// is no invincibility frame!
+        /// </summary>
+        /// <param name="damage"></param>
         public void takeHit(float damage)
         {
             health -= damage;

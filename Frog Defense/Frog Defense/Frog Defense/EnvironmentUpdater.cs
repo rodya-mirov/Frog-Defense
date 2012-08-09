@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Frog_Defense.Traps;
 
 namespace Frog_Defense
 {
@@ -51,7 +52,8 @@ namespace Frog_Defense
 
             Arena.LoadContent();
             Enemy.LoadContent();
-            Trap.LoadContent();
+            SpikeTrap.LoadContent();
+            GunTrap.LoadContent();
         }
 
         private int framesBetweenSpawns = 45;

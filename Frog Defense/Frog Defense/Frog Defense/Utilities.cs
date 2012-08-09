@@ -18,4 +18,9 @@ namespace Frog_Defense
             this.z = z;
         }
     }
+
+    enum Direction
+    {
+        UP, RIGHT, LEFT, DOWN
+    };
 }
