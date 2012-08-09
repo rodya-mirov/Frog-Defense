@@ -114,6 +114,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Structs.cs" />
     <Compile Include="TDGame.cs" />
+    <Compile Include="Trap.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

@@ -12,10 +12,23 @@ namespace Frog_Defense
         private Arena arena;
         private EnvironmentUpdater env;
 
+        //Health info
+        private const float MAX_HEALTH = 100;
+        private float health;
+
         //We're using ints for position because XNA gets glitchy when we draw on floats
         private int speed = 1;
 
         private int xPos, yPos;
+        public int XPos
+        {
+            get { return xPos; }
+        }
+        public int YPos
+        {
+            get { return yPos; }
+        }
+
         private int goalX, goalY;
         private bool hasGoal;
 
@@ -34,12 +47,23 @@ namespace Frog_Defense
             this.xPos = startX;
             this.yPos = startY;
 
+            this.health = MAX_HEALTH;
+
             hasGoal = false;
         }
 
         public bool IsAlive()
         {
-            return true;
+            return health > 0;
+        }
+
+        private const int hitFlashFrames = 3;
+        private int framesSinceHit = 3;
+
+        public void takeHit(float damage)
+        {
+            health -= damage;
+            framesSinceHit = 0;
         }
 
         /// <summary>
@@ -120,13 +144,25 @@ namespace Frog_Defense
 
         public void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
         {
+            Color tint;
+
+            if (framesSinceHit < hitFlashFrames)
+            {
+                framesSinceHit += 1;
+                tint = Color.Red;
+            }
+            else
+            {
+                tint = Color.White;
+            }
+
             batch.Draw(
                 imageTexture,
                 new Vector2(
                     xPos + xOffset - imageWidth / 2,
                     yPos + yOffset - imageHeight / 2
                     ),
-                Color.White
+                tint
                 );
         }
     }

@@ -17,6 +17,7 @@ namespace Frog_Defense
     {
         private Arena arena;
         private Queue<Enemy> enemies;
+        private Queue<Trap> traps;
 
         private SpriteBatch batch;
 
@@ -36,6 +37,12 @@ namespace Frog_Defense
             batch = new SpriteBatch(TDGame.MainGame.GraphicsDevice);
 
             enemies = new Queue<Enemy>();
+            traps = new Queue<Trap>();
+
+            foreach (Trap trap in arena.makeTraps())
+            {
+                traps.Enqueue(trap);
+            }
         }
 
         protected override void LoadContent()
@@ -44,12 +51,38 @@ namespace Frog_Defense
 
             Arena.LoadContent();
             Enemy.LoadContent();
+            Trap.LoadContent();
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
+            updateEnemies();
+
+            updateTraps();
+
+            arena.Update();
+
+            if (enemies.Count < 20)
+            {
+                enemies.Enqueue(arena.makeEnemy());
+            }
+        }
+
+        private void updateTraps()
+        {
+            int numTraps = traps.Count;
+            for (int i = 0; i < numTraps; i++)
+            {
+                Trap trap = traps.Dequeue();
+                trap.Update(enemies);
+                traps.Enqueue(trap);
+            }
+        }
+
+        private void updateEnemies()
+        {
             int numEnemies = enemies.Count;
 
             for (int i = 0; i < numEnemies; i++)
@@ -60,13 +93,6 @@ namespace Frog_Defense
 
                 if (enemy.IsAlive())
                     enemies.Enqueue(enemy);
-            }
-
-            arena.Update();
-
-            if (enemies.Count < 20)
-            {
-                enemies.Enqueue(arena.makeEnemy());
             }
         }
 
@@ -80,6 +106,14 @@ namespace Frog_Defense
             batch.Begin();
 
             arena.Draw(gameTime, batch, xOffset, yOffset);
+
+            int numTraps = traps.Count;
+            for (int i = 0; i < numTraps; i++)
+            {
+                Trap trap = traps.Dequeue();
+                trap.Draw(gameTime, batch, xOffset, yOffset);
+                traps.Enqueue(trap);
+            }
 
             int numEnemies = enemies.Count;
             for (int i = 0; i < numEnemies; i++)

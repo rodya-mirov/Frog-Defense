@@ -197,6 +197,33 @@ namespace Frog_Defense
             updatePathing();
         }
 
+        public List<Trap> makeTraps()
+        {
+            Random ran = new Random();
+
+            List<Trap> output = new List<Trap>();
+
+            for (int x = 1; x < width; x += 2)
+            {
+                for (int y = 1; y < height; y += 2)
+                {
+                    if ((x == goalX && y == goalY) || (x == startX && y == startY))
+                        continue;
+
+                    if (ran.NextDouble() < .7)
+                        continue;
+
+                    int trapX = x * squareWidth + squareWidth / 2;
+                    int trapY = y * squareHeight + squareHeight / 2;
+
+                    Trap t = new Trap(this, env, trapX, trapY);
+                    output.Add(t);
+                }
+            }
+
+            return output;
+        }
+
         //this is a super-cool modified Dijkstra's algorithm which
         //stores all best paths from the goal position to every point on the board;
         //by following these backwards, we have the best paths from every point on
