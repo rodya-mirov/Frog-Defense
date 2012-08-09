@@ -64,7 +64,7 @@ namespace Frog_Defense
 
             arena.Update();
 
-            if (enemies.Count < 1)
+            if (enemies.Count < 20)
             {
                 enemies.Enqueue(arena.makeEnemy());
             }

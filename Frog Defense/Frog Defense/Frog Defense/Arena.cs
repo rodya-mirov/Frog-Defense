@@ -160,8 +160,8 @@ namespace Frog_Defense
         /// </summary>
         private void setupDefaultArena()
         {
-            width = 20;
-            height = 10;
+            width = 19;
+            height = 11;
 
             startX = width - 2;
             startY = 1;
@@ -186,17 +186,9 @@ namespace Frog_Defense
             }
 
             //toss in some walls
-            for (int x = 2; x < width; x += 4)
+            for (int x = 2; x < width; x += 2)
             {
-                for (int y = 2; y < height; y++)
-                {
-                    passable[x, y] = false;
-                }
-            }
-
-            for (int x = 4; x < width; x += 4)
-            {
-                for (int y = 1; y + 2 < height; y++)
+                for (int y = 2; y < height; y += 2)
                 {
                     passable[x, y] = false;
                 }
