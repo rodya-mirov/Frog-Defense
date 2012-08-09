@@ -54,6 +54,9 @@ namespace Frog_Defense
             Trap.LoadContent();
         }
 
+        private int framesBetweenSpawns = 45;
+        private int framesSinceSpawn = 0;
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -64,9 +67,13 @@ namespace Frog_Defense
 
             arena.Update();
 
-            if (enemies.Count < 20)
+            if (framesSinceSpawn < framesBetweenSpawns)
+                framesSinceSpawn++;
+
+            else if (enemies.Count < 20)
             {
                 enemies.Enqueue(arena.makeEnemy());
+                framesSinceSpawn = 0;
             }
         }
 
