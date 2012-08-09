@@ -17,7 +17,7 @@ namespace Frog_Defense
 
         //each (passable) point in the grid has a best next target, or possibly several,
         //on the way to the goal.  This is stored here.
-        private List<Point>[,] bestPaths; 
+        private Queue<Point>[,] bestPaths; 
 
         //enemy spawn points.  This may become multiple at some point.
         private int startX;
@@ -28,8 +28,18 @@ namespace Frog_Defense
         private int goalY;
 
         //Graphically, the size (in pixels) of grid squares.
-        private const int squareWidth = 30;
-        private const int squareHeight = 30;
+        private const int squareWidth = 40;
+        private const int squareHeight = 40;
+
+        public int PixelWidth
+        {
+            get { return squareWidth * width; }
+        }
+
+        public int PixelHeight
+        {
+            get { return squareHeight * height; }
+        }
 
         //Graphically, the size (in pixels) of the arrows.
         private const int arrowWidth = 20;
@@ -91,20 +101,73 @@ namespace Frog_Defense
             setupDefaultArena();
         }
 
+        public void Update()
+        {
+            //Does nothing at the moment.
+        }
+
         /// <summary>
-        /// This is a preset arena for testing purposes.  It has blocked borders but the
-        /// insides are all empty.
+        /// Creates a new enemy, located at the center of the spawn point.
+        /// Returns that enemy and does not handle it in any additional way.
+        /// </summary>
+        /// <returns>The new Enemy</returns>
+        public Enemy makeEnemy()
+        {
+            int x = startX * squareWidth + squareWidth / 2;
+            int y = startY * squareHeight + squareHeight / 2;
+
+            return new Enemy(this, env, x, y);
+        }
+
+        /// <summary>
+        /// Returns the next place an Enemy should go, assuming they're
+        /// located at the specified coordinates.
+        /// 
+        /// Note: this cycles between the goal points, so if there are
+        /// multiple good options, repeated calls will return DIFFERENT answers.
+        /// 
+        /// Note: this assumes the input is in pixel coordinates, and the
+        /// output is also in pixel coordinates.  They are not array indices.
+        /// 
+        /// Note: the results of this method may be surprising if the enemy
+        /// is sitting right on an edge :{
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public Point nextWayPoint(int x, int y)
+        {
+            //transform to array indices
+            int xArr = x / squareWidth;
+            int yArr = y / squareHeight;
+
+            //if there's no path from here, give up
+            if (bestPaths[xArr, yArr] == null)
+                return new Point(x, y);
+
+            //cycle the best path list
+            Point goalArr = bestPaths[xArr, yArr].Dequeue();
+            bestPaths[xArr, yArr].Enqueue(goalArr);
+
+            //return the new point in pixel coordinates, pointing
+            //to the center of the next goal square
+            return new Point(goalArr.X * squareWidth + squareWidth / 2, goalArr.Y * squareHeight + squareHeight / 2);
+        }
+
+        /// <summary>
+        /// This is a preset arena for testing purposes.  It has blocked borders
+        /// and a snaking internal path.
         /// </summary>
         private void setupDefaultArena()
         {
             width = 20;
             height = 10;
 
-            startX = width-2;
+            startX = width - 2;
             startY = 1;
 
             goalX = 1;
-            goalY = height-2;
+            goalY = height - 2;
 
             passable = new bool[width, height];
 
@@ -122,22 +185,22 @@ namespace Frog_Defense
                 }
             }
 
-            Random ran = new Random();
-
-            //add some walls
-            for (int x = 0; x < width; x++)
+            //toss in some walls
+            for (int x = 2; x < width; x += 4)
             {
-                for (int y = 0; y < height; y++)
+                for (int y = 2; y < height; y++)
                 {
-                    if (x == goalX && y == goalY)
-                        continue;
-                    if (x == startX && y == startY)
-                        continue;
-                    else if (ran.NextDouble() < .3)
-                        passable[x, y] = false;
+                    passable[x, y] = false;
                 }
             }
 
+            for (int x = 4; x < width; x += 4)
+            {
+                for (int y = 1; y + 2 < height; y++)
+                {
+                    passable[x, y] = false;
+                }
+            }
 
             updatePathing();
         }
@@ -148,7 +211,7 @@ namespace Frog_Defense
         //the board to the goal position
         private void updatePathing()
         {
-            bestPaths = new List<Point>[width, height];
+            bestPaths = new Queue<Point>[width, height];
             int[,] recordPathLengths = new int[width, height];
 
             for (int x = 0; x < width; x++)
@@ -206,30 +269,35 @@ namespace Frog_Defense
                     if (pathLength < recordPathLengths[testX, testY])
                     {
                         recordPathLengths[testX, testY] = pathLength;
-                        bestPaths[testX, testY] = new List<Point>();
-                        bestPaths[testX, testY].Add(new Point(x, y));
+                        bestPaths[testX, testY] = new Queue<Point>(4);
+                        bestPaths[testX, testY].Enqueue(new Point(x, y));
                         activePoints.Enqueue(new PathTracker(testX, testY, pathLength + 1));
                     }
                     else if (pathLength == recordPathLengths[testX, testY])
                     {
-                        bestPaths[testX, testY].Add(new Point(x, y));
+                        bestPaths[testX, testY].Enqueue(new Point(x, y));
                     }
                 }
             }
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch batch)
+        /// <summary>
+        /// Draws the arena.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="batch"></param>
+        public void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
         {
-            int xOffset = TDGame.MainGame.GraphicsDevice.Viewport.Width / 2;
-            int yOffset = TDGame.MainGame.GraphicsDevice.Viewport.Height / 2;
-
-            xOffset -= width * squareWidth / 2;
-            yOffset -= height * squareHeight / 2;
-
             drawSquares(batch, xOffset, yOffset);
             drawArrows(batch, xOffset, yOffset);
         }
 
+        /// <summary>
+        /// Helper method for Draw; not to be used anywhere else.
+        /// </summary>
+        /// <param name="batch"></param>
+        /// <param name="xOffset"></param>
+        /// <param name="yOffset"></param>
         private void drawArrows(SpriteBatch batch, int xOffset, int yOffset)
         {
             Texture2D toDraw;
@@ -282,6 +350,12 @@ namespace Frog_Defense
             }
         }
 
+        /// <summary>
+        /// Helper method for Draw; not to be used anywhere else.
+        /// </summary>
+        /// <param name="batch"></param>
+        /// <param name="xOffset"></param>
+        /// <param name="yOffset"></param>
         private void drawSquares(SpriteBatch batch, int xOffset, int yOffset)
         {
             Texture2D toDraw;

@@ -16,6 +16,7 @@ namespace Frog_Defense
     class EnvironmentUpdater : DrawableGameComponent
     {
         private Arena arena;
+        private Queue<Enemy> enemies;
 
         private SpriteBatch batch;
 
@@ -33,6 +34,8 @@ namespace Frog_Defense
 
             arena = new Arena(this);
             batch = new SpriteBatch(TDGame.MainGame.GraphicsDevice);
+
+            enemies = new Queue<Enemy>();
         }
 
         protected override void LoadContent()
@@ -40,20 +43,51 @@ namespace Frog_Defense
             base.LoadContent();
 
             Arena.LoadContent();
+            Enemy.LoadContent();
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            int numEnemies = enemies.Count;
+
+            for (int i = 0; i < numEnemies; i++)
+            {
+                Enemy enemy = enemies.Dequeue();
+
+                enemy.Update();
+
+                if (enemy.IsAlive())
+                    enemies.Enqueue(enemy);
+            }
+
+            arena.Update();
+
+            if (enemies.Count < 1)
+            {
+                enemies.Enqueue(arena.makeEnemy());
+            }
         }
 
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
 
+            int xOffset = (TDGame.MainGame.GraphicsDevice.Viewport.Width - arena.PixelWidth) / 2;
+            int yOffset = (TDGame.MainGame.GraphicsDevice.Viewport.Height - arena.PixelHeight) / 2;
+
             batch.Begin();
 
-            arena.Draw(gameTime, batch);
+            arena.Draw(gameTime, batch, xOffset, yOffset);
+
+            int numEnemies = enemies.Count;
+            for (int i = 0; i < numEnemies; i++)
+            {
+                Enemy enemy = enemies.Dequeue();
+                enemy.Draw(gameTime, batch, xOffset, yOffset);
+                enemies.Enqueue(enemy);
+            }
 
             batch.End();
         }
