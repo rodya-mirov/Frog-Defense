@@ -236,15 +236,7 @@ namespace Frog_Defense.Traps
 
         public override void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
         {
-            batch.Draw(
-                myGunTexture,
-                new Vector2(
-                    position.X + xOffset - gunImageWidth / 2,
-                    position.Y + yOffset - gunImageHeight / 2
-                    ),
-                Color.White
-                );
-
+            //draw bullets first
             foreach (Point p in bulletPositions)
             {
                 batch.Draw(
@@ -256,6 +248,17 @@ namespace Frog_Defense.Traps
                     Color.White
                     );
             }
+
+            //then the gun itself
+            batch.Draw(
+                myGunTexture,
+                new Vector2(
+                    position.X + xOffset - gunImageWidth / 2,
+                    position.Y + yOffset - gunImageHeight / 2
+                    ),
+                Color.White
+                );
+
         }
     }
 }

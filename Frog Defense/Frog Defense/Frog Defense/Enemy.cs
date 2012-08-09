@@ -17,7 +17,7 @@ namespace Frog_Defense
         private float health;
 
         //We're using ints for position because XNA gets glitchy when we draw on floats
-        private int speed = 1;
+        private int speed = 2;
 
         private int xPos, yPos;
         public int XPos
@@ -113,8 +113,19 @@ namespace Frog_Defense
                 goalX = goal.X;
                 goalY = goal.Y;
 
+                if (xPos == goalX && yPos == goalY)
+                    reachGoal();
+
                 hasGoal = true;
             }
+        }
+
+        /// <summary>
+        /// Gets triggered when the enemy hits a goal.  Sucks for everyone actually!
+        /// </summary>
+        private void reachGoal()
+        {
+            health = -1;
         }
 
         /// <summary>

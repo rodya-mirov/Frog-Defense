@@ -28,6 +28,7 @@ namespace Frog_Defense
         public TDGame()
         {
             MainGame = this;
+            this.IsMouseVisible = true;
 
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";

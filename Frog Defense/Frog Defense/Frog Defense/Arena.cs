@@ -161,7 +161,7 @@ namespace Frog_Defense
         /// </summary>
         private void setupDefaultArena()
         {
-            width = 19;
+            width = 11;
             height = 11;
 
             startX = width - 2;
@@ -212,7 +212,7 @@ namespace Frog_Defense
                     if ((x == goalX && y == goalY) || (x == startX && y == startY))
                         continue;
 
-                    if (ran.NextDouble() < .7)
+                    if (ran.NextDouble() < .8)
                         continue;
 
                     int trapX = x * squareWidth + squareWidth / 2;
@@ -223,16 +223,59 @@ namespace Frog_Defense
                 }
             }
 
+            addGunTraps(output);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Helper method for makeTraps.
+        /// </summary>
+        /// <param name="output"></param>
+        private void addGunTraps(List<Trap> output)
+        {
             //then add some gun traps
             GunTrap gt;
 
-            for (int y = 1; y < height; y += 2)
+            //the traps going right...
+            for (int x = 1; x + 1 < width; x += 4)
             {
-                gt = new GunTrap(this, env, squareWidth, squareHeight * y + squareHeight / 2, Direction.RIGHT);
-                output.Add(gt);
+                for (int y = 2; y + 1 < height; y += 2)
+                {
+                    gt = new GunTrap(this, env, x * squareWidth, squareHeight * y + squareHeight / 2, Direction.RIGHT);
+                    output.Add(gt);
+                }
             }
 
-            return output;
+            //the traps going left...
+            for (int x = 4; x < width; x += 4)
+            {
+                for (int y = 2; y + 1 < height; y += 2)
+                {
+                    gt = new GunTrap(this, env, x * squareWidth, squareHeight * y + squareHeight / 2, Direction.LEFT);
+                    output.Add(gt);
+                }
+            }
+
+            //the traps going down...
+            for (int x = 2; x + 1 < width; x += 2)
+            {
+                for (int y = 1; y + 1 < height; y += 4)
+                {
+                    gt = new GunTrap(this, env, x * squareWidth + squareWidth / 2, squareHeight * y, Direction.DOWN);
+                    output.Add(gt);
+                }
+            }
+
+            //the traps going up...
+            for (int x = 2; x + 1 < width; x += 2)
+            {
+                for (int y = 4; y < height; y += 4)
+                {
+                    gt = new GunTrap(this, env, x * squareWidth + squareWidth / 2, squareHeight * y, Direction.UP);
+                    output.Add(gt);
+                }
+            }
         }
 
         //this is a super-cool modified Dijkstra's algorithm which
