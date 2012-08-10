@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Frog_Defense.Traps;
+using Frog_Defense.Enemies;
 
 namespace Frog_Defense
 {
@@ -148,7 +149,7 @@ namespace Frog_Defense
             int x = spawnPosition.X * squareWidth + squareWidth / 2;
             int y = spawnPosition.Y * squareHeight + squareHeight / 2;
 
-            return new Enemy(this, env, x, y);
+            return new BasicEnemy(this, env, x, y);
         }
 
         /// <summary>

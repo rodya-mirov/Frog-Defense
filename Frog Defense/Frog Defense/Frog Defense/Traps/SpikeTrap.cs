@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Frog_Defense.Enemies;
 
 namespace Frog_Defense.Traps
 {
@@ -60,8 +61,8 @@ namespace Frog_Defense.Traps
 
             foreach (Enemy e in enemies)
             {
-                if (e.XPos >= minX && e.XPos <= maxX && e.YPos >= minY && e.YPos <= maxY)
-                    e.takeHit(damagePerTick);
+                if (e.XCenter >= minX && e.XCenter <= maxX && e.YCenter >= minY && e.YCenter <= maxY)
+                    e.TakeHit(damagePerTick);
             }
         }
 

@@ -5,21 +5,26 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace Frog_Defense
+namespace Frog_Defense.Enemies
 {
-    class Enemy
+    class BasicEnemy : Enemy
     {
-        private Arena arena;
-        private EnvironmentUpdater env;
-
         //Health info
-        private const float MAX_HEALTH = 100;
+        protected override float Health
+        {
+            get { return health; }
+        }
         private float health;
+
+        protected override float MAX_HEALTH
+        {
+            get { return 100; }
+        }
 
         /// <summary>
         /// The cash value dropped by a dead enemy
         /// </summary>
-        public int CashValue
+        public override int CashValue
         {
             get { return 50; }
         }
@@ -29,7 +34,7 @@ namespace Frog_Defense
         /// <summary>
         /// Whether or not this enemy has hit a target
         /// </summary>
-        public bool HasReachedGoal
+        public override bool HasReachedGoal
         {
             get { return hasReachedGoal; }
         }
@@ -38,11 +43,11 @@ namespace Frog_Defense
         private int speed = 2;
 
         private int xPos, yPos;
-        public int XPos
+        public override int XCenter
         {
             get { return xPos; }
         }
-        public int YPos
+        public override int YCenter
         {
             get { return yPos; }
         }
@@ -54,14 +59,21 @@ namespace Frog_Defense
         private const int imageWidth = 30;
         private const int imageHeight = 30;
 
+        public override int PixelWidth
+        {
+            get { return imageWidth; }
+        }
+        public override int PixelHeight
+        {
+            get { return imageHeight; }
+        }
+
         private const String imagePath = "Images/Enemies/Enemy";
         private static Texture2D imageTexture;
 
-        public Enemy(Arena arena, EnvironmentUpdater env, int startX, int startY)
+        public BasicEnemy(Arena arena, EnvironmentUpdater env, int startX, int startY)
+            : base(env, arena)
         {
-            this.arena = arena;
-            this.env = env;
-
             this.xPos = startX;
             this.yPos = startY;
 
@@ -70,17 +82,18 @@ namespace Frog_Defense
             hasGoal = false;
         }
 
-        public bool IsAlive()
+        public override bool IsAlive
         {
-            return health > 0;
+            get { return health > 0; }
         }
 
         private const int hitFlashFrames = 3;
         private int framesSinceHit = 3;
 
-        public bool containsPoint(Point p)
+        public override bool ContainsPoint(Point p)
         {
-            return (xPos - imageWidth / 2 <= p.X && p.X <= xPos + imageWidth / 2 && yPos - imageHeight / 2 <= p.Y && p.Y <= yPos + imageHeight / 2);
+            return xPos - imageWidth / 2 <= p.X && p.X <= xPos + imageWidth / 2
+                && yPos - imageHeight / 2 <= p.Y && p.Y <= yPos + imageHeight / 2;
         }
 
         /// <summary>
@@ -88,7 +101,7 @@ namespace Frog_Defense
         /// is no invincibility frame!
         /// </summary>
         /// <param name="damage"></param>
-        public void takeHit(float damage)
+        public override void TakeHit(float damage)
         {
             health -= damage;
             framesSinceHit = 0;
@@ -98,7 +111,7 @@ namespace Frog_Defense
         /// Loads up the textures if they aren't already.  Does nothing if the
         /// textures are already loaded.
         /// </summary>
-        public static void LoadContent()
+        public static new void LoadContent()
         {
             if (imageTexture == null)
                 imageTexture = TDGame.MainGame.Content.Load<Texture2D>(imagePath);
@@ -111,7 +124,7 @@ namespace Frog_Defense
         /// <summary>
         /// Moves!
         /// </summary>
-        public void Update()
+        public override void Update()
         {
             UpdateGoal();
 
@@ -181,7 +194,7 @@ namespace Frog_Defense
                 hasGoal = false;
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
+        public override void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
         {
             Color tint;
 

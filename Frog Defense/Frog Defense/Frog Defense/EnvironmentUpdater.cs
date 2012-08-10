@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Frog_Defense.Traps;
 using Microsoft.Xna.Framework.Input;
+using Frog_Defense.Enemies;
 
 namespace Frog_Defense
 {
@@ -87,7 +88,10 @@ namespace Frog_Defense
             base.LoadContent();
 
             Arena.LoadContent();
+
             Enemy.LoadContent();
+            BasicEnemy.LoadContent();
+
             SpikeTrap.LoadContent();
             GunTrap.LoadContent();
         }
@@ -177,7 +181,7 @@ namespace Frog_Defense
                 {
                     player.TakeHit();
                 }
-                else if (enemy.IsAlive())
+                else if (enemy.IsAlive)
                 {
                     enemies.Enqueue(enemy);
                 }
@@ -212,22 +216,25 @@ namespace Frog_Defense
             int arenaOffsetX = ArenaOffsetX;
             int arenaOffsetY = ArenaOffsetY;
 
+            //Draw the arena and its walls...
             arena.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY);
 
-            int numTraps = traps.Count;
-            for (int i = 0; i < numTraps; i++)
+            //...draw the traps...
+            foreach (Trap t in traps)
             {
-                Trap trap = traps.Dequeue();
-                trap.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY);
-                traps.Enqueue(trap);
+                t.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY);
             }
 
-            int numEnemies = enemies.Count;
-            for (int i = 0; i < numEnemies; i++)
+            //...draw the enemies...
+            foreach (Enemy e in enemies)
             {
-                Enemy enemy = enemies.Dequeue();
-                enemy.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY);
-                enemies.Enqueue(enemy);
+                e.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY);
+            }
+
+            //...and their health bars
+            foreach (Enemy e in enemies)
+            {
+                e.DrawHealthBar(gameTime, batch, arenaOffsetX, arenaOffsetY);
             }
         }
     }

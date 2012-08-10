@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Frog_Defense.Enemies;
 
 namespace Frog_Defense.Traps
 {

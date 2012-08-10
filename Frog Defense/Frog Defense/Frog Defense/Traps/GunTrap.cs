@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Frog_Defense.Enemies;
 
 namespace Frog_Defense.Traps
 {
@@ -141,9 +142,9 @@ namespace Frog_Defense.Traps
                 //next, see if it hit an enemy
                 foreach (Enemy e in enemies)
                 {
-                    if (e.containsPoint(p))
+                    if (e.ContainsPoint(p))
                     {
-                        e.takeHit(bulletDamage);
+                        e.TakeHit(bulletDamage);
                         madeCollision = true;
                         break;
                     }
@@ -193,7 +194,7 @@ namespace Frog_Defense.Traps
                 switch (facing)
                 {
                     case Direction.LEFT:
-                        if (e.YPos >= ymin && e.YPos <= ymax && e.XPos <= xmax)
+                        if (e.YCenter >= ymin && e.YCenter <= ymax && e.XCenter <= xmax)
                         {
                             found = true;
                         }
@@ -201,7 +202,7 @@ namespace Frog_Defense.Traps
                         break;
 
                     case Direction.RIGHT:
-                        if (e.YPos >= ymin && e.YPos <= ymax && e.XPos >= xmin)
+                        if (e.YCenter >= ymin && e.YCenter <= ymax && e.XCenter >= xmin)
                         {
                             found = true;
                         }
@@ -209,7 +210,7 @@ namespace Frog_Defense.Traps
                         break;
 
                     case Direction.UP:
-                        if (e.XPos >= xmin && e.XPos <= xmax && e.YPos <= ymin)
+                        if (e.XCenter >= xmin && e.XCenter <= xmax && e.YCenter <= ymin)
                         {
                             found = true;
                         }
@@ -217,7 +218,7 @@ namespace Frog_Defense.Traps
                         break;
 
                     case Direction.DOWN:
-                        if (e.XPos >= xmin && e.XPos <= xmax && e.YPos >= ymax)
+                        if (e.XCenter >= xmin && e.XCenter <= xmax && e.YCenter >= ymax)
                         {
                             found = true;
                         }
