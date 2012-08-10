@@ -70,6 +70,10 @@ namespace Frog_Defense.Enemies
 
         private const String imagePath = "Images/Enemies/Enemy";
         private static Texture2D imageTexture;
+        protected virtual Texture2D ImageTexture
+        {
+            get { return imageTexture; }
+        }
 
         public BasicEnemy(Arena arena, EnvironmentUpdater env, int startX, int startY)
             : base(env, arena)
@@ -209,7 +213,7 @@ namespace Frog_Defense.Enemies
             }
 
             batch.Draw(
-                imageTexture,
+                ImageTexture,
                 new Vector2(
                     xPos + xOffset - imageWidth / 2,
                     yPos + yOffset - imageHeight / 2

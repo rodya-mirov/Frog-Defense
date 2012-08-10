@@ -91,6 +91,7 @@ namespace Frog_Defense
 
             Enemy.LoadContent();
             BasicEnemy.LoadContent();
+            BigBasicEnemy.LoadContent();
 
             SpikeTrap.LoadContent();
             GunTrap.LoadContent();

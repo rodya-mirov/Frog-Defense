@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="Arena.cs" />
     <Compile Include="Enemies\BasicEnemy.cs" />
+    <Compile Include="Enemies\BigBasicEnemy.cs" />
     <Compile Include="Enemies\Enemy.cs" />
     <Compile Include="EnvironmentUpdater.cs" />
     <Compile Include="Player.cs" />

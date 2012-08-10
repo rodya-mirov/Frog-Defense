@@ -134,6 +134,9 @@ namespace Frog_Defense
             //Does nothing at the moment.
         }
 
+        private int spawnedEnemies = 0;
+        private int startSpawningBigEnemies = 10;
+
         /// <summary>
         /// Creates a new enemy, located at the center of the spawn point.
         /// Returns that enemy and does not handle it in any additional way.
@@ -149,7 +152,15 @@ namespace Frog_Defense
             int x = spawnPosition.X * squareWidth + squareWidth / 2;
             int y = spawnPosition.Y * squareHeight + squareHeight / 2;
 
-            return new BasicEnemy(this, env, x, y);
+            if (spawnedEnemies < startSpawningBigEnemies)
+            {
+                spawnedEnemies += 1;
+                return new BasicEnemy(this, env, x, y);
+            }
+            else
+            {
+                return new BigBasicEnemy(this, env, x, y);
+            }
         }
 
         /// <summary>
