@@ -9,11 +9,17 @@ using Frog_Defense.Enemies;
 
 namespace Frog_Defense
 {
+    enum SquareType { FLOOR, WALL, VOID };
+
     class Arena
     {
+        //TEMPORARY WAVE QUEUEING SYSTEM- REMOVE AT EARLIEST CONVENIENCE
+        private int spawnedEnemies = 0;
+        private int startSpawningBigEnemies = 10;
+
         private EnvironmentUpdater env;
 
-        private bool[,] passable; //the passability grid.  Edges should never be passable.
+        private SquareType[,] floorType; //the passability grid.  Edges should never be passable.
         private bool[,] hasTrap; //a grid keeping track of whether there is a trap on this spot.
         private int width; //the width of the grid
         private int height; //the height of the grid
@@ -134,9 +140,6 @@ namespace Frog_Defense
             //Does nothing at the moment.
         }
 
-        private int spawnedEnemies = 0;
-        private int startSpawningBigEnemies = 10;
-
         /// <summary>
         /// Creates a new enemy, located at the center of the spawn point.
         /// Returns that enemy and does not handle it in any additional way.
@@ -206,48 +209,75 @@ namespace Frog_Defense
         /// <summary>
         /// This is a preset arena for testing purposes.  It has blocked borders
         /// and a snaking internal path.
+        /// 
+        /// drawing:
+        /// 
+        /// WWWWW  WWW
+        /// Wh-hW  WsW
+        /// W-W-W  W-W
+        /// W---W  W-W
+        /// WW-WW  W-W
+        ///  W-W   W-W
+        ///  W-WWWWW-W
+        ///  W-------W
+        ///  WWWWWWWWW
         /// </summary>
         private void setupDefaultArena()
         {
             spawnPositions = new Queue<Point>();
             goalPositions = new Queue<Point>();
 
-            width = 7;
-            height = 11;
+            width = 10;
+            height = 9;
 
-            spawnPositions.Enqueue(new Point(4, 1));
-            spawnPositions.Enqueue(new Point(2, 1));
+            goalPositions.Enqueue(new Point(1, 1));
+            goalPositions.Enqueue(new Point(3, 1));
 
-            goalPositions.Enqueue(new Point(2, height - 2));
-            goalPositions.Enqueue(new Point(4, height - 2));
+            spawnPositions.Enqueue(new Point(8, 1));
 
-            passable = new bool[width, height];
+            floorType = new SquareType[width, height];
 
-            //block the borders
+            //everything starts as walls
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if (x == 0 || x == width - 1)
-                        passable[x, y] = false;
-                    else if (y == 0 || y == height - 1)
-                        passable[x, y] = false;
-                    else
-                        passable[x, y] = true;
+                    floorType[x, y] = SquareType.WALL;
                 }
             }
 
-            //toss in some walls
-            for (int x = 2; x < width; x += 2)
+            //carve out the right path
+            for (int y = 1; y + 1 < height; y++)
             {
-                for (int y = 2; y < height; y += 2)
+                floorType[width - 2, y] = SquareType.FLOOR;
+            }
+
+            //carve out the bottom path
+            for (int x = 2; x + 1 < width; x++)
+            {
+                floorType[x, height - 2] = SquareType.FLOOR;
+            }
+
+            //carve out the upper-left square
+            for (int x = 1; x < 4; x++)
+            {
+                for (int y = 1; y < 4; y++)
                 {
-                    passable[x, y] = false;
+                    if (x != 2 || y != 2)
+                        floorType[x, y] = SquareType.FLOOR;
                 }
             }
 
+            //carve out the connecting path
+            for (int y = 4; y + 2 < height; y++)
+            {
+                floorType[2, y] = SquareType.FLOOR;
+            }
+
+            autoassignVoid();
             updatePathing();
 
+            //no traps
             hasTrap = new bool[width, height];
             for (int x = 0; x < width; x++)
             {
@@ -258,10 +288,62 @@ namespace Frog_Defense
             }
         }
 
+        //This method automatically replaces all WALL tiles with VOID
+        //if none of its neighbors (including diagonal!) are FLOOR tiles
+        private void autoassignVoid()
+        {
+            bool[,] canSwitch = new bool[width, height];
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    canSwitch[x, y] = true;
+                }
+            }
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (floorType[x, y] == SquareType.FLOOR)
+                    {
+                        canSwitch[x, y] = false;
+                        if (x > 0)
+                            canSwitch[x - 1, y] = false;
+                        if (x + 1 < width)
+                            canSwitch[x + 1, y] = false;
+                        if (y > 0)
+                            canSwitch[x, y - 1] = false;
+                        if (y + 1 < height)
+                            canSwitch[x, y + 1] = false;
+
+                        if (x > 0 && y > 0)
+                            canSwitch[x - 1, y - 1] = false;
+                        if (x > 0 && y + 1 < height)
+                            canSwitch[x - 1, y + 1] = false;
+                        if (x + 1 < width && y > 0)
+                            canSwitch[x + 1, y - 1] = false;
+                        if (x + 1 < width && y + 1 < height)
+                            canSwitch[x + 1, y + 1] = false;
+                    }
+                }
+            }
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (canSwitch[x, y])
+                        floorType[x, y] = SquareType.VOID;
+                }
+            }
+        }
+
         //this is a super-cool modified Dijkstra's algorithm which
-        //stores all best paths from the goal position to every point on the board;
+        //stores all best paths from any goal position to every point on the board;
         //by following these backwards, we have the best paths from every point on
-        //the board to the goal position
+        //the board to the closest goal position
         private void updatePathing()
         {
             bestPaths = new Queue<Point>[width, height];
@@ -296,22 +378,22 @@ namespace Frog_Defense
                 List<int> testXValues = new List<int>(4);
                 List<int> testYValues = new List<int>(4);
 
-                if (x > 0 && passable[x - 1, y])
+                if (x > 0 && (floorType[x - 1, y] == SquareType.FLOOR))
                 {
                     testXValues.Add(x - 1);
                     testYValues.Add(y);
                 }
-                if (x + 1 < width && passable[x + 1, y])
+                if (x + 1 < width && (floorType[x + 1, y] == SquareType.FLOOR))
                 {
                     testXValues.Add(x + 1);
                     testYValues.Add(y);
                 }
-                if (y > 0 && passable[x, y - 1])
+                if (y > 0 && (floorType[x, y - 1] == SquareType.FLOOR))
                 {
                     testXValues.Add(x);
                     testYValues.Add(y - 1);
                 }
-                if (y + 1 < height && passable[x, y + 1])
+                if (y + 1 < height && (floorType[x, y + 1] == SquareType.FLOOR))
                 {
                     testXValues.Add(x);
                     testYValues.Add(y + 1);
@@ -421,11 +503,14 @@ namespace Frog_Defense
             {
                 for (int y = 0; y < height; y++)
                 {
+
                     if (x == highlightedSquare.X && y == highlightedSquare.Y)
                         toDraw = highlightedSquareTexture;
-                    else if (passable[x, y])
+                    else if (floorType[x, y] == SquareType.VOID)
+                        continue;
+                    else if (floorType[x, y] == SquareType.FLOOR)
                         toDraw = passableSquareTexture;
-                    else
+                    else //it must be the wall
                         toDraw = impassableSquareTexture;
 
                     batch.Draw( //draw the texture
@@ -476,7 +561,7 @@ namespace Frog_Defense
             int xArr = p.X / squareWidth;
             int yArr = p.Y / squareHeight;
 
-            return !passable[xArr, yArr];
+            return floorType[xArr, yArr] == SquareType.WALL;
         }
 
         /// <summary>
@@ -534,11 +619,13 @@ namespace Frog_Defense
                     return null;
             }
 
-            //check if it's passable and unoccupied
-            if (!(passable[highlightedSquare.X, highlightedSquare.Y] && !hasTrap[highlightedSquare.X, highlightedSquare.Y]))
-            {
+            //check if it's passable...
+            if (floorType[highlightedSquare.X, highlightedSquare.Y] != SquareType.FLOOR)
                 return null;
-            }
+
+            //...and unoccupied
+            if (hasTrap[highlightedSquare.X, highlightedSquare.Y])
+                return null;
 
             SpikeTrap t = new SpikeTrap(
                 this,

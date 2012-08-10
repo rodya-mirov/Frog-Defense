@@ -13,6 +13,11 @@ namespace Frog_Defense.Enemies
             get { return 200; }
         }
 
+        public override int CashValue
+        {
+            get { return 80; }
+        }
+
         private const String imagePath = "Images/Enemies/BigEnemy";
         private static Texture2D imageTexture;
 
