@@ -13,6 +13,7 @@ namespace Frog_Defense
         private EnvironmentUpdater env;
 
         private bool[,] passable; //the passability grid.  Edges should never be passable.
+        private bool[,] hasTrap; //a grid keeping track of whether there is a trap on this spot.
         private int width; //the width of the grid
         private int height; //the height of the grid
 
@@ -31,6 +32,20 @@ namespace Frog_Defense
         //Graphically, the size (in pixels) of grid squares.
         private const int squareWidth = 40;
         private const int squareHeight = 40;
+
+        /// <summary>
+        /// The most recent square that was moused over.  The default value,
+        /// for "not on any square in particular" is (-1,-1), but other
+        /// failure values are possible.  Do not assume this is either (-1,-1)
+        /// or a valid square!
+        /// </summary>
+        private Point highlightedSquare;
+
+        /// <summary>
+        /// The most recent coordinates of the mouse.  This is relative to
+        /// the arena, so the upper-left corner of the arena is (0,0).
+        /// </summary>
+        private Point mousePosition;
 
         public int PixelWidth
         {
@@ -56,6 +71,8 @@ namespace Frog_Defense
         private static Texture2D startSquareTexture;
         private const String goalSquarePath = "Images/Squares/GoalSquare";
         private static Texture2D goalSquareTexture;
+        private const String highlightedSquarePath = "Images/Squares/HighlightedSquare";
+        private static Texture2D highlightedSquareTexture;
 
         //for arrows ...
         private const String upArrowPath = "Images/Arrows/ArrowUp";
@@ -81,6 +98,9 @@ namespace Frog_Defense
 
             if (startSquareTexture == null)
                 startSquareTexture = TDGame.MainGame.Content.Load<Texture2D>(startSquarePath);
+
+            if (highlightedSquareTexture == null)
+                highlightedSquareTexture = TDGame.MainGame.Content.Load<Texture2D>(highlightedSquarePath);
 
             if (upArrowTexture == null)
                 upArrowTexture = TDGame.MainGame.Content.Load<Texture2D>(upArrowPath);
@@ -155,6 +175,11 @@ namespace Frog_Defense
             return new Point(goalArr.X * squareWidth + squareWidth / 2, goalArr.Y * squareHeight + squareHeight / 2);
         }
 
+        public List<Trap> makeTraps()
+        {
+            return new List<Trap>();
+        }
+
         /// <summary>
         /// This is a preset arena for testing purposes.  It has blocked borders
         /// and a snaking internal path.
@@ -196,9 +221,24 @@ namespace Frog_Defense
             }
 
             updatePathing();
+
+            hasTrap = new bool[width, height];
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    hasTrap[x, y] = false;
+                }
+            }
         }
 
-        public List<Trap> makeTraps()
+        /// <summary>
+        /// This is just a preset trap configuration that's used for testing.  It
+        /// assumes the wall set of default arena, and other wall sets may not be
+        /// compatible!
+        /// </summary>
+        /// <returns></returns>
+        private List<Trap> defaultTraps()
         {
             Random ran = new Random();
 
@@ -223,16 +263,16 @@ namespace Frog_Defense
                 }
             }
 
-            addGunTraps(output);
+            addDefaultGunTraps(output);
 
             return output;
         }
 
         /// <summary>
-        /// Helper method for makeTraps.
+        /// Helper method for defaultTraps.
         /// </summary>
         /// <param name="output"></param>
-        private void addGunTraps(List<Trap> output)
+        private void addDefaultGunTraps(List<Trap> output)
         {
             //then add some gun traps
             GunTrap gt;
@@ -424,22 +464,22 @@ namespace Frog_Defense
         }
 
         /// <summary>
-        /// Helper method for Draw; not to be used anywhere else.
+        /// Helper method for Draw; not to be used anywhere else.  Draws the
+        /// tiles all over, and draws the start/end portals on top of them.
         /// </summary>
         /// <param name="batch"></param>
         /// <param name="xOffset"></param>
         /// <param name="yOffset"></param>
         private void drawSquares(SpriteBatch batch, int xOffset, int yOffset)
         {
+            //Draw the passability grid
             Texture2D toDraw;
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if (x == startX && y == startY)
-                        toDraw = startSquareTexture;
-                    else if (x == goalX && y == goalY)
-                        toDraw = goalSquareTexture;
+                    if (x == highlightedSquare.X && y == highlightedSquare.Y)
+                        toDraw = highlightedSquareTexture;
                     else if (passable[x, y])
                         toDraw = passableSquareTexture;
                     else
@@ -449,12 +489,31 @@ namespace Frog_Defense
                         toDraw, //texture to be drawn
                         new Vector2( //position to be drawn at
                             x * squareWidth + xOffset, //x-position, taking into account centering and current square
-                            y * squareWidth + yOffset //y-position, taking into account centering and current square
+                            y * squareHeight + yOffset //y-position, taking into account centering and current square
                             ),
                         Color.White //Color of tint; white indicates no tint
                         );
                 }
             }
+
+            //now the start and end
+            batch.Draw(
+                startSquareTexture,
+                new Vector2(
+                    startX * squareWidth + xOffset,
+                    startY * squareHeight + yOffset
+                    ),
+                Color.White
+                );
+
+            batch.Draw(
+                goalSquareTexture,
+                new Vector2(
+                    goalX * squareWidth + xOffset,
+                    goalY * squareHeight + yOffset
+                    ),
+                Color.White
+                );
         }
 
         /// <summary>
@@ -468,6 +527,56 @@ namespace Frog_Defense
             int yArr = p.Y / squareHeight;
 
             return !passable[xArr, yArr];
+        }
+
+        /// <summary>
+        /// Notifies the Arena of the current position of the mouse in coordinates
+        /// relative to the Arena (so (0,0) should be the upper-left corner of the Arena).
+        /// 
+        /// The main thing it does is highlight a square, but it will use this stored info
+        /// to process clicks as well.
+        /// </summary>
+        /// <param name="mouseX"></param>
+        /// <param name="mouseY"></param>
+        public void updateMousePosition(int mouseX, int mouseY)
+        {
+            mousePosition.X = mouseX;
+            mousePosition.Y = mouseY;
+
+            if (mouseX < 0 || mouseY < 0)
+            {
+                highlightedSquare.X = -1;
+                highlightedSquare.Y = -1;
+            }
+            else
+            {
+                highlightedSquare.X = mouseX / squareWidth;
+                highlightedSquare.Y = mouseY / squareHeight;
+            }
+        }
+
+        /// <summary>
+        /// Creates a SpikeTrap at the current mouse position and returns it,
+        /// if the position is valid and unoccupied.  Also marks the space as
+        /// occupied afterward, so don't lose the Trap :D
+        /// </summary>
+        /// <returns></returns>
+        public Trap addTrapAtMousePosition()
+        {
+            //first, if the mouse is off-screen, be done with it
+            if (highlightedSquare.X < 0 || highlightedSquare.X >= width || highlightedSquare.Y < 0 || highlightedSquare.Y >= height)
+                return null;
+
+            if (passable[highlightedSquare.X, highlightedSquare.Y] && !hasTrap[highlightedSquare.X, highlightedSquare.Y])
+            {
+                hasTrap[highlightedSquare.X, highlightedSquare.Y] = true;
+                return new SpikeTrap(this, env,
+                    highlightedSquare.X * squareWidth + squareWidth / 2, highlightedSquare.Y * squareHeight + squareHeight / 2);
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 

@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Frog_Defense.Traps;
+using Microsoft.Xna.Framework.Input;
 
 namespace Frog_Defense
 {
@@ -63,6 +64,8 @@ namespace Frog_Defense
         {
             base.Update(gameTime);
 
+            updateMouse();
+
             updateEnemies();
 
             updateTraps();
@@ -76,6 +79,36 @@ namespace Frog_Defense
             {
                 enemies.Enqueue(arena.makeEnemy());
                 framesSinceSpawn = 0;
+            }
+        }
+
+        private int mouseX, mouseY;
+        private bool mouseClicked = false;
+        private bool mouseWasClicked = false;
+
+        /// <summary>
+        /// Finds the mouse position (in pixels) and tells the arena about it.
+        /// </summary>
+        private void updateMouse()
+        {
+            MouseState ms = Mouse.GetState();
+
+            mouseX = ms.X;
+            mouseY = ms.Y;
+
+            int xOffset = (TDGame.MainGame.GraphicsDevice.Viewport.Width - arena.PixelWidth) / 2;
+            int yOffset = (TDGame.MainGame.GraphicsDevice.Viewport.Height - arena.PixelHeight) / 2;
+
+            arena.updateMousePosition(mouseX - xOffset, mouseY - yOffset);
+
+            mouseWasClicked = mouseClicked;
+            mouseClicked = (ms.LeftButton == ButtonState.Pressed);
+
+            if (mouseWasClicked && !mouseClicked)
+            {
+                Trap t = arena.addTrapAtMousePosition();
+                if (t != null)
+                    traps.Enqueue(t);
             }
         }
 
