@@ -16,6 +16,24 @@ namespace Frog_Defense
         private const float MAX_HEALTH = 100;
         private float health;
 
+        /// <summary>
+        /// The cash value dropped by a dead enemy
+        /// </summary>
+        public int CashValue
+        {
+            get { return 50; }
+        }
+
+        private bool hasReachedGoal = false;
+
+        /// <summary>
+        /// Whether or not this enemy has hit a target
+        /// </summary>
+        public bool HasReachedGoal
+        {
+            get { return hasReachedGoal; }
+        }
+
         //We're using ints for position because XNA gets glitchy when we draw on floats
         private int speed = 2;
 
@@ -125,7 +143,7 @@ namespace Frog_Defense
         /// </summary>
         private void reachGoal()
         {
-            health = -1;
+            hasReachedGoal = true;
         }
 
         /// <summary>

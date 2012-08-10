@@ -535,7 +535,7 @@ namespace Frog_Defense
                 highlightedSquare.Y * squareHeight + squareHeight / 2
                 );
 
-            if (player.attemptSpend(t.Cost))
+            if (player.AttemptSpend(t.Cost))
             {
                 hasTrap[highlightedSquare.X, highlightedSquare.Y] = true;
                 return t;

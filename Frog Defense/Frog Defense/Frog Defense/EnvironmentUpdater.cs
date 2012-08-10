@@ -158,6 +158,11 @@ namespace Frog_Defense
             }
         }
 
+        /// <summary>
+        /// Helper method for Update.  This updates all the enemies through cycling,
+        /// and simply forgets to add them back in if the enemy is dead.  It also
+        /// credits the player with the kill.
+        /// </summary>
         private void updateEnemies()
         {
             int numEnemies = enemies.Count;
@@ -168,8 +173,18 @@ namespace Frog_Defense
 
                 enemy.Update();
 
-                if (enemy.IsAlive())
+                if (enemy.HasReachedGoal)
+                {
+                    player.TakeHit();
+                }
+                else if (enemy.IsAlive())
+                {
                     enemies.Enqueue(enemy);
+                }
+                else
+                {
+                    player.AddMoney(enemy.CashValue);
+                }
             }
         }
 
