@@ -21,13 +21,11 @@ namespace Frog_Defense
         //on the way to the goal.  This is stored here.
         private Queue<Point>[,] bestPaths; 
 
-        //enemy spawn points.  This may become multiple at some point.
-        private int startX;
-        private int startY;
+        //enemy spawn points.
+        private Queue<Point> spawnPositions;
 
-        //enemy goal points.  This may also become multiple at some point.
-        private int goalX;
-        private int goalY;
+        //enemy goal points.
+        private Queue<Point> goalPositions;
 
         //Graphically, the size (in pixels) of grid squares.
         private const int squareWidth = 40;
@@ -134,8 +132,13 @@ namespace Frog_Defense
         /// <returns>The new Enemy</returns>
         public Enemy makeEnemy()
         {
-            int x = startX * squareWidth + squareWidth / 2;
-            int y = startY * squareHeight + squareHeight / 2;
+            //cycle through the spawn positions
+            Point spawnPosition = spawnPositions.Dequeue();
+            spawnPositions.Enqueue(spawnPosition);
+
+            //set the enemy up
+            int x = spawnPosition.X * squareWidth + squareWidth / 2;
+            int y = spawnPosition.Y * squareHeight + squareHeight / 2;
 
             return new Enemy(this, env, x, y);
         }
@@ -186,14 +189,17 @@ namespace Frog_Defense
         /// </summary>
         private void setupDefaultArena()
         {
-            width = 11;
+            spawnPositions = new Queue<Point>();
+            goalPositions = new Queue<Point>();
+
+            width = 7;
             height = 11;
 
-            startX = width - 2;
-            startY = 1;
+            spawnPositions.Enqueue(new Point(4, 1));
+            spawnPositions.Enqueue(new Point(2, 1));
 
-            goalX = 1;
-            goalY = height - 2;
+            goalPositions.Enqueue(new Point(2, height - 2));
+            goalPositions.Enqueue(new Point(4, height - 2));
 
             passable = new bool[width, height];
 
@@ -232,92 +238,6 @@ namespace Frog_Defense
             }
         }
 
-        /// <summary>
-        /// This is just a preset trap configuration that's used for testing.  It
-        /// assumes the wall set of default arena, and other wall sets may not be
-        /// compatible!
-        /// </summary>
-        /// <returns></returns>
-        private List<Trap> defaultTraps()
-        {
-            Random ran = new Random();
-
-            //first add spike traps
-            List<Trap> output = new List<Trap>();
-
-            for (int x = 1; x < width; x += 2)
-            {
-                for (int y = 1; y < height; y += 2)
-                {
-                    if ((x == goalX && y == goalY) || (x == startX && y == startY))
-                        continue;
-
-                    if (ran.NextDouble() < .8)
-                        continue;
-
-                    int trapX = x * squareWidth + squareWidth / 2;
-                    int trapY = y * squareHeight + squareHeight / 2;
-
-                    SpikeTrap t = new SpikeTrap(this, env, trapX, trapY);
-                    output.Add(t);
-                }
-            }
-
-            addDefaultGunTraps(output);
-
-            return output;
-        }
-
-        /// <summary>
-        /// Helper method for defaultTraps.
-        /// </summary>
-        /// <param name="output"></param>
-        private void addDefaultGunTraps(List<Trap> output)
-        {
-            //then add some gun traps
-            GunTrap gt;
-
-            //the traps going right...
-            for (int x = 1; x + 1 < width; x += 4)
-            {
-                for (int y = 2; y + 1 < height; y += 2)
-                {
-                    gt = new GunTrap(this, env, x * squareWidth, squareHeight * y + squareHeight / 2, Direction.RIGHT);
-                    output.Add(gt);
-                }
-            }
-
-            //the traps going left...
-            for (int x = 4; x < width; x += 4)
-            {
-                for (int y = 2; y + 1 < height; y += 2)
-                {
-                    gt = new GunTrap(this, env, x * squareWidth, squareHeight * y + squareHeight / 2, Direction.LEFT);
-                    output.Add(gt);
-                }
-            }
-
-            //the traps going down...
-            for (int x = 2; x + 1 < width; x += 2)
-            {
-                for (int y = 1; y + 1 < height; y += 4)
-                {
-                    gt = new GunTrap(this, env, x * squareWidth + squareWidth / 2, squareHeight * y, Direction.DOWN);
-                    output.Add(gt);
-                }
-            }
-
-            //the traps going up...
-            for (int x = 2; x + 1 < width; x += 2)
-            {
-                for (int y = 4; y < height; y += 4)
-                {
-                    gt = new GunTrap(this, env, x * squareWidth + squareWidth / 2, squareHeight * y, Direction.UP);
-                    output.Add(gt);
-                }
-            }
-        }
-
         //this is a super-cool modified Dijkstra's algorithm which
         //stores all best paths from the goal position to every point on the board;
         //by following these backwards, we have the best paths from every point on
@@ -338,8 +258,11 @@ namespace Frog_Defense
 
             Queue<PathTracker> activePoints = new Queue<PathTracker>();
 
-            recordPathLengths[goalX, goalY] = 0;
-            activePoints.Enqueue(new PathTracker(goalX, goalY, 1));
+            foreach (Point p in goalPositions)
+            {
+                recordPathLengths[p.X, p.Y] = 0;
+                activePoints.Enqueue(new PathTracker(p.X, p.Y, 1));
+            }
 
             while (activePoints.Count > 0)
             {
@@ -495,25 +418,32 @@ namespace Frog_Defense
                         );
                 }
             }
+            
+            //now the starts
+            foreach (Point p in spawnPositions)
+            {
+                batch.Draw(
+                    startSquareTexture,
+                    new Vector2(
+                        p.X * squareWidth + xOffset,
+                        p.Y * squareHeight + yOffset
+                        ),
+                    Color.White
+                    );
+            }
 
-            //now the start and end
-            batch.Draw(
-                startSquareTexture,
-                new Vector2(
-                    startX * squareWidth + xOffset,
-                    startY * squareHeight + yOffset
-                    ),
-                Color.White
-                );
-
-            batch.Draw(
-                goalSquareTexture,
-                new Vector2(
-                    goalX * squareWidth + xOffset,
-                    goalY * squareHeight + yOffset
-                    ),
-                Color.White
-                );
+            //and the ends
+            foreach (Point p in goalPositions)
+            {
+                batch.Draw(
+                    goalSquareTexture,
+                    new Vector2(
+                        p.X * squareWidth + xOffset,
+                        p.Y * squareHeight + yOffset
+                        ),
+                    Color.White
+                    );
+            }
         }
 
         /// <summary>
@@ -559,6 +489,9 @@ namespace Frog_Defense
         /// Creates a SpikeTrap at the current mouse position and returns it,
         /// if the position is valid and unoccupied.  Also marks the space as
         /// occupied afterward, so don't lose the Trap :D
+        /// 
+        /// Valid positions are passable positions without traps on them, and
+        /// which do not have the goal or start square on them.
         /// </summary>
         /// <returns></returns>
         public Trap addTrapAtMousePosition()
@@ -567,6 +500,21 @@ namespace Frog_Defense
             if (highlightedSquare.X < 0 || highlightedSquare.X >= width || highlightedSquare.Y < 0 || highlightedSquare.Y >= height)
                 return null;
 
+            //if the square is the start, done
+            foreach (Point p in spawnPositions)
+            {
+                if (highlightedSquare.X == p.X && highlightedSquare.Y == p.Y)
+                    return null;
+            }
+
+            //if the square is the goal, done
+            foreach (Point p in goalPositions)
+            {
+                if (highlightedSquare.X == p.X && highlightedSquare.Y == p.Y)
+                    return null;
+            }
+
+            //finally, just check if it's passable and unoccupied
             if (passable[highlightedSquare.X, highlightedSquare.Y] && !hasTrap[highlightedSquare.X, highlightedSquare.Y])
             {
                 hasTrap[highlightedSquare.X, highlightedSquare.Y] = true;

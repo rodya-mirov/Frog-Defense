@@ -23,8 +23,23 @@ namespace Frog_Defense
 
         private SpriteBatch batch;
 
+        private int ArenaOffsetX
+        {
+            get
+            {
+                return (TDGame.MainGame.GraphicsDevice.Viewport.Width - arena.PixelWidth) / 2;
+            }
+        }
+        private int ArenaOffsetY
+        {
+            get
+            {
+                return (TDGame.MainGame.GraphicsDevice.Viewport.Height - arena.PixelHeight) / 2;
+            }
+        }
+
         /// <summary>
-        /// Only constructor for EnvironmentUpdater
+        /// The only constructor for EnvironmentUpdater
         /// </summary>
         public EnvironmentUpdater()
             : base(TDGame.MainGame)
@@ -96,10 +111,7 @@ namespace Frog_Defense
             mouseX = ms.X;
             mouseY = ms.Y;
 
-            int xOffset = (TDGame.MainGame.GraphicsDevice.Viewport.Width - arena.PixelWidth) / 2;
-            int yOffset = (TDGame.MainGame.GraphicsDevice.Viewport.Height - arena.PixelHeight) / 2;
-
-            arena.updateMousePosition(mouseX - xOffset, mouseY - yOffset);
+            arena.updateMousePosition(mouseX - ArenaOffsetX, mouseY - ArenaOffsetY);
 
             mouseWasClicked = mouseClicked;
             mouseClicked = (ms.LeftButton == ButtonState.Pressed);
@@ -142,18 +154,18 @@ namespace Frog_Defense
         {
             base.Draw(gameTime);
 
-            int xOffset = (TDGame.MainGame.GraphicsDevice.Viewport.Width - arena.PixelWidth) / 2;
-            int yOffset = (TDGame.MainGame.GraphicsDevice.Viewport.Height - arena.PixelHeight) / 2;
+            int arenaOffsetX = ArenaOffsetX;
+            int arenaOffsetY = ArenaOffsetY;
 
             batch.Begin();
 
-            arena.Draw(gameTime, batch, xOffset, yOffset);
+            arena.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY);
 
             int numTraps = traps.Count;
             for (int i = 0; i < numTraps; i++)
             {
                 Trap trap = traps.Dequeue();
-                trap.Draw(gameTime, batch, xOffset, yOffset);
+                trap.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY);
                 traps.Enqueue(trap);
             }
 
@@ -161,7 +173,7 @@ namespace Frog_Defense
             for (int i = 0; i < numEnemies; i++)
             {
                 Enemy enemy = enemies.Dequeue();
-                enemy.Draw(gameTime, batch, xOffset, yOffset);
+                enemy.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY);
                 enemies.Enqueue(enemy);
             }
 

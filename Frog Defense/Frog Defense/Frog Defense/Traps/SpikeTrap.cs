@@ -16,7 +16,7 @@ namespace Frog_Defense.Traps
         private int xPos, yPos;
 
         //the damage this trap inflicts on every critter that touches it
-        private const float damagePerTick = 1.2f;
+        private const float damagePerTick = 0.3f;
 
         //Typical graphics stuff
         private const int imageWidth = 40;
