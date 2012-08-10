@@ -14,7 +14,7 @@ namespace Frog_Defense
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class TDGame : Microsoft.Xna.Framework.Game
+    public class TDGame : Game
     {
         //This is a singleton structure and I don't feel like passing
         //around a bazillion references if I don't have to.

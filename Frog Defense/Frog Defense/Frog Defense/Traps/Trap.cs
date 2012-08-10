@@ -18,6 +18,11 @@ namespace Frog_Defense.Traps
             this.env = env;
         }
 
+        public abstract int Cost
+        {
+            get;
+        }
+
         public abstract void Update(IEnumerable<Enemy> enemies);
         public abstract void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset);
     }

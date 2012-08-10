@@ -13,6 +13,11 @@ namespace Frog_Defense.Traps
     /// </summary>
     class GunTrap : Trap
     {
+        public override int Cost
+        {
+            get { return 100; }
+        }
+
         private Point position;
 
         private Direction facing;

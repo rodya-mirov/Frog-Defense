@@ -17,17 +17,25 @@ namespace Frog_Defense
     /// </summary>
     class EnvironmentUpdater : DrawableGameComponent
     {
+        private Player player;
+
         private Arena arena;
         private Queue<Enemy> enemies;
         private Queue<Trap> traps;
 
         private SpriteBatch batch;
 
+        private SpriteFont font;
+        public SpriteFont Font
+        {
+            get { return font; }
+        }
+
         private int ArenaOffsetX
         {
             get
             {
-                return (TDGame.MainGame.GraphicsDevice.Viewport.Width - arena.PixelWidth) / 2;
+                return ArenaOffsetY;
             }
         }
         private int ArenaOffsetY
@@ -36,6 +44,15 @@ namespace Frog_Defense
             {
                 return (TDGame.MainGame.GraphicsDevice.Viewport.Height - arena.PixelHeight) / 2;
             }
+        }
+
+        private int PlayerOffsetX
+        {
+            get { return ArenaOffsetX * 2 + arena.PixelWidth; }
+        }
+        private int PlayerOffsetY
+        {
+            get { return ArenaOffsetY; }
         }
 
         /// <summary>
@@ -50,8 +67,11 @@ namespace Frog_Defense
         {
             base.Initialize();
 
-            arena = new Arena(this);
             batch = new SpriteBatch(TDGame.MainGame.GraphicsDevice);
+            font = TDGame.MainGame.Content.Load<SpriteFont>("MainFont");
+
+            player = new Player(this, 500);
+            arena = new Arena(this);
 
             enemies = new Queue<Enemy>();
             traps = new Queue<Trap>();
@@ -118,12 +138,15 @@ namespace Frog_Defense
 
             if (mouseWasClicked && !mouseClicked)
             {
-                Trap t = arena.addTrapAtMousePosition();
+                Trap t = arena.addTrapAtMousePosition(player);
                 if (t != null)
                     traps.Enqueue(t);
             }
         }
 
+        /// <summary>
+        /// Just cycles through the traps and updates them
+        /// </summary>
         private void updateTraps()
         {
             int numTraps = traps.Count;
@@ -154,10 +177,25 @@ namespace Frog_Defense
         {
             base.Draw(gameTime);
 
+            batch.Begin();
+
+            drawArenaAndRelated(gameTime);
+
+            player.Draw(gameTime, batch, PlayerOffsetX, PlayerOffsetY);
+
+            batch.End();
+        }
+
+        /// <summary>
+        /// Helper method for Draw; this draws the arena and everything in it (enemies, traps, etc.)
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="arenaOffsetX"></param>
+        /// <param name="arenaOffsetY"></param>
+        private void drawArenaAndRelated(GameTime gameTime)
+        {
             int arenaOffsetX = ArenaOffsetX;
             int arenaOffsetY = ArenaOffsetY;
-
-            batch.Begin();
 
             arena.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY);
 
@@ -176,8 +214,6 @@ namespace Frog_Defense
                 enemy.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY);
                 enemies.Enqueue(enemy);
             }
-
-            batch.End();
         }
     }
 }

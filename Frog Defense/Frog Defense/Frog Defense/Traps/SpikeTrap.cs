@@ -24,6 +24,14 @@ namespace Frog_Defense.Traps
         private const String imagePath = "Images/Traps/Spikes";
         private static Texture2D imageTexture;
 
+        /// <summary>
+        /// The cost, in "dollars," of placing a single SpikeTrap
+        /// </summary>
+        public override int Cost
+        {
+            get { return 100; }
+        }
+
         public SpikeTrap(Arena arena, EnvironmentUpdater env, int x, int y)
             : base(arena, env)
         {

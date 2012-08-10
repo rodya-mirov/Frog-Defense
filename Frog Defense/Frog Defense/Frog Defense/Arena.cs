@@ -45,11 +45,17 @@ namespace Frog_Defense
         /// </summary>
         private Point mousePosition;
 
+        /// <summary>
+        /// The width, in pixels, of the arena
+        /// </summary>
         public int PixelWidth
         {
             get { return squareWidth * width; }
         }
 
+        /// <summary>
+        /// The height, in pixels, of the arena
+        /// </summary>
         public int PixelHeight
         {
             get { return squareHeight * height; }
@@ -82,7 +88,9 @@ namespace Frog_Defense
         private const String leftArrowPath = "Images/Arrows/ArrowLeft";
         private static Texture2D leftArrowTexture;
 
-        //reloads all unloaded content.  Does nothing if the content is loaded
+        /// <summary>
+        /// reloads all unloaded content.  Does nothing if the content is loaded
+        /// </summary>
         public static void LoadContent()
         {
             if (impassableSquareTexture == null)
@@ -494,7 +502,7 @@ namespace Frog_Defense
         /// which do not have the goal or start square on them.
         /// </summary>
         /// <returns></returns>
-        public Trap addTrapAtMousePosition()
+        public Trap addTrapAtMousePosition(Player player)
         {
             //first, if the mouse is off-screen, be done with it
             if (highlightedSquare.X < 0 || highlightedSquare.X >= width || highlightedSquare.Y < 0 || highlightedSquare.Y >= height)
@@ -514,12 +522,23 @@ namespace Frog_Defense
                     return null;
             }
 
-            //finally, just check if it's passable and unoccupied
-            if (passable[highlightedSquare.X, highlightedSquare.Y] && !hasTrap[highlightedSquare.X, highlightedSquare.Y])
+            //check if it's passable and unoccupied
+            if (!(passable[highlightedSquare.X, highlightedSquare.Y] && !hasTrap[highlightedSquare.X, highlightedSquare.Y]))
+            {
+                return null;
+            }
+
+            SpikeTrap t = new SpikeTrap(
+                this,
+                env,
+                highlightedSquare.X * squareWidth + squareWidth / 2,
+                highlightedSquare.Y * squareHeight + squareHeight / 2
+                );
+
+            if (player.attemptSpend(t.Cost))
             {
                 hasTrap[highlightedSquare.X, highlightedSquare.Y] = true;
-                return new SpikeTrap(this, env,
-                    highlightedSquare.X * squareWidth + squareWidth / 2, highlightedSquare.Y * squareHeight + squareHeight / 2);
+                return t;
             }
             else
             {
