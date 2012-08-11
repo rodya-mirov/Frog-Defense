@@ -11,9 +11,9 @@ namespace Frog_Defense.Traps
     abstract class Trap
     {
         protected Arena arena;
-        protected EnvironmentUpdater env;
+        protected GameUpdater env;
 
-        protected Trap(Arena arena, EnvironmentUpdater env)
+        protected Trap(Arena arena, GameUpdater env)
         {
             this.arena = arena;
             this.env = env;

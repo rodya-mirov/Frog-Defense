@@ -16,7 +16,7 @@ namespace Frog_Defense
     /// 
     /// It also handles the drawing and contains the only SpriteBatch, which gets passed around.
     /// </summary>
-    class EnvironmentUpdater : DrawableGameComponent
+    class GameUpdater : DrawableGameComponent
     {
         private Player player;
 
@@ -59,10 +59,12 @@ namespace Frog_Defense
         /// <summary>
         /// The only constructor for EnvironmentUpdater
         /// </summary>
-        public EnvironmentUpdater()
+        public GameUpdater()
             : base(TDGame.MainGame)
         {
         }
+
+
 
         public override void Initialize()
         {
@@ -71,6 +73,23 @@ namespace Frog_Defense
             batch = new SpriteBatch(TDGame.MainGame.GraphicsDevice);
             font = TDGame.MainGame.Content.Load<SpriteFont>("MainFont");
 
+            resetGame();
+        }
+
+        protected override void OnEnabledChanged(object sender, EventArgs args)
+        {
+            base.OnEnabledChanged(sender, args);
+
+            //if we just got re-enabled
+            if (this.Enabled)
+            {
+                Console.WriteLine("It's GO TIME");
+                resetGame();
+            }
+        }
+
+        private void resetGame()
+        {
             player = new Player(this, 500);
             arena = new Arena(this);
 
@@ -195,6 +214,8 @@ namespace Frog_Defense
 
         public override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
             base.Draw(gameTime);
 
             batch.Begin();

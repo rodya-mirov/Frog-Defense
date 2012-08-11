@@ -41,7 +41,7 @@ namespace Frog_Defense.Enemies
         protected abstract float Health { get; }
 
         protected Arena arena;
-        protected EnvironmentUpdater env;
+        protected GameUpdater env;
 
         //textures for health bars
         protected const int healthBarWidth = 30;
@@ -52,7 +52,7 @@ namespace Frog_Defense.Enemies
         protected const String healthBarEmptyPath = "Images/Healthbars/EmptyBar";
         protected static Texture2D healthBarEmptyTexture;
 
-        protected Enemy(EnvironmentUpdater env, Arena arena)
+        protected Enemy(GameUpdater env, Arena arena)
         {
             this.env = env;
             this.arena = arena;

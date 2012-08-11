@@ -33,7 +33,7 @@ namespace Frog_Defense.Traps
             get { return 100; }
         }
 
-        public SpikeTrap(Arena arena, EnvironmentUpdater env, int x, int y)
+        public SpikeTrap(Arena arena, GameUpdater env, int x, int y)
             : base(arena, env)
         {
             this.xPos = x;

@@ -20,8 +20,11 @@ namespace Frog_Defense
         //around a bazillion references if I don't have to.
         public static TDGame MainGame = null;
 
-        //The main EnvironmentUpdater
-        private EnvironmentUpdater env;
+        //The main GameUpdater
+        private GameUpdater env;
+
+        //The main menu screen
+        private StartScreen menu;
 
         GraphicsDeviceManager graphics;
 
@@ -33,8 +36,25 @@ namespace Frog_Defense
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            env = new EnvironmentUpdater();
+            env = new GameUpdater();
+            env.Enabled = false;
+            env.Visible = false;
             Components.Add(env);
+
+            menu = new StartScreen();
+            menu.Enabled = true;
+            menu.Visible = true;
+
+            Components.Add(menu);
+        }
+
+        public void StartPlaying()
+        {
+            menu.Enabled = false;
+            menu.Visible = false;
+
+            env.Visible = true;
+            env.Enabled = true;
         }
 
         /// <summary>
@@ -45,17 +65,17 @@ namespace Frog_Defense
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
-        /// all of your content.  Not used for this game.
+        /// all of your content.  It also loads the content of all its components (apparently)
+        /// automatically, so we don't need to do anything here.
         /// </summary>
         protected override void LoadContent()
         {
+            base.LoadContent();
         }
 
         /// <summary>
@@ -64,6 +84,7 @@ namespace Frog_Defense
         /// </summary>
         protected override void UnloadContent()
         {
+            base.UnloadContent();
         }
 
         /// <summary>

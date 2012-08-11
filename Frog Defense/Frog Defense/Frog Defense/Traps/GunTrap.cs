@@ -59,7 +59,7 @@ namespace Frog_Defense.Traps
         private const String bulletPath = "Images/Traps/Bullet";
         private static Texture2D bulletTexture;
 
-        public GunTrap(Arena arena, EnvironmentUpdater env, int x, int y, Direction facing)
+        public GunTrap(Arena arena, GameUpdater env, int x, int y, Direction facing)
             : base(arena, env)
         {
             position.X = x;

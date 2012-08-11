@@ -75,7 +75,7 @@ namespace Frog_Defense.Enemies
             get { return imageTexture; }
         }
 
-        public BasicEnemy(Arena arena, EnvironmentUpdater env, int startX, int startY)
+        public BasicEnemy(Arena arena, GameUpdater env, int startX, int startY)
             : base(env, arena)
         {
             this.xPos = startX;

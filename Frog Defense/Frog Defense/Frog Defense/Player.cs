@@ -34,9 +34,9 @@ namespace Frog_Defense
             get { return health; }
         }
 
-        private EnvironmentUpdater env;
+        private GameUpdater env;
 
-        public Player(EnvironmentUpdater env, int startingMoney = 0, String name = "Commander Badass")
+        public Player(GameUpdater env, int startingMoney = 0, String name = "Commander Badass")
         {
             this.name = name;
             this.money = startingMoney;

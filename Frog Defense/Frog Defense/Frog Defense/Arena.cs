@@ -17,7 +17,7 @@ namespace Frog_Defense
         private int spawnedEnemies = 0;
         private int startSpawningBigEnemies = 10;
 
-        private EnvironmentUpdater env;
+        private GameUpdater env;
 
         private SquareType[,] floorType; //the passability grid.  Edges should never be passable.
         private bool[,] hasTrap; //a grid keeping track of whether there is a trap on this spot.
@@ -128,7 +128,7 @@ namespace Frog_Defense
                 leftArrowTexture = TDGame.MainGame.Content.Load<Texture2D>(leftArrowPath);
         }
 
-        public Arena(EnvironmentUpdater env)
+        public Arena(GameUpdater env)
         {
             this.env = env;
 
