@@ -23,3 +23,8 @@ Content\MediumFont.xnb
 Content\BigFont.xnb
 Content\SmallFont.xnb
 Content\Images\TrapPreviews\GunTrapPreview.xnb
+Content\Images\Traps\DartTrapDown.xnb
+Content\Images\Traps\DartTrapLeft.xnb
+Content\Images\Traps\DartTrapRight.xnb
+Content\Images\Traps\DartTrapUp.xnb
+Content\Images\TrapPreviews\DartTrapPreview.xnb

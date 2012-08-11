@@ -8,7 +8,7 @@ using Frog_Defense.Enemies;
 
 namespace Frog_Defense.Traps
 {
-    enum TrapType { NoType, SpikeTrap, GunTrap };
+    enum TrapType { NoType, SpikeTrap, GunTrap, DartTrap };
 
     abstract class Trap
     {

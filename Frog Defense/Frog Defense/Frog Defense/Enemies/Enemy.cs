@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Frog_Defense.Traps;
 
 namespace Frog_Defense.Enemies
 {
@@ -38,7 +39,7 @@ namespace Frog_Defense.Enemies
         public abstract int PixelHeight { get; }
 
         protected abstract float MAX_HEALTH { get; }
-        protected abstract float Health { get; }
+        protected abstract float Health { get; set; }
 
         protected Arena arena;
         protected GameUpdater env;
@@ -52,10 +53,17 @@ namespace Frog_Defense.Enemies
         protected const String healthBarEmptyPath = "Images/Healthbars/EmptyBar";
         protected static Texture2D healthBarEmptyTexture;
 
+        //stuff for getting poisoned
+        protected Dictionary<int, PoisonCounter> poisonCounters;
+        protected Queue<int> poisonIDs;
+
         protected Enemy(GameUpdater env, Arena arena)
         {
             this.env = env;
             this.arena = arena;
+
+            this.poisonIDs = new Queue<int>();
+            this.poisonCounters = new Dictionary<int, PoisonCounter>();
         }
 
         public static void LoadContent()
@@ -68,15 +76,53 @@ namespace Frog_Defense.Enemies
         }
 
         /// <summary>
-        /// General Update method
+        /// General Update method.  All extending creatures should
+        /// make sure to use base.Update!
         /// </summary>
-        public abstract void Update();
+        public virtual void Update()
+        {
+            int numPoisons = poisonIDs.Count;
+
+            for (int i = 0; i < numPoisons; i++)
+            {
+                int id = poisonIDs.Dequeue();
+                PoisonCounter pc = poisonCounters[id];
+
+                Health -= pc.damagePerTick;
+                pc.ticksRemaining -= 1;
+
+                if (pc.ticksRemaining > 0)
+                {
+                    poisonIDs.Enqueue(id);
+                }
+                else
+                {
+                    poisonCounters.Remove(id);
+                }
+            }
+        }
 
         /// <summary>
         /// What it sounds like!
         /// </summary>
         /// <param name="damage"></param>
         public abstract void TakeHit(float damage);
+
+        /// <summary>
+        /// Adds a PoisonCounter with the associated information.
+        /// If the ID is already in use, this will replace the poison
+        /// with that ID, effectively resetting the timer.
+        /// </summary>
+        /// <param name="damage"></param>
+        /// <param name="duration"></param>
+        /// <param name="pid"></param>
+        public virtual void GetPoisoned(float damage, int duration, PoisonID pid)
+        {
+            int id = pid.ID;
+
+            poisonIDs.Enqueue(id);
+            poisonCounters[id] = new PoisonCounter(damage, duration);
+        }
 
         /// <summary>
         /// Whether or not a specified point (relative to the Arena)
@@ -119,6 +165,18 @@ namespace Frog_Defense.Enemies
             healthRect.Width = (int)((healthBarWidth * Health) / MAX_HEALTH);
 
             batch.Draw(healthBarFullTexture, healthRect, Color.White);
+        }
+    }
+
+    struct PoisonCounter
+    {
+        public float damagePerTick;
+        public int ticksRemaining;
+
+        public PoisonCounter(float damagePerTick, int ticksRemaining)
+        {
+            this.damagePerTick = damagePerTick;
+            this.ticksRemaining = ticksRemaining;
         }
     }
 }

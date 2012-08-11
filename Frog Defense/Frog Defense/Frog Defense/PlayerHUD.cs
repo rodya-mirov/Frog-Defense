@@ -71,6 +71,7 @@ namespace Frog_Defense
 
             fixedTraps.Add(new SpikeTrap(arena, env, -1, -1));
             fixedTraps.Add(new GunTrap(arena, env, -1, -1, Direction.UP));
+            fixedTraps.Add(new DartTrap(arena, env, -1, -1, Direction.UP));
 
             setSelectedTrap(0);
         }

@@ -13,6 +13,7 @@ namespace Frog_Defense.Enemies
         protected override float Health
         {
             get { return health; }
+            set { health = value; }
         }
         private float health;
 
@@ -130,6 +131,8 @@ namespace Frog_Defense.Enemies
         /// </summary>
         public override void Update()
         {
+            base.Update();
+
             UpdateGoal();
 
             MoveTowardGoal();

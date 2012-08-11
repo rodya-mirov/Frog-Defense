@@ -135,6 +135,7 @@ namespace Frog_Defense
 
             SpikeTrap.LoadContent();
             GunTrap.LoadContent();
+            DartTrap.LoadContent();
         }
 
         public override void Update(GameTime gameTime)

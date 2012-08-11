@@ -707,6 +707,7 @@ namespace Frog_Defense
                     return;
 
                 case TrapType.GunTrap:
+                case TrapType.DartTrap:
                     if (env.Player.AttemptSpend(selectedTrap.Cost))
                     {
                         env.addTrap(selectedTrap);
@@ -761,8 +762,12 @@ namespace Frog_Defense
 
                 //as are "on the wall"-type traps
                 case TrapType.GunTrap:
+                case TrapType.DartTrap:
                     makeWallTrap();
                     break;
+
+                default:
+                    throw new NotImplementedException();
             }
         }
 
@@ -821,18 +826,17 @@ namespace Frog_Defense
                     throw new NotImplementedException();
             }
 
+            int xpos = highlightedSquare.X * squareWidth + xOffset;
+            int ypos = highlightedSquare.Y * squareHeight + yOffset;
+
             switch (SelectedTrapType)
             {
                 case TrapType.GunTrap:
+                    selectedTrap = new GunTrap(this, env, xpos, ypos, favoredDirection);
+                    return;
 
-                    selectedTrap = new GunTrap(
-                        this,
-                        env,
-                        highlightedSquare.X * squareWidth + xOffset,
-                        highlightedSquare.Y * squareHeight + yOffset,
-                        favoredDirection
-                        );
-
+                case TrapType.DartTrap:
+                    selectedTrap = new DartTrap(this, env, xpos, ypos, favoredDirection);
                     return;
 
                 default:
@@ -856,7 +860,7 @@ namespace Frog_Defense
             if (hasFloorTrap[highlightedSquare.X, highlightedSquare.Y])
                 return;
 
-            switch(SelectedTrapType)
+            switch (SelectedTrapType)
             {
                 case TrapType.SpikeTrap:
                     selectedTrap = new SpikeTrap(
@@ -866,7 +870,7 @@ namespace Frog_Defense
                         highlightedSquare.Y * squareHeight + squareHeight / 2
                         );
                     break;
-                    
+
                 default:
                     throw new NotImplementedException();
             }

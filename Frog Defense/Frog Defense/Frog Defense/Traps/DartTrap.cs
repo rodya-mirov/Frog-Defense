@@ -3,73 +3,75 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
 using Frog_Defense.Enemies;
 
 namespace Frog_Defense.Traps
 {
-    /// <summary>
-    /// This trap is affixed to the center of a wall, and fires at the closest target.
-    /// It hits that target for flat damage.
-    /// </summary>
-    class GunTrap : WallProjectileTrap
+    class DartTrap : WallProjectileTrap
     {
         public override TrapType trapType
         {
-            get { return TrapType.GunTrap; }
+            get { return TrapType.DartTrap; }
         }
         public override string Name
         {
-            get { return "Pellet Gun"; }
+            get { return "Dart Launcher"; }
         }
         public override string Description
         {
-            get { return "Fires bullets in a fixed direction."; }
+            get
+            {
+                return "Fires darts in a fixed direction." +
+                    "\nThe darts poison what they hit.\n\nSuccessive hits from the same" +
+                    "\nlauncher increase the duration,\nwhile hits from" +
+                    "separate launchers\nstack independently.";
+            }
         }
 
         public override int Cost
         {
-            get { return 100; }
+            get { return 200; }
         }
 
         protected override float ProjectileDamage
         {
-            get { return 10; }
+            get { return 4; }
         }
 
+        #region IMAGE_STUFF
         //standard image stuff: Gun
         protected override int imageWidth { get { return 30; } }
         protected override int imageHeight { get { return 30; } }
 
-        private const String upGunPath = "Images/Traps/GunTrapUp";
+        private const String upGunPath = "Images/Traps/DartTrapUp";
         private static Texture2D upGunTexture;
         protected override Texture2D UpTexture
         {
             get { return upGunTexture; }
         }
 
-        private const String downGunPath = "Images/Traps/GunTrapDown";
+        private const String downGunPath = "Images/Traps/DartTrapDown";
         private static Texture2D downGunTexture;
         protected override Texture2D DownTexture
         {
             get { return downGunTexture; }
         }
 
-        private const String rightGunPath = "Images/Traps/GunTrapRight";
+        private const String rightGunPath = "Images/Traps/DartTrapRight";
         private static Texture2D rightGunTexture;
         protected override Texture2D RightTexture
         {
             get { return rightGunTexture; }
         }
 
-        private const String leftGunPath = "Images/Traps/GunTrapLeft";
+        private const String leftGunPath = "Images/Traps/DartTrapLeft";
         private static Texture2D leftGunTexture;
         protected override Texture2D LeftTexture
         {
             get { return leftGunTexture; }
         }
 
-        private const String previewGunPath = "Images/TrapPreviews/GunTrapPreview";
+        private const String previewGunPath = "Images/TrapPreviews/DartTrapPreview";
         private static Texture2D previewTexture;
         public override Texture2D PreviewTexture
         {
@@ -86,6 +88,29 @@ namespace Frog_Defense.Traps
         {
             get { return bulletTexture; }
         }
+        #endregion
+
+        #region POISON_STUFF
+        private PoisonID poisonID;
+
+        /// <summary>
+        /// The damage PER TICK of poison; this will happen roughly 60 times
+        /// per second.
+        /// </summary>
+        public float PoisonDamage
+        {
+            get { return .1f; }
+        }
+
+        /// <summary>
+        /// This is the number of FRAMES the poison should last,
+        /// where the frames per second is roughly 60.
+        /// </summary>
+        public int PoisonDuration
+        {
+            get { return 600; }
+        }
+        #endregion
 
         /// <summary>
         /// Creates a new GunTrap at the specified location
@@ -95,9 +120,10 @@ namespace Frog_Defense.Traps
         /// <param name="centerX">The centerX of the gun</param>
         /// <param name="centerY">The centerY of the gun</param>
         /// <param name="facing"></param>
-        public GunTrap(Arena arena, GameUpdater env, int centerX, int centerY, Direction facing)
+        public DartTrap(Arena arena, GameUpdater env, int centerX, int centerY, Direction facing)
             : base(arena, env, centerX, centerY, facing)
         {
+            poisonID = PoisonID.GetPoisonID();
         }
 
         /// <summary>
@@ -122,6 +148,14 @@ namespace Frog_Defense.Traps
 
             if (previewTexture == null)
                 previewTexture = TDGame.MainGame.Content.Load<Texture2D>(previewGunPath);
+        }
+
+        protected override bool hitEnemy(Enemy e)
+        {
+            e.TakeHit(ProjectileDamage);
+            e.GetPoisoned(PoisonDamage, PoisonDuration, poisonID);
+
+            return true;
         }
     }
 }
