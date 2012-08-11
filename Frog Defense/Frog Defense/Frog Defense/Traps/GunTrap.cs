@@ -52,9 +52,12 @@ namespace Frog_Defense.Traps
         private const String leftGunPath = "Images/Traps/GunTrapLeft";
         private static Texture2D leftGunTexture;
 
+        private const String previewGunPath = "Images/TrapPreviews/GunTrapPreview";
+        private static Texture2D previewTexture;
+
         public override Texture2D PreviewTexture
         {
-            get { throw new NotImplementedException(); }
+            get { return previewTexture; }
         }
 
         public override TrapType trapType
@@ -79,6 +82,14 @@ namespace Frog_Defense.Traps
         private const String bulletPath = "Images/Traps/Bullet";
         private static Texture2D bulletTexture;
 
+        /// <summary>
+        /// Creates a new GunTrap at the specified location
+        /// </summary>
+        /// <param name="arena"></param>
+        /// <param name="env"></param>
+        /// <param name="x">The centerX of the gun</param>
+        /// <param name="y">The centerY of the gun</param>
+        /// <param name="facing"></param>
         public GunTrap(Arena arena, GameUpdater env, int x, int y, Direction facing)
             : base(arena, env)
         {
@@ -122,6 +133,9 @@ namespace Frog_Defense.Traps
 
             if (bulletTexture == null)
                 bulletTexture = TDGame.MainGame.Content.Load<Texture2D>(bulletPath);
+
+            if (previewTexture == null)
+                previewTexture = TDGame.MainGame.Content.Load<Texture2D>(previewGunPath);
         }
 
         /// <summary>

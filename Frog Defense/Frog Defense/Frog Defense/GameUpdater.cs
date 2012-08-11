@@ -169,6 +169,9 @@ namespace Frog_Defense
         /// </summary>
         private void updateMouse()
         {
+            if (!TDGame.MainGame.IsActive)
+                return;
+
             MouseState ms = Mouse.GetState();
 
             mouseX = ms.X;

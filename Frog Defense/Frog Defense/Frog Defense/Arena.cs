@@ -21,6 +21,8 @@ namespace Frog_Defense
 
         private SquareType[,] floorType; //the passability grid.  Edges should never be passable.
         private bool[,] hasFloorTrap; //a grid keeping track of whether there is a trap on this spot.
+        private Dictionary<Direction, bool[,]> hasWallTrap; //a grid keeping track of whether there is a trap on a wall bordering this spot (can only be one per direction)
+
         private int width; //the width of the grid
         private int height; //the height of the grid
 
@@ -41,6 +43,8 @@ namespace Frog_Defense
             set { selectedTrapType = value; }
         }
 
+        private Trap selectedTrap;
+
         //Graphically, the size (in pixels) of grid squares.
         private const int squareWidth = 40;
         private const int squareHeight = 40;
@@ -52,6 +56,13 @@ namespace Frog_Defense
         /// or a valid square!
         /// </summary>
         private Point highlightedSquare;
+
+        /// <summary>
+        /// Within the square, which edge is the mouse closest to?  If the top,
+        /// favored direction is down (etc.) since a gun on the top wall would
+        /// face down.
+        /// </summary>
+        private Direction favoredDirection;
 
         /// <summary>
         /// The most recent coordinates of the mouse.  This is relative to
@@ -293,11 +304,22 @@ namespace Frog_Defense
 
             //no traps
             hasFloorTrap = new bool[width, height];
+
+            hasWallTrap = new Dictionary<Direction, bool[,]>();
+            hasWallTrap[Direction.UP] = new bool[width, height];
+            hasWallTrap[Direction.DOWN] = new bool[width, height];
+            hasWallTrap[Direction.RIGHT] = new bool[width, height];
+            hasWallTrap[Direction.LEFT] = new bool[width, height];
+
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
                     hasFloorTrap[x, y] = false;
+                    hasWallTrap[Direction.UP][x, y] = false;
+                    hasWallTrap[Direction.DOWN][x, y] = false;
+                    hasWallTrap[Direction.RIGHT][x, y] = false;
+                    hasWallTrap[Direction.LEFT][x, y] = false;
                 }
             }
         }
@@ -440,7 +462,7 @@ namespace Frog_Defense
         /// <param name="batch"></param>
         public void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
         {
-            drawSquares(batch, xOffset, yOffset);
+            drawSquares(gameTime, batch, xOffset, yOffset);
             drawArrows(batch, xOffset, yOffset);
         }
 
@@ -509,7 +531,7 @@ namespace Frog_Defense
         /// <param name="batch"></param>
         /// <param name="xOffset"></param>
         /// <param name="yOffset"></param>
-        private void drawSquares(SpriteBatch batch, int xOffset, int yOffset)
+        private void drawSquares(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
         {
             //Draw the passability grid
             Texture2D toDraw;
@@ -518,9 +540,7 @@ namespace Frog_Defense
                 for (int y = 0; y < height; y++)
                 {
 
-                    if (x == highlightedSquare.X && y == highlightedSquare.Y)
-                        toDraw = highlightedSquareTexture;
-                    else if (floorType[x, y] == SquareType.VOID)
+                    if (floorType[x, y] == SquareType.VOID)
                         continue;
                     else if (floorType[x, y] == SquareType.FLOOR)
                         toDraw = passableSquareTexture;
@@ -536,6 +556,24 @@ namespace Frog_Defense
                         Color.White //Color of tint; white indicates no tint
                         );
                 }
+            }
+
+            //now the highlighted square, if appropriate, along with the selected trap
+            if (0 <= highlightedSquare.X && highlightedSquare.X < width
+                && 0 <= highlightedSquare.Y && highlightedSquare.Y < height
+                && floorType[highlightedSquare.X, highlightedSquare.Y] != SquareType.VOID)
+            {
+                if (selectedTrap != null)
+                    selectedTrap.Draw(gameTime, batch, xOffset, yOffset);
+
+                batch.Draw(
+                    highlightedSquareTexture,
+                    new Vector2(
+                        highlightedSquare.X * squareWidth + xOffset,
+                        highlightedSquare.Y * squareHeight + yOffset
+                        ),
+                    Color.White
+                    );
             }
             
             //now the starts
@@ -582,8 +620,10 @@ namespace Frog_Defense
         /// Notifies the Arena of the current position of the mouse in coordinates
         /// relative to the Arena (so (0,0) should be the upper-left corner of the Arena).
         /// 
-        /// The main thing it does is highlight a square, but it will use this stored info
-        /// to process clicks as well.
+        /// The first thing it does is highlight a square.
+        /// 
+        /// It will also actually create a hypothetical trap, so that if the user clicks
+        /// here, that is the trap that will be placed.
         /// </summary>
         /// <param name="mouseX"></param>
         /// <param name="mouseY"></param>
@@ -601,7 +641,27 @@ namespace Frog_Defense
             {
                 highlightedSquare.X = mouseX / squareWidth;
                 highlightedSquare.Y = mouseY / squareHeight;
+
+                int distUp, distDown, distRight, distLeft;
+
+                distUp = mouseY % squareHeight;
+                distDown = squareHeight - distUp;
+                distLeft = mouseX % squareWidth;
+                distRight = squareWidth - distLeft;
+
+                int minDist = Math.Min(distUp, Math.Min(distDown, Math.Min(distLeft, distRight)));
+
+                if (minDist == distUp)
+                    favoredDirection = Direction.DOWN;
+                else if (minDist == distDown)
+                    favoredDirection = Direction.UP;
+                else if (minDist == distRight)
+                    favoredDirection = Direction.LEFT;
+                else
+                    favoredDirection = Direction.RIGHT;
             }
+
+            makeTrap();
         }
 
         /// <summary>
@@ -618,36 +678,59 @@ namespace Frog_Defense
             if (highlightedSquare.X < 0 || highlightedSquare.X >= width || highlightedSquare.Y < 0 || highlightedSquare.Y >= height)
                 return;
 
-            //now, how and where we place traps depends greatly on what kind of trap we're doing!
-            switch (SelectedTrapType)
-            {
-                    //if there's no trap, just be done
-                case TrapType.NoType:
-                    return;
-
-                    //all "on the ground"-type traps are handled similarly
-                case TrapType.SpikeTrap:
-                    placeGroundTrap();
-                    break;
-
-                    //as are "on the wall"-type traps
-                case TrapType.GunTrap:
-                    placeWallTrap();
-                    break;
-            }
-        }
-
-        private void placeWallTrap()
-        {
-            throw new NotImplementedException();
+            placeTrap();
         }
 
         /// <summary>
-        /// This places a ground trap at the specified location, assuming that
-        /// the selected trap is a ground trap (otherwise throws an exception)
+        /// This attempts to place selectedTrap permanently in the arena.  Assumes that highlightedSquare
+        /// is the appropriate position and selectedTrap is current!  If it's impossible to place the trap,
+        /// it will silently do nothing (this is intended behavior, so it can be safely called whether or
+        /// not a trap is ready to be placed here).
         /// </summary>
-        private void placeGroundTrap()
+        private void placeTrap()
         {
+            if (selectedTrap == null)
+                return;
+
+            switch (SelectedTrapType)
+            {
+                case TrapType.NoType:
+                    return;
+
+                case TrapType.SpikeTrap:
+                    if (env.Player.AttemptSpend(selectedTrap.Cost))
+                    {
+                        env.addTrap(selectedTrap);
+                        hasFloorTrap[highlightedSquare.X, highlightedSquare.Y] = true;
+                    }
+
+                    return;
+
+                case TrapType.GunTrap:
+                    if (env.Player.AttemptSpend(selectedTrap.Cost))
+                    {
+                        env.addTrap(selectedTrap);
+                        hasWallTrap[favoredDirection][highlightedSquare.X, highlightedSquare.Y] = true;
+                    }
+
+                    return;
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        private void makeTrap()
+        {
+            selectedTrap = null;
+
+            //if the square is off the board, done
+            if (highlightedSquare.X < 0 || highlightedSquare.X >= width
+                || highlightedSquare.Y < 0 || highlightedSquare.Y >= height)
+            {
+                return;
+            }
+
             //if the square is the start, done
             foreach (Point p in spawnPositions)
             {
@@ -662,6 +745,109 @@ namespace Frog_Defense
                     return;
             }
 
+
+            //aside from that, how and where we place traps depends greatly on what kind of trap we're doing!
+            switch (SelectedTrapType)
+            {
+                //if there's no trap, just be done
+                case TrapType.NoType:
+                    selectedTrap = null;
+                    return;
+
+                //all "on the ground"-type traps are handled similarly
+                case TrapType.SpikeTrap:
+                    makeGroundTrap();
+                    break;
+
+                //as are "on the wall"-type traps
+                case TrapType.GunTrap:
+                    makeWallTrap();
+                    break;
+            }
+        }
+
+        private void makeWallTrap()
+        {
+            //check if it's passable...
+            if (floorType[highlightedSquare.X, highlightedSquare.Y] != SquareType.FLOOR)
+                return;
+
+            //...and unoccupied
+            if (hasWallTrap[favoredDirection][highlightedSquare.X, highlightedSquare.Y])
+                return;
+
+            //now, account for centering the trap ON THE WALL,
+            //which depends on the favoredDirection
+            int xOffset, yOffset;
+
+
+            //to save on switch blocks (they're not cheap!) we also
+            //check here to see if there is a wall to mount the trap on!
+            switch (favoredDirection)
+            {
+                case Direction.RIGHT:
+                    if (highlightedSquare.X <= 0 || floorType[highlightedSquare.X - 1, highlightedSquare.Y] != SquareType.WALL)
+                        return;
+
+                    xOffset = 0;
+                    yOffset = squareHeight / 2;
+                    break;
+
+                case Direction.LEFT:
+                    if (highlightedSquare.X + 1 >= width || floorType[highlightedSquare.X + 1, highlightedSquare.Y] != SquareType.WALL)
+                        return;
+
+                    xOffset = squareWidth;
+                    yOffset = squareHeight / 2;
+                    break;
+
+                case Direction.DOWN:
+                    if (highlightedSquare.Y <= 0 || floorType[highlightedSquare.X, highlightedSquare.Y - 1] != SquareType.WALL)
+                        return;
+
+                    xOffset = squareWidth / 2;
+                    yOffset = 0;
+                    break;
+
+                case Direction.UP:
+                    if (highlightedSquare.Y + 1 >= height || floorType[highlightedSquare.X, highlightedSquare.Y + 1] != SquareType.WALL)
+                        return;
+
+                    xOffset = squareWidth / 2;
+                    yOffset = squareHeight;
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
+
+            switch (SelectedTrapType)
+            {
+                case TrapType.GunTrap:
+
+                    selectedTrap = new GunTrap(
+                        this,
+                        env,
+                        highlightedSquare.X * squareWidth + xOffset,
+                        highlightedSquare.Y * squareHeight + yOffset,
+                        favoredDirection
+                        );
+
+                    return;
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// This makes a ground trap at the specified location, assuming that
+        /// the selected trap is a ground trap (otherwise throws an exception).
+        /// 
+        /// Assumes selectedTrap == null at the start
+        /// </summary>
+        private void makeGroundTrap()
+        {
             //check if it's passable...
             if (floorType[highlightedSquare.X, highlightedSquare.Y] != SquareType.FLOOR)
                 return;
@@ -670,13 +856,10 @@ namespace Frog_Defense
             if (hasFloorTrap[highlightedSquare.X, highlightedSquare.Y])
                 return;
 
-            //this is the trap we're going to add
-            Trap t = null;
-
             switch(SelectedTrapType)
             {
                 case TrapType.SpikeTrap:
-                    t = new SpikeTrap(
+                    selectedTrap = new SpikeTrap(
                         this,
                         env,
                         highlightedSquare.X * squareWidth + squareWidth / 2,
@@ -686,12 +869,6 @@ namespace Frog_Defense
                     
                 default:
                     throw new NotImplementedException();
-            }
-
-            if (env.Player.AttemptSpend(t.Cost))
-            {
-                hasFloorTrap[highlightedSquare.X, highlightedSquare.Y] = true;
-                env.addTrap(t);
             }
         }
     }

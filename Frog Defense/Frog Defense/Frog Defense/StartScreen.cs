@@ -41,6 +41,14 @@ namespace Frog_Defense
         {
             base.Update(gameTime);
 
+            updateMouse();
+        }
+
+        private void updateMouse()
+        {
+            if (!TDGame.MainGame.IsActive)
+                return;
+
             MouseState ms = Mouse.GetState();
 
             menu.MouseOver(ms.X, ms.Y);

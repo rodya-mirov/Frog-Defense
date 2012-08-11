@@ -52,7 +52,7 @@ namespace Frog_Defense
             this.health = STARTING_HEALTH;
 
             previewX = 0;
-            previewY = env.MediumFont.MeasureString("\n\n\n").Y + mainYBuffer;
+            previewY = env.MediumFont.MeasureString("A\nA").Y + mainYBuffer; //the height of a 2-line string and a buffer
 
             setupFixedTraps();
         }
@@ -65,10 +65,14 @@ namespace Frog_Defense
 
         private void setupFixedTraps()
         {
+            Random ran = new Random();
+
             fixedTraps = new List<Trap>();
 
-            for (int i = 0; i < 50; i++)
-                fixedTraps.Add(new SpikeTrap(arena, env, -1, -1));
+            fixedTraps.Add(new SpikeTrap(arena, env, -1, -1));
+            fixedTraps.Add(new GunTrap(arena, env, -1, -1, Direction.UP));
+
+            setSelectedTrap(0);
         }
 
         /// <summary>
@@ -150,9 +154,14 @@ namespace Frog_Defense
 
             if (0 <= index && index < fixedTraps.Count)
             {
-                selectedPreviewIndex = index;
-                arena.SelectedTrapType = fixedTraps[index].trapType;
+                setSelectedTrap(index);
             }
+        }
+
+        private void setSelectedTrap(int index)
+        {
+            selectedPreviewIndex = index;
+            arena.SelectedTrapType = fixedTraps[index].trapType;
 
             fixPreviewString();
         }
@@ -190,7 +199,7 @@ namespace Frog_Defense
 
         private int previewsPerRow = 10;
 
-        private float mainYBuffer = 10;
+        private float mainYBuffer = 20;
 
         private float xBuffer = 2;
         private float yBuffer = 2;
@@ -238,7 +247,7 @@ namespace Frog_Defense
 
             xPos = previewX + xOffset;
 
-            yPos += mainYBuffer;
+            yPos += Trap.PreviewHeight + yBuffer + mainYBuffer;
 
             batch.DrawString(env.SmallFont, previewString, new Vector2(xPos, yPos), Color.White);
         }
