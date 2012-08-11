@@ -57,6 +57,11 @@ namespace Frog_Defense.Traps
             get { throw new NotImplementedException(); }
         }
 
+        public override TrapType trapType
+        {
+            get { return TrapType.GunTrap; }
+        }
+
         public override string Name
         {
             get { return "Pellet Gun"; }

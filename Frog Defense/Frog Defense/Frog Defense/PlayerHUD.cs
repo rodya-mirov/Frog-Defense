@@ -149,7 +149,10 @@ namespace Frog_Defense
             int index = relevantX + relevantY * previewsPerRow;
 
             if (0 <= index && index < fixedTraps.Count)
+            {
                 selectedPreviewIndex = index;
+                arena.SelectedTrapType = fixedTraps[index].trapType;
+            }
 
             fixPreviewString();
         }

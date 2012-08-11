@@ -19,6 +19,10 @@ namespace Frog_Defense
     class GameUpdater : DrawableGameComponent
     {
         private PlayerHUD player;
+        public PlayerHUD Player
+        {
+            get { return player; }
+        }
 
         private Arena arena;
         private Queue<Enemy> enemies;
@@ -180,7 +184,7 @@ namespace Frog_Defense
 
             if (mouseWasDown && !mouseIsDown)
             {
-                arena.GetClicked(player);
+                arena.GetClicked();
                 player.GetClicked();
             }
         }

@@ -34,6 +34,11 @@ namespace Frog_Defense.Traps
             get { return previewTexture; }
         }
 
+        public override TrapType trapType
+        {
+            get { return TrapType.SpikeTrap; }
+        }
+
         public override string Name
         {
             get { return "Spike Trap"; }

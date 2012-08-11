@@ -8,6 +8,8 @@ using Frog_Defense.Enemies;
 
 namespace Frog_Defense.Traps
 {
+    enum TrapType { NoType, SpikeTrap, GunTrap };
+
     abstract class Trap
     {
         protected Arena arena;
@@ -23,6 +25,8 @@ namespace Frog_Defense.Traps
         {
             return Name + "\nCost: $" + Cost + "\n" + Description;
         }
+
+        public abstract TrapType trapType { get; }
 
         public abstract String Name { get; }
         public abstract int Cost { get; }

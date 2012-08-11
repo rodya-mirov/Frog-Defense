@@ -20,7 +20,7 @@ namespace Frog_Defense
         private GameUpdater env;
 
         private SquareType[,] floorType; //the passability grid.  Edges should never be passable.
-        private bool[,] hasTrap; //a grid keeping track of whether there is a trap on this spot.
+        private bool[,] hasFloorTrap; //a grid keeping track of whether there is a trap on this spot.
         private int width; //the width of the grid
         private int height; //the height of the grid
 
@@ -33,6 +33,13 @@ namespace Frog_Defense
 
         //enemy goal points.
         private Queue<Point> goalPositions;
+
+        private TrapType selectedTrapType;
+        public TrapType SelectedTrapType
+        {
+            get { return selectedTrapType; }
+            set { selectedTrapType = value; }
+        }
 
         //Graphically, the size (in pixels) of grid squares.
         private const int squareWidth = 40;
@@ -131,6 +138,7 @@ namespace Frog_Defense
         public Arena(GameUpdater env)
         {
             this.env = env;
+            this.selectedTrapType = TrapType.NoType;
 
             setupDefaultArena();
         }
@@ -140,7 +148,6 @@ namespace Frog_Defense
 
         public void Update()
         {
-
             if (framesSinceSpawn < framesBetweenSpawns)
             {
                 framesSinceSpawn++;
@@ -285,12 +292,12 @@ namespace Frog_Defense
             updatePathing();
 
             //no traps
-            hasTrap = new bool[width, height];
+            hasFloorTrap = new bool[width, height];
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    hasTrap[x, y] = false;
+                    hasFloorTrap[x, y] = false;
                 }
             }
         }
@@ -598,20 +605,49 @@ namespace Frog_Defense
         }
 
         /// <summary>
-        /// Creates a SpikeTrap at the current mouse position and tells the
-        /// GameUpdater to add it to the Queue.  This only occurs if the position
-        /// is valid and unoccupied.  Also marks the space as occupied afterward.
+        /// Processes clicks.  More specifically, it places a trap (of the
+        /// selected type) on the moused-over square, assuming that position
+        /// is valid for the trap and doesn't already have a trap there.
         /// 
         /// Valid positions are passable positions without traps on them, and
         /// which do not have the goal or start square on them.
         /// </summary>
-        /// <returns></returns>
-        public void GetClicked(PlayerHUD player)
+        public void GetClicked()
         {
             //first, if the mouse is off-screen, be done with it
             if (highlightedSquare.X < 0 || highlightedSquare.X >= width || highlightedSquare.Y < 0 || highlightedSquare.Y >= height)
                 return;
 
+            //now, how and where we place traps depends greatly on what kind of trap we're doing!
+            switch (SelectedTrapType)
+            {
+                    //if there's no trap, just be done
+                case TrapType.NoType:
+                    return;
+
+                    //all "on the ground"-type traps are handled similarly
+                case TrapType.SpikeTrap:
+                    placeGroundTrap();
+                    break;
+
+                    //as are "on the wall"-type traps
+                case TrapType.GunTrap:
+                    placeWallTrap();
+                    break;
+            }
+        }
+
+        private void placeWallTrap()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// This places a ground trap at the specified location, assuming that
+        /// the selected trap is a ground trap (otherwise throws an exception)
+        /// </summary>
+        private void placeGroundTrap()
+        {
             //if the square is the start, done
             foreach (Point p in spawnPositions)
             {
@@ -631,19 +667,30 @@ namespace Frog_Defense
                 return;
 
             //...and unoccupied
-            if (hasTrap[highlightedSquare.X, highlightedSquare.Y])
+            if (hasFloorTrap[highlightedSquare.X, highlightedSquare.Y])
                 return;
 
-            SpikeTrap t = new SpikeTrap(
-                this,
-                env,
-                highlightedSquare.X * squareWidth + squareWidth / 2,
-                highlightedSquare.Y * squareHeight + squareHeight / 2
-                );
+            //this is the trap we're going to add
+            Trap t = null;
 
-            if (player.AttemptSpend(t.Cost))
+            switch(SelectedTrapType)
             {
-                hasTrap[highlightedSquare.X, highlightedSquare.Y] = true;
+                case TrapType.SpikeTrap:
+                    t = new SpikeTrap(
+                        this,
+                        env,
+                        highlightedSquare.X * squareWidth + squareWidth / 2,
+                        highlightedSquare.Y * squareHeight + squareHeight / 2
+                        );
+                    break;
+                    
+                default:
+                    throw new NotImplementedException();
+            }
+
+            if (env.Player.AttemptSpend(t.Cost))
+            {
+                hasFloorTrap[highlightedSquare.X, highlightedSquare.Y] = true;
                 env.addTrap(t);
             }
         }
