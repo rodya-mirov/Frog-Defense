@@ -135,9 +135,21 @@ namespace Frog_Defense
             setupDefaultArena();
         }
 
+        private int framesBetweenSpawns = 45;
+        private int framesSinceSpawn = 0;
+
         public void Update()
         {
-            //Does nothing at the moment.
+
+            if (framesSinceSpawn < framesBetweenSpawns)
+            {
+                framesSinceSpawn++;
+            }
+            else
+            {
+                env.addEnemy(makeEnemy());
+                framesSinceSpawn = 0;
+            }
         }
 
         /// <summary>
@@ -199,11 +211,6 @@ namespace Frog_Defense
             //return the new point in pixel coordinates, pointing
             //to the center of the next goal square
             return new Point(goalArr.X * squareWidth + squareWidth / 2, goalArr.Y * squareHeight + squareHeight / 2);
-        }
-
-        public List<Trap> makeTraps()
-        {
-            return new List<Trap>();
         }
 
         /// <summary>
@@ -591,41 +598,41 @@ namespace Frog_Defense
         }
 
         /// <summary>
-        /// Creates a SpikeTrap at the current mouse position and returns it,
-        /// if the position is valid and unoccupied.  Also marks the space as
-        /// occupied afterward, so don't lose the Trap :D
+        /// Creates a SpikeTrap at the current mouse position and tells the
+        /// GameUpdater to add it to the Queue.  This only occurs if the position
+        /// is valid and unoccupied.  Also marks the space as occupied afterward.
         /// 
         /// Valid positions are passable positions without traps on them, and
         /// which do not have the goal or start square on them.
         /// </summary>
         /// <returns></returns>
-        public Trap addTrapAtMousePosition(Player player)
+        public void GetClicked(PlayerHUD player)
         {
             //first, if the mouse is off-screen, be done with it
             if (highlightedSquare.X < 0 || highlightedSquare.X >= width || highlightedSquare.Y < 0 || highlightedSquare.Y >= height)
-                return null;
+                return;
 
             //if the square is the start, done
             foreach (Point p in spawnPositions)
             {
                 if (highlightedSquare.X == p.X && highlightedSquare.Y == p.Y)
-                    return null;
+                    return;
             }
 
             //if the square is the goal, done
             foreach (Point p in goalPositions)
             {
                 if (highlightedSquare.X == p.X && highlightedSquare.Y == p.Y)
-                    return null;
+                    return;
             }
 
             //check if it's passable...
             if (floorType[highlightedSquare.X, highlightedSquare.Y] != SquareType.FLOOR)
-                return null;
+                return;
 
             //...and unoccupied
             if (hasTrap[highlightedSquare.X, highlightedSquare.Y])
-                return null;
+                return;
 
             SpikeTrap t = new SpikeTrap(
                 this,
@@ -637,11 +644,7 @@ namespace Frog_Defense
             if (player.AttemptSpend(t.Cost))
             {
                 hasTrap[highlightedSquare.X, highlightedSquare.Y] = true;
-                return t;
-            }
-            else
-            {
-                return null;
+                env.addTrap(t);
             }
         }
     }

@@ -13,8 +13,9 @@ namespace Frog_Defense.Menus
 
         private String mainText;
 
-        private const String fontPath = "MainFont";
-        private static SpriteFont font;
+        private static SpriteFont smallFont;
+        private static SpriteFont mediumFont;
+        private static SpriteFont bigFont;
 
         private Vector2 drawPosition = new Vector2(100, 100);
 
@@ -47,8 +48,12 @@ namespace Frog_Defense.Menus
 
         public static void LoadContent()
         {
-            if (font == null)
-                font = TDGame.MainGame.Content.Load<SpriteFont>(fontPath);
+            if (smallFont == null)
+                smallFont = TDGame.MainGame.Content.Load<SpriteFont>("SmallFont");
+            if (mediumFont == null)
+                mediumFont = TDGame.MainGame.Content.Load<SpriteFont>("MediumFont");
+            if (bigFont == null)
+                bigFont = TDGame.MainGame.Content.Load<SpriteFont>("BigFont");
         }
 
         public static Menu MakeStartMenu()
@@ -58,8 +63,8 @@ namespace Frog_Defense.Menus
 
             output.items = new List<MenuItem>();
 
-            output.addItem(new NewGameButton("New Game", font));
-            output.addItem(new ExitButton("Exit Game", font));
+            output.addItem(new NewGameButton("New Game", mediumFont));
+            output.addItem(new ExitButton("Exit Game", mediumFont));
 
             return output;
         }
@@ -74,7 +79,7 @@ namespace Frog_Defense.Menus
 
             if (items.Count == 0)
             {
-                yPos = drawPosition.Y + font.MeasureString(mainText).Y + yBuffer;
+                yPos = drawPosition.Y + bigFont.MeasureString(mainText).Y + yBuffer;
             }
             else
             {
@@ -89,7 +94,7 @@ namespace Frog_Defense.Menus
 
         public void Draw(GameTime gameTime, SpriteBatch batch)
         {
-            batch.DrawString(font, mainText, drawPosition, Color.White);
+            batch.DrawString(bigFont, mainText, drawPosition, Color.White);
 
             foreach (MenuItem item in items)
             {

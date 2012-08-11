@@ -14,7 +14,11 @@ Content\Images\Traps\GunTrapRight.xnb
 Content\Images\Traps\GunTrapUp.xnb
 Content\Images\Traps\Bullet.xnb
 Content\Images\Squares\HighlightedSquare.xnb
-Content\MainFont.xnb
 Content\Images\Healthbars\EmptyBar.xnb
 Content\Images\Healthbars\FullBar.xnb
 Content\Images\Enemies\BigEnemy.xnb
+Content\Images\TrapPreviews\HighlightedBorder.xnb
+Content\Images\TrapPreviews\SpikesPreview.xnb
+Content\MediumFont.xnb
+Content\BigFont.xnb
+Content\SmallFont.xnb

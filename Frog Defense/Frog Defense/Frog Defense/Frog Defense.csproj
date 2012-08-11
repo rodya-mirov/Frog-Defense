@@ -116,7 +116,7 @@
     <Compile Include="Menus\Menu.cs" />
     <Compile Include="Menus\MenuItem.cs" />
     <Compile Include="Menus\NewGameButton.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="PlayerHUD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="StartScreen.cs" />

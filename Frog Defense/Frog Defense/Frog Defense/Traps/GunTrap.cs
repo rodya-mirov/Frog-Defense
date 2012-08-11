@@ -52,6 +52,21 @@ namespace Frog_Defense.Traps
         private const String leftGunPath = "Images/Traps/GunTrapLeft";
         private static Texture2D leftGunTexture;
 
+        public override Texture2D PreviewTexture
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public override string Name
+        {
+            get { return "Pellet Gun"; }
+        }
+
+        public override string Description
+        {
+            get { return "Fires bullets in a fixed direction."; }
+        }
+
         //standard image stuff: Bullet
         private const int bulletImageWidth = 2;
         private const int bulletImageHeight = 2;

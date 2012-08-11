@@ -20,10 +20,29 @@ namespace Frog_Defense.Traps
         private const float damagePerTick = 1.5f;
 
         //Typical graphics stuff
-        private const int imageWidth = 40;
-        private const int imageHeight = 40;
+        private const int mainImageWidth = 40;
+        private const int mainImageHeight = 40;
+
         private const String imagePath = "Images/Traps/Spikes";
         private static Texture2D imageTexture;
+
+        private const String previewImagePath = "Images/TrapPreviews/SpikesPreview";
+        private static Texture2D previewTexture;
+
+        public override Texture2D PreviewTexture
+        {
+            get { return previewTexture; }
+        }
+
+        public override string Name
+        {
+            get { return "Spike Trap"; }
+        }
+
+        public override string Description
+        {
+            get { return "Deals continuous damage to all\nenemies standing on it."; }
+        }
 
         /// <summary>
         /// The cost, in "dollars," of placing a single SpikeTrap
@@ -44,6 +63,9 @@ namespace Frog_Defense.Traps
         {
             if (imageTexture == null)
                 imageTexture = TDGame.MainGame.Content.Load<Texture2D>(imagePath);
+
+            if (previewTexture == null)
+                previewTexture = TDGame.MainGame.Content.Load<Texture2D>(previewImagePath);
         }
 
         /// <summary>
@@ -53,11 +75,11 @@ namespace Frog_Defense.Traps
         /// <param name="enemies">The collection of enemies to possibly hurt.</param>
         public override void Update(IEnumerable<Enemy> enemies)
         {
-            int minX = xPos - imageWidth / 2;
-            int maxX = xPos + imageWidth / 2;
+            int minX = xPos - mainImageWidth / 2;
+            int maxX = xPos + mainImageWidth / 2;
 
-            int minY = yPos - imageHeight / 2;
-            int maxY = yPos + imageHeight / 2;
+            int minY = yPos - mainImageHeight / 2;
+            int maxY = yPos + mainImageHeight / 2;
 
             foreach (Enemy e in enemies)
             {
@@ -71,8 +93,8 @@ namespace Frog_Defense.Traps
             batch.Draw(
                 imageTexture,
                 new Vector2(
-                    xPos + xOffset - imageWidth / 2,
-                    yPos + yOffset - imageHeight / 2
+                    xPos + xOffset - mainImageWidth / 2,
+                    yPos + yOffset - mainImageHeight / 2
                     ),
                 Color.White
                 );

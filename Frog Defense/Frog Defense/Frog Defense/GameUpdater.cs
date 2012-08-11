@@ -18,25 +18,40 @@ namespace Frog_Defense
     /// </summary>
     class GameUpdater : DrawableGameComponent
     {
-        private Player player;
+        private PlayerHUD player;
 
         private Arena arena;
         private Queue<Enemy> enemies;
+        private Queue<Enemy> enemiesToBeAdded;
+
         private Queue<Trap> traps;
+        private Queue<Trap> trapsToBeAdded;
 
         private SpriteBatch batch;
 
-        private SpriteFont font;
-        public SpriteFont Font
+        private SpriteFont smallFont;
+        public SpriteFont SmallFont
         {
-            get { return font; }
+            get { return smallFont; }
+        }
+
+        private SpriteFont mediumFont;
+        public SpriteFont MediumFont
+        {
+            get { return mediumFont; }
+        }
+
+        private SpriteFont bigFont;
+        public SpriteFont BigFont
+        {
+            get { return bigFont; }
         }
 
         private int ArenaOffsetX
         {
             get
             {
-                return ArenaOffsetY;
+                return 30;
             }
         }
         private int ArenaOffsetY
@@ -71,7 +86,6 @@ namespace Frog_Defense
             base.Initialize();
 
             batch = new SpriteBatch(TDGame.MainGame.GraphicsDevice);
-            font = TDGame.MainGame.Content.Load<SpriteFont>("MainFont");
 
             resetGame();
         }
@@ -90,23 +104,26 @@ namespace Frog_Defense
 
         private void resetGame()
         {
-            player = new Player(this, 500);
             arena = new Arena(this);
+            player = new PlayerHUD(this, arena, 500);
 
             enemies = new Queue<Enemy>();
-            traps = new Queue<Trap>();
+            enemiesToBeAdded = new Queue<Enemy>();
 
-            foreach (Trap trap in arena.makeTraps())
-            {
-                traps.Enqueue(trap);
-            }
+            traps = new Queue<Trap>();
+            trapsToBeAdded = new Queue<Trap>();
         }
 
         protected override void LoadContent()
         {
             base.LoadContent();
 
+            smallFont = TDGame.MainGame.Content.Load<SpriteFont>("SmallFont");
+            mediumFont = TDGame.MainGame.Content.Load<SpriteFont>("MediumFont");
+            bigFont = TDGame.MainGame.Content.Load<SpriteFont>("BigFont");
+
             Arena.LoadContent();
+            PlayerHUD.LoadContent();
 
             Enemy.LoadContent();
             BasicEnemy.LoadContent();
@@ -116,12 +133,19 @@ namespace Frog_Defense
             GunTrap.LoadContent();
         }
 
-        private int framesBetweenSpawns = 45;
-        private int framesSinceSpawn = 0;
-
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            while (trapsToBeAdded.Count > 0)
+            {
+                traps.Enqueue(trapsToBeAdded.Dequeue());
+            }
+
+            while (enemiesToBeAdded.Count > 0)
+            {
+                enemies.Enqueue(enemiesToBeAdded.Dequeue());
+            }
 
             updateMouse();
 
@@ -130,20 +154,11 @@ namespace Frog_Defense
             updateTraps();
 
             arena.Update();
-
-            if (framesSinceSpawn < framesBetweenSpawns)
-                framesSinceSpawn++;
-
-            else if (enemies.Count < 20)
-            {
-                enemies.Enqueue(arena.makeEnemy());
-                framesSinceSpawn = 0;
-            }
         }
 
         private int mouseX, mouseY;
-        private bool mouseClicked = false;
-        private bool mouseWasClicked = false;
+        private bool mouseIsDown = false;
+        private bool mouseWasDown = false;
 
         /// <summary>
         /// Finds the mouse position (in pixels) and tells the arena about it.
@@ -155,17 +170,29 @@ namespace Frog_Defense
             mouseX = ms.X;
             mouseY = ms.Y;
 
+            //first, tell all the components where the mouse is (in relative coordinates)
             arena.updateMousePosition(mouseX - ArenaOffsetX, mouseY - ArenaOffsetY);
+            player.MouseOver(mouseX - PlayerOffsetX, mouseY - PlayerOffsetY);
 
-            mouseWasClicked = mouseClicked;
-            mouseClicked = (ms.LeftButton == ButtonState.Pressed);
+            //second, deal with all the clicking!
+            mouseWasDown = mouseIsDown;
+            mouseIsDown = (ms.LeftButton == ButtonState.Pressed);
 
-            if (mouseWasClicked && !mouseClicked)
+            if (mouseWasDown && !mouseIsDown)
             {
-                Trap t = arena.addTrapAtMousePosition(player);
-                if (t != null)
-                    traps.Enqueue(t);
+                arena.GetClicked(player);
+                player.GetClicked();
             }
+        }
+
+        public void addTrap(Trap t)
+        {
+            traps.Enqueue(t);
+        }
+
+        public void addEnemy(Enemy e)
+        {
+            enemiesToBeAdded.Enqueue(e);
         }
 
         /// <summary>
