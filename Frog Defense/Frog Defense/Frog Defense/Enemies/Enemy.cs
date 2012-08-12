@@ -53,6 +53,13 @@ namespace Frog_Defense.Enemies
         protected const String healthBarEmptyPath = "Images/Healthbars/EmptyBar";
         protected static Texture2D healthBarEmptyTexture;
 
+        //for the poison drop
+        protected const int poisonDropWidth = 8;
+        protected const int poisonDropHeight = 8;
+
+        protected const String poisonDropPath = "Images/Enemies/PoisonDrop";
+        protected static Texture2D poisonDropTexture;
+
         //stuff for getting poisoned
         protected bool isPoisoned;
         protected PoisonCounter poisonCounter;
@@ -72,6 +79,9 @@ namespace Frog_Defense.Enemies
 
             if (healthBarEmptyTexture == null)
                 healthBarEmptyTexture = TDGame.MainGame.Content.Load<Texture2D>(healthBarEmptyPath);
+
+            if (poisonDropTexture == null)
+                poisonDropTexture = TDGame.MainGame.Content.Load<Texture2D>(poisonDropPath);
         }
 
         /// <summary>
@@ -142,6 +152,21 @@ namespace Frog_Defense.Enemies
         /// <param name="xOffset"></param>
         /// <param name="yOffset"></param>
         public abstract void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused);
+
+        /// <summary>
+        /// Draws a poison drop in the specified location
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="batch"></param>
+        /// <param name="leftX"></param>
+        /// <param name="topY"></param>
+        /// <param name="paused"></param>
+        protected virtual void DrawPoison(GameTime gameTime, SpriteBatch batch, int leftX, int topY, bool paused)
+        {
+            Vector2 drawPosition = new Vector2(leftX, topY);
+
+            batch.Draw(poisonDropTexture, drawPosition, Color.White);
+        }
 
         /// <summary>
         /// This draws the health bar of the enemy in question.  This can be called separately and

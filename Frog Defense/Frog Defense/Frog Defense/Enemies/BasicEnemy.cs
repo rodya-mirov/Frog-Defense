@@ -223,6 +223,9 @@ namespace Frog_Defense.Enemies
                     ),
                 tint
                 );
+
+            if (isPoisoned)
+                DrawPoison(gameTime, batch, xPos + xOffset - (imageWidth*4)/7, yPos + yOffset - imageHeight / 2, paused);
         }
     }
 }
