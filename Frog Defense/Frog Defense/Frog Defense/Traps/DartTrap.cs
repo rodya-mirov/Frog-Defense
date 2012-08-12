@@ -29,7 +29,7 @@ namespace Frog_Defense.Traps
 
         public override int Cost
         {
-            get { return 200; }
+            get { return 150; }
         }
 
         protected override float ProjectileDamage

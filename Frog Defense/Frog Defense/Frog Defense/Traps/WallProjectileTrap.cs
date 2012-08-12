@@ -16,11 +16,7 @@ namespace Frog_Defense.Traps
         //contains subobjects which are bullets
         protected Queue<Point> projectilePositions;
 
-        //parameters for the value of the gun
-        protected virtual int maxBullets
-        {
-            get { return 2000; }
-        }
+        //various parameters for the gun
         protected virtual int bulletSpeed
         {
             get { return 2; }
@@ -175,55 +171,15 @@ namespace Frog_Defense.Traps
                 return;
             }
 
-            //now check if there is too much ordinance already in motion
-            if (projectilePositions.Count >= maxBullets)
-            {
-                return;
-            }
-
             //all clear, so check if we have a target
             bool found = false;
 
-            int xmin = position.X;
-            int xmax = position.X + imageWidth;
-            int ymin = position.Y;
-            int ymax = position.Y + imageHeight;
-
             foreach (Enemy e in enemies)
             {
-                switch (facing)
+                if (e.touchesRay(position.X, position.Y, facing))
                 {
-                    case Direction.LEFT:
-                        if (e.YCenter >= ymin && e.YCenter <= ymax && e.XCenter <= xmax)
-                        {
-                            found = true;
-                        }
-
-                        break;
-
-                    case Direction.RIGHT:
-                        if (e.YCenter >= ymin && e.YCenter <= ymax && e.XCenter >= xmin)
-                        {
-                            found = true;
-                        }
-
-                        break;
-
-                    case Direction.UP:
-                        if (e.XCenter >= xmin && e.XCenter <= xmax && e.YCenter <= ymin)
-                        {
-                            found = true;
-                        }
-
-                        break;
-
-                    case Direction.DOWN:
-                        if (e.XCenter >= xmin && e.XCenter <= xmax && e.YCenter >= ymax)
-                        {
-                            found = true;
-                        }
-
-                        break;
+                    found = true;
+                    break;
                 }
             }
 

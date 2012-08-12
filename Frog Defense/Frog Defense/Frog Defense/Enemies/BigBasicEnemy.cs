@@ -20,10 +20,16 @@ namespace Frog_Defense.Enemies
 
         private const String imagePath = "Images/Enemies/BigEnemy/Image";
         private static Texture2D imageTexture;
-
         protected override Texture2D ImageTexture
         {
             get { return imageTexture; }
+        }
+
+        private const String previewPath = "Images/Enemies/BigEnemy/Preview";
+        private static Texture2D previewTexture;
+        public override Texture2D PreviewTexture
+        {
+            get { return previewTexture; }
         }
 
         public BigBasicEnemy(ArenaMap arena, ArenaManager env, int startX, int startY)
@@ -35,6 +41,9 @@ namespace Frog_Defense.Enemies
         {
             if (imageTexture == null)
                 imageTexture = TDGame.MainGame.Content.Load<Texture2D>(imagePath);
+
+            if (previewTexture == null)
+                previewTexture = TDGame.MainGame.Content.Load<Texture2D>(previewPath);
         }
     }
 }

@@ -93,14 +93,15 @@ namespace Frog_Defense
 
         public void Update(GameTime gameTime, bool paused)
         {
+            //first, add in all the queued up new friends :)
+            foreach (Trap t in trapsToBeAdded)
+                traps.Enqueue(t);
+
+            trapsToBeAdded.Clear();
+
+            //most things won't happen during paused time
             if (!paused)
             {
-                //first, add in all the queued up new friends :)
-                foreach (Trap t in trapsToBeAdded)
-                    traps.Enqueue(t);
-
-                trapsToBeAdded.Clear();
-
                 foreach (Enemy e in enemiesToBeAdded)
                     enemies.Enqueue(e);
 

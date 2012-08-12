@@ -224,6 +224,16 @@ namespace Frog_Defense.Enemies
         }
 
         public abstract void setPosition(int xCenter, int yCenter);
+
+        /// <summary>
+        /// Determines whether a ray from the specified point, traveling
+        /// along dir, would touch this enemy
+        /// </summary>
+        /// <param name="xOrigin"></param>
+        /// <param name="yOrigin"></param>
+        /// <param name="dir"></param>
+        /// <returns></returns>
+        public abstract bool touchesRay(int xOrigin, int yOrigin, Direction dir);
     }
 
     struct PoisonCounter

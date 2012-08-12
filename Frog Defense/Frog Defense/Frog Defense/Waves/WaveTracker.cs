@@ -49,16 +49,26 @@ namespace Frog_Defense.Waves
 
         private void loadEnemies()
         {
-            EnemyTracker et;
+            Enemy e;
+
+            int lag = 180;
 
             for (int i = 0; i < 10; i++)
             {
-                et = new EnemyTracker(
-                    new BasicEnemy(arena, env, -1, -1),
-                    i * 60
-                    );
+                e = new BasicEnemy(arena, env, -1, -1);
+                enemies.Enqueue(new EnemyTracker(e, lag));
 
-                enemies.Enqueue(et);
+                lag += 45;
+            }
+
+            lag += 180;
+            
+            for (int i = 0; i < 10; i++)
+            {
+                e = new BigBasicEnemy(arena, env, -1, -1);
+                enemies.Enqueue(new EnemyTracker(e, lag));
+
+                lag += 60;
             }
         }
 

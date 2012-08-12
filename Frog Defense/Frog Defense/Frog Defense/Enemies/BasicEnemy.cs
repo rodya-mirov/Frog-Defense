@@ -114,6 +114,31 @@ namespace Frog_Defense.Enemies
                 && yCenter - imageHeight / 2 <= p.Y && p.Y <= yCenter + imageHeight / 2;
         }
 
+        public override bool touchesRay(int xOrigin, int yOrigin, Direction dir)
+        {
+            switch (dir)
+            {
+                case Direction.DOWN:
+                    return xCenter - imageWidth / 2 <= xOrigin && xOrigin <= xCenter + imageWidth / 2
+                        && yOrigin <= yCenter + imageHeight / 2;
+
+                case Direction.UP:
+                    return xCenter - imageWidth / 2 <= xOrigin && xOrigin <= xCenter + imageWidth / 2
+                        && yOrigin >= yCenter - imageHeight / 2;
+
+                case Direction.RIGHT:
+                    return yCenter - imageHeight / 2 <= yOrigin && yOrigin <= yCenter + imageHeight / 2
+                        && xOrigin <= xCenter + imageHeight / 2;
+
+                case Direction.LEFT:
+                    return yCenter - imageHeight / 2 <= yOrigin && yOrigin <= yCenter + imageHeight / 2
+                        && xOrigin >= xCenter - imageHeight / 2;
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         /// <summary>
         /// Reduces health by the specified amount and flashes red.  Note there
         /// is no invincibility frame!
