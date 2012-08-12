@@ -41,8 +41,8 @@ namespace Frog_Defense.Enemies
         protected abstract float MAX_HEALTH { get; }
         protected abstract float Health { get; set; }
 
-        protected Arena arena;
-        protected GameUpdater env;
+        protected ArenaMap arena;
+        protected ArenaManager env;
 
         //preview images for WaveTracker
         public const int PreviewImageWidth = 20;
@@ -70,7 +70,7 @@ namespace Frog_Defense.Enemies
         protected bool isPoisoned;
         protected PoisonCounter poisonCounter;
 
-        protected Enemy(GameUpdater env, Arena arena)
+        protected Enemy(ArenaManager env, ArenaMap arena)
         {
             this.env = env;
             this.arena = arena;
@@ -79,6 +79,14 @@ namespace Frog_Defense.Enemies
         }
 
         public static void LoadContent()
+        {
+            loadEffects();
+
+            BasicEnemy.LoadContent();
+            BigBasicEnemy.LoadContent();
+        }
+
+        private static void loadEffects()
         {
             if (healthBarFullTexture == null)
                 healthBarFullTexture = TDGame.MainGame.Content.Load<Texture2D>(healthBarFullPath);
@@ -214,6 +222,8 @@ namespace Frog_Defense.Enemies
 
             batch.Draw(healthBarFullTexture, healthRect, Color.White);
         }
+
+        public abstract void setPosition(int xCenter, int yCenter);
     }
 
     struct PoisonCounter

@@ -11,13 +11,12 @@ namespace Frog_Defense
 {
     enum SquareType { FLOOR, WALL, VOID };
 
-    class Arena
+    /// <summary>
+    /// This is just a map for the Arena; it should have as little unrelated functionality as possible!
+    /// </summary>
+    class ArenaMap
     {
-        //TEMPORARY WAVE QUEUEING SYSTEM- REMOVE AT EARLIEST CONVENIENCE
-        private int spawnedEnemies = 0;
-        private int startSpawningBigEnemies = 10;
-
-        private GameUpdater env;
+        private ArenaManager manager;
 
         private SquareType[,] floorType; //the passability grid.  Edges should never be passable.
         private bool[,] hasFloorTrap; //a grid keeping track of whether there is a trap on this spot.
@@ -35,13 +34,6 @@ namespace Frog_Defense
 
         //enemy goal points.
         private Queue<Point> goalPositions;
-
-        private TrapType selectedTrapType;
-        public TrapType SelectedTrapType
-        {
-            get { return selectedTrapType; }
-            set { selectedTrapType = value; }
-        }
 
         private Trap selectedTrap;
 
@@ -146,54 +138,11 @@ namespace Frog_Defense
                 leftArrowTexture = TDGame.MainGame.Content.Load<Texture2D>(leftArrowPath);
         }
 
-        public Arena(GameUpdater env)
+        public ArenaMap(ArenaManager env)
         {
-            this.env = env;
-            this.selectedTrapType = TrapType.NoType;
+            this.manager = env;
 
             setupDefaultArena();
-        }
-
-        private int framesBetweenSpawns = 90;
-        private int framesSinceSpawn = 0;
-
-        public void Update()
-        {
-            if (framesSinceSpawn < framesBetweenSpawns)
-            {
-                framesSinceSpawn++;
-            }
-            else
-            {
-                env.addEnemy(makeEnemy());
-                framesSinceSpawn = 0;
-            }
-        }
-
-        /// <summary>
-        /// Creates a new enemy, located at the center of the spawn point.
-        /// Returns that enemy and does not handle it in any additional way.
-        /// </summary>
-        /// <returns>The new Enemy</returns>
-        public Enemy makeEnemy()
-        {
-            //cycle through the spawn positions
-            Point spawnPosition = spawnPositions.Dequeue();
-            spawnPositions.Enqueue(spawnPosition);
-
-            //set the enemy up
-            int x = spawnPosition.X * squareWidth + squareWidth / 2;
-            int y = spawnPosition.Y * squareHeight + squareHeight / 2;
-
-            if (spawnedEnemies < startSpawningBigEnemies)
-            {
-                spawnedEnemies += 1;
-                return new BasicEnemy(this, env, x, y);
-            }
-            else
-            {
-                return new BigBasicEnemy(this, env, x, y);
-            }
         }
 
         /// <summary>
@@ -721,15 +670,15 @@ namespace Frog_Defense
             if (selectedTrap == null)
                 return;
 
-            switch (SelectedTrapType)
+            switch (manager.SelectedTrapType)
             {
                 case TrapType.NoType:
                     return;
 
                 case TrapType.SpikeTrap:
-                    if (env.Player.AttemptSpend(selectedTrap.Cost))
+                    if (manager.Player.AttemptSpend(selectedTrap.Cost))
                     {
-                        env.addTrap(selectedTrap);
+                        manager.addTrap(selectedTrap);
                         hasFloorTrap[highlightedSquare.X, highlightedSquare.Y] = true;
                     }
 
@@ -737,9 +686,9 @@ namespace Frog_Defense
 
                 case TrapType.GunTrap:
                 case TrapType.DartTrap:
-                    if (env.Player.AttemptSpend(selectedTrap.Cost))
+                    if (manager.Player.AttemptSpend(selectedTrap.Cost))
                     {
-                        env.addTrap(selectedTrap);
+                        manager.addTrap(selectedTrap);
                         hasWallTrap[favoredDirection][highlightedSquare.X, highlightedSquare.Y] = true;
                     }
 
@@ -775,9 +724,8 @@ namespace Frog_Defense
                     return;
             }
 
-
             //aside from that, how and where we place traps depends greatly on what kind of trap we're doing!
-            switch (SelectedTrapType)
+            switch (manager.SelectedTrapType)
             {
                 //if there's no trap, just be done
                 case TrapType.NoType:
@@ -858,14 +806,14 @@ namespace Frog_Defense
             int xpos = highlightedSquare.X * squareWidth + xOffset;
             int ypos = highlightedSquare.Y * squareHeight + yOffset;
 
-            switch (SelectedTrapType)
+            switch (manager.SelectedTrapType)
             {
                 case TrapType.GunTrap:
-                    selectedTrap = new GunTrap(this, env, xpos, ypos, favoredDirection);
+                    selectedTrap = new GunTrap(manager, xpos, ypos, favoredDirection);
                     return;
 
                 case TrapType.DartTrap:
-                    selectedTrap = new DartTrap(this, env, xpos, ypos, favoredDirection);
+                    selectedTrap = new DartTrap(manager, xpos, ypos, favoredDirection);
                     return;
 
                 default:
@@ -889,12 +837,11 @@ namespace Frog_Defense
             if (hasFloorTrap[highlightedSquare.X, highlightedSquare.Y])
                 return;
 
-            switch (SelectedTrapType)
+            switch (manager.SelectedTrapType)
             {
                 case TrapType.SpikeTrap:
                     selectedTrap = new SpikeTrap(
-                        this,
-                        env,
+                        manager,
                         highlightedSquare.X * squareWidth + squareWidth / 2,
                         highlightedSquare.Y * squareHeight + squareHeight / 2
                         );
@@ -927,6 +874,18 @@ namespace Frog_Defense
 
                 batch.DrawString(TDGame.HugeFont, "PAUSED", drawPosition, Color.White);
             }
+        }
+
+        /// <summary>
+        /// Fixes the enemy's position to be right in the spawn
+        /// </summary>
+        /// <param name="e"></param>
+        public void putInSpawn(Enemy e)
+        {
+            Point nextSpawn = spawnPositions.Dequeue();
+            spawnPositions.Enqueue(nextSpawn);
+
+            e.setPosition(nextSpawn.X * squareWidth + squareWidth / 2, nextSpawn.Y * squareHeight + squareHeight / 2);
         }
     }
 

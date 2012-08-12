@@ -57,14 +57,14 @@ namespace Frog_Defense.Traps
             get { return 100; }
         }
 
-        public SpikeTrap(Arena arena, GameUpdater env, int x, int y)
-            : base(arena, env)
+        public SpikeTrap(ArenaManager env, int x, int y)
+            : base(env)
         {
             this.xPos = x;
             this.yPos = y;
         }
 
-        public static void LoadContent()
+        public static new void LoadContent()
         {
             if (imageTexture == null)
                 imageTexture = TDGame.MainGame.Content.Load<Texture2D>(imagePath);

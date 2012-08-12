@@ -35,7 +35,6 @@ namespace Frog_Defense
         }
 
         private GameUpdater env;
-        private Arena arena;
 
         private List<Trap> fixedTraps;
 
@@ -43,16 +42,15 @@ namespace Frog_Defense
         private const String highlightBorderPath = "Images/TrapPreviews/HighlightedBorder";
         private static Texture2D highlightBorderTexture;
 
-        public PlayerHUD(GameUpdater env, Arena arena, int startingMoney = 0)
+        public PlayerHUD(GameUpdater env, int startingMoney = 0)
         {
             this.money = startingMoney;
             this.env = env;
-            this.arena = arena;
 
             this.health = STARTING_HEALTH;
 
             previewX = 0;
-            previewY = env.MediumFont.MeasureString("A\nA").Y + mainYBuffer; //the height of a 2-line string and a buffer
+            previewY = TDGame.MediumFont.MeasureString("A\nA").Y + mainYBuffer; //the height of a 2-line string and a buffer
 
             setupFixedTraps();
         }
@@ -69,9 +67,9 @@ namespace Frog_Defense
 
             fixedTraps = new List<Trap>();
 
-            fixedTraps.Add(new SpikeTrap(arena, env, -1, -1));
-            fixedTraps.Add(new GunTrap(arena, env, -1, -1, Direction.UP));
-            fixedTraps.Add(new DartTrap(arena, env, -1, -1, Direction.UP));
+            fixedTraps.Add(new SpikeTrap(env.ArenaManager, -1, -1));
+            fixedTraps.Add(new GunTrap(env.ArenaManager, -1, -1, Direction.UP));
+            fixedTraps.Add(new DartTrap(env.ArenaManager, -1, -1, Direction.UP));
 
             setSelectedTrap(-1);
         }
@@ -167,9 +165,9 @@ namespace Frog_Defense
             selectedPreviewIndex = index;
 
             if (0 <= index && index < fixedTraps.Count)
-                arena.SelectedTrapType = fixedTraps[index].trapType;
+                env.ArenaManager.SelectedTrapType = fixedTraps[index].trapType;
             else
-                arena.SelectedTrapType = TrapType.NoType;
+                env.ArenaManager.SelectedTrapType = TrapType.NoType;
 
             fixPreviewString();
         }
@@ -195,7 +193,7 @@ namespace Frog_Defense
 
             //Draw that text
             batch.DrawString(
-                env.MediumFont,
+                TDGame.MediumFont,
                 toDraw,
                 new Vector2(0 + xOffset, 0 + yOffset),
                 Color.White
@@ -256,7 +254,7 @@ namespace Frog_Defense
 
             yPos += Trap.PreviewHeight + yBuffer + mainYBuffer;
 
-            batch.DrawString(env.SmallFont, previewString, new Vector2(xPos, yPos), Color.White);
+            batch.DrawString(TDGame.SmallFont, previewString, new Vector2(xPos, yPos), Color.White);
         }
     }
 }

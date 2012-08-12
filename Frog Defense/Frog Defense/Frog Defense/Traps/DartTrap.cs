@@ -117,15 +117,15 @@ namespace Frog_Defense.Traps
         /// <param name="centerX">The centerX of the gun</param>
         /// <param name="centerY">The centerY of the gun</param>
         /// <param name="facing"></param>
-        public DartTrap(Arena arena, GameUpdater env, int centerX, int centerY, Direction facing)
-            : base(arena, env, centerX, centerY, facing)
+        public DartTrap(ArenaManager env, int centerX, int centerY, Direction facing)
+            : base(env, centerX, centerY, facing)
         {
         }
 
         /// <summary>
         /// Standard LoadContent method, gets all the textures up and ready.
         /// </summary>
-        public static void LoadContent()
+        public static new void LoadContent()
         {
             if (upGunTexture == null)
                 upGunTexture = TDGame.MainGame.Content.Load<Texture2D>(upGunPath);

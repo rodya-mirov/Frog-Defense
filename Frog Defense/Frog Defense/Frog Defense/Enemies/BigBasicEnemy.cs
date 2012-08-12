@@ -26,7 +26,7 @@ namespace Frog_Defense.Enemies
             get { return imageTexture; }
         }
 
-        public BigBasicEnemy(Arena arena, GameUpdater env, int startX, int startY)
+        public BigBasicEnemy(ArenaMap arena, ArenaManager env, int startX, int startY)
             : base(arena, env, startX, startY)
         {
         }

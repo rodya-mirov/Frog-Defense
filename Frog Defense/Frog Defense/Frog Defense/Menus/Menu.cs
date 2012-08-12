@@ -71,7 +71,17 @@ namespace Frog_Defense.Menus
 
         public static Menu MakeDeathMenu()
         {
-            Menu output = new Menu("You have died.  Try to avoid that.");
+            Menu output = new Menu("You have died. Try to avoid that.");
+
+            output.addItem(new StartButton("Back to Main Menu", mediumFont));
+            output.addItem(new ExitButton("Exit Game", mediumFont));
+
+            return output;
+        }
+
+        public static Menu MakeWinMenu()
+        {
+            Menu output = new Menu("You win! You're the best winner ever.");
 
             output.addItem(new StartButton("Back to Main Menu", mediumFont));
             output.addItem(new ExitButton("Exit Game", mediumFont));

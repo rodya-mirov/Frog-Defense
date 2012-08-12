@@ -32,16 +32,10 @@ namespace Frog_Defense
         {
             get { return player; }
         }
-
-        private WaveTracker waveTracker;
         private ButtonPanel buttonPanel;
 
-        private Arena arena;
-        private Queue<Enemy> enemies;
-        private Queue<Enemy> enemiesToBeAdded;
-
-        private Queue<Trap> traps;
-        private Queue<Trap> trapsToBeAdded;
+        private ArenaManager arenaManager;
+        public ArenaManager ArenaManager { get { return arenaManager; } }
 
         private bool shouldResumeGame;
         public bool HasSuspendedGame
@@ -50,24 +44,6 @@ namespace Frog_Defense
         }
 
         private SpriteBatch batch;
-
-        private SpriteFont smallFont;
-        public SpriteFont SmallFont
-        {
-            get { return smallFont; }
-        }
-
-        private SpriteFont mediumFont;
-        public SpriteFont MediumFont
-        {
-            get { return mediumFont; }
-        }
-
-        private SpriteFont bigFont;
-        public SpriteFont BigFont
-        {
-            get { return bigFont; }
-        }
 
         //All these offsets determine the location of all the panels
         //The plan is: WaveTracker is a horizontal bar across the top
@@ -84,13 +60,13 @@ namespace Frog_Defense
         {
             get
             {
-                return waveTracker.PixelHeight + 10 + WaveTrackerOffsetY;
+                return arenaManager.WaveTracker.PixelHeight + 10 + WaveTrackerOffsetY;
             }
         }
 
         private int PlayerOffsetX
         {
-            get { return ArenaOffsetX + arena.PixelWidth + 10; }
+            get { return ArenaOffsetX + arenaManager.PixelWidthArena + 10; }
         }
         private int PlayerOffsetY
         {
@@ -132,7 +108,8 @@ namespace Frog_Defense
             this.shouldResumeGame = false;
             this.paused = false;
 
-            buttonPanel = ButtonPanel.MakeDefaultPanel(this, smallFont);
+            arenaManager = new ArenaManager(this);
+            buttonPanel = ButtonPanel.MakeDefaultPanel(this, TDGame.SmallFont);
         }
 
         protected override void OnEnabledChanged(object sender, EventArgs args)
@@ -156,16 +133,9 @@ namespace Frog_Defense
         /// </summary>
         public void ResetGame()
         {
-            arena = new Arena(this);
-            waveTracker = new WaveTracker(arena, this);
+            arenaManager.ResetGame();
 
-            player = new PlayerHUD(this, arena, 500);
-
-            enemies = new Queue<Enemy>();
-            enemiesToBeAdded = new Queue<Enemy>();
-
-            traps = new Queue<Trap>();
-            trapsToBeAdded = new Queue<Trap>();
+            player = new PlayerHUD(this, 500);
 
             shouldResumeGame = false;
         }
@@ -174,20 +144,9 @@ namespace Frog_Defense
         {
             base.LoadContent();
 
-            smallFont = TDGame.MainGame.Content.Load<SpriteFont>("Fonts/SmallFont");
-            mediumFont = TDGame.MainGame.Content.Load<SpriteFont>("Fonts/MediumFont");
-            bigFont = TDGame.MainGame.Content.Load<SpriteFont>("Fonts/BigFont");
-
-            Arena.LoadContent();
+            TDGame.loadFonts();
+            ArenaManager.LoadContent();
             PlayerHUD.LoadContent();
-
-            Enemy.LoadContent();
-            BasicEnemy.LoadContent();
-            BigBasicEnemy.LoadContent();
-
-            SpikeTrap.LoadContent();
-            GunTrap.LoadContent();
-            DartTrap.LoadContent();
         }
 
         public override void Update(GameTime gameTime)
@@ -200,27 +159,8 @@ namespace Frog_Defense
             {
                 paused = true;
             }
-                
 
-            if (!paused)
-            {
-                while (trapsToBeAdded.Count > 0)
-                {
-                    traps.Enqueue(trapsToBeAdded.Dequeue());
-                }
-
-                while (enemiesToBeAdded.Count > 0)
-                {
-                    enemies.Enqueue(enemiesToBeAdded.Dequeue());
-                }
-
-                updateEnemies();
-
-                updateTraps();
-
-                arena.Update();
-                waveTracker.Update();
-            }
+            arenaManager.Update(gameTime, paused);
         }
 
         private int mouseX, mouseY;
@@ -240,8 +180,8 @@ namespace Frog_Defense
             mouseX = ms.X;
             mouseY = ms.Y;
 
-            //first, tell all the components where the mouse is (in relative coordinates)
-            arena.updateMousePosition(mouseX - ArenaOffsetX, mouseY - ArenaOffsetY);
+            //first, tell all the drawable components where the mouse is (in relative coordinates)
+            arenaManager.Map.updateMousePosition(mouseX - ArenaOffsetX, mouseY - ArenaOffsetY);
             player.MouseOver(mouseX - PlayerOffsetX, mouseY - PlayerOffsetY);
 
             //second, deal with all the clicking!
@@ -250,67 +190,13 @@ namespace Frog_Defense
 
             if (mouseWasDown && !mouseIsDown)
             {
-                arena.GetClicked();
+                arenaManager.GetClicked();
                 player.GetClicked();
 
                 int xOffset = ButtonPanelOffsetX;
                 int yOffset = ButtonPanelOffsetY;
 
                 buttonPanel.ProcessClick(mouseX - xOffset, mouseY - yOffset);
-            }
-        }
-
-        public void addTrap(Trap t)
-        {
-            traps.Enqueue(t);
-        }
-
-        public void addEnemy(Enemy e)
-        {
-            enemiesToBeAdded.Enqueue(e);
-        }
-
-        /// <summary>
-        /// Just cycles through the traps and updates them
-        /// </summary>
-        private void updateTraps()
-        {
-            int numTraps = traps.Count;
-            for (int i = 0; i < numTraps; i++)
-            {
-                Trap trap = traps.Dequeue();
-                trap.Update(enemies);
-                traps.Enqueue(trap);
-            }
-        }
-
-        /// <summary>
-        /// Helper method for Update.  This updates all the enemies through cycling,
-        /// and simply forgets to add them back in if the enemy is dead.  It also
-        /// credits the player with the kill.
-        /// </summary>
-        private void updateEnemies()
-        {
-            int numEnemies = enemies.Count;
-
-            for (int i = 0; i < numEnemies; i++)
-            {
-                Enemy enemy = enemies.Dequeue();
-
-                enemy.Update();
-
-                if (enemy.HasReachedGoal)
-                {
-                    player.TakeHit();
-                }
-                else if (enemy.IsAlive)
-                {
-                    enemies.Enqueue(enemy);
-                }
-                else
-                {
-                    player.AddMoney(enemy.CashValue);
-                }
             }
         }
 
@@ -322,54 +208,23 @@ namespace Frog_Defense
 
             batch.Begin();
 
-            drawArenaAndRelated(gameTime);
-
+            arenaManager.DrawArena(gameTime, batch, ArenaOffsetX, ArenaOffsetY, paused);
             player.Draw(gameTime, batch, PlayerOffsetX, PlayerOffsetY);
-            waveTracker.Draw(gameTime, batch, WaveTrackerOffsetX, WaveTrackerOffsetY);
+            arenaManager.WaveTracker.Draw(gameTime, batch, WaveTrackerOffsetX, WaveTrackerOffsetY);
             buttonPanel.Draw(gameTime, batch, ButtonPanelOffsetX, ButtonPanelOffsetY, paused);
 
             batch.End();
         }
 
         /// <summary>
-        /// Helper method for Draw; this draws the arena and everything in it (enemies, traps, etc.)
-        /// </summary>
-        /// <param name="gameTime"></param>
-        /// <param name="arenaOffsetX"></param>
-        /// <param name="arenaOffsetY"></param>
-        private void drawArenaAndRelated(GameTime gameTime)
-        {
-            int arenaOffsetX = ArenaOffsetX;
-            int arenaOffsetY = ArenaOffsetY;
-
-            //Draw the arena and its walls...
-            arena.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
-
-            //...draw the traps...
-            foreach (Trap t in traps)
-            {
-                t.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
-            }
-
-            //...draw the enemies...
-            foreach (Enemy e in enemies)
-            {
-                e.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
-            }
-
-            //...and their health bars
-            foreach (Enemy e in enemies)
-            {
-                e.DrawHealthBar(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
-            }
-
-            arena.DrawPausedOverlay(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
-        }
-
-        /// <summary>
         /// Does a little cleanup, but mostly just invalidates the gamestate for resumption.
         /// </summary>
         public void Die()
+        {
+            shouldResumeGame = false;
+        }
+
+        public void Win()
         {
             shouldResumeGame = false;
         }

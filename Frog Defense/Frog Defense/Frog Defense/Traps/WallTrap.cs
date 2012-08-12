@@ -13,8 +13,8 @@ namespace Frog_Defense.Traps
             get { return facing; }
         }
 
-        protected WallTrap(Arena arena, GameUpdater env, Direction facing)
-            : base(arena, env)
+        protected WallTrap(ArenaManager env, Direction facing)
+            : base(env)
         {
             this.facing = facing;
         }

@@ -11,7 +11,7 @@ namespace Frog_Defense
 {
     class MenuScreen : DrawableGameComponent
     {
-        private enum MenuScreenType { Start, Death };
+        private enum MenuScreenType { Start, Death, Win };
 
         private SpriteBatch batch;
         private Menu menu;
@@ -33,6 +33,11 @@ namespace Frog_Defense
             return new MenuScreen(MenuScreenType.Start);
         }
 
+        public static MenuScreen makeWinScreen()
+        {
+            return new MenuScreen(MenuScreenType.Win);
+        }
+
         public override void Initialize()
         {
             base.Initialize();
@@ -47,6 +52,10 @@ namespace Frog_Defense
 
                 case MenuScreenType.Start:
                     menu = Menu.MakeStartMenu();
+                    break;
+
+                case MenuScreenType.Win:
+                    menu = Menu.MakeWinMenu();
                     break;
 
                 default:

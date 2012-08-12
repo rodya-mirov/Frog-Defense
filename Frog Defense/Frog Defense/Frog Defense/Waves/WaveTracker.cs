@@ -25,8 +25,8 @@ namespace Frog_Defense.Waves
         private Queue<EnemyTracker> enemies;
         private Queue<Enemy> toBeSpawned;
 
-        private GameUpdater env;
-        private Arena arena;
+        private ArenaManager env;
+        private ArenaMap arena;
 
         public int PixelHeight
         {
@@ -37,7 +37,7 @@ namespace Frog_Defense.Waves
             get { return TDGame.MainGame.GraphicsDevice.Viewport.Width; }
         }
 
-        public WaveTracker(Arena arena, GameUpdater env)
+        public WaveTracker(ArenaMap arena, ArenaManager env)
         {
             this.arena = arena;
             this.env = env;
@@ -79,6 +79,12 @@ namespace Frog_Defense.Waves
                     toBeSpawned.Enqueue(et.enemy);
                 }
             }
+
+            if (toBeSpawned.Count > 0)
+            {
+                Enemy e = toBeSpawned.Dequeue();
+                env.spawnEnemy(e);
+            }
         }
 
         public void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
@@ -101,6 +107,16 @@ namespace Frog_Defense.Waves
                 Vector2 drawPosition = new Vector2(xOffset + 1 + e.ticksRemaining/2 - Enemy.PreviewImageWidth, yOffset + 1);
                 batch.Draw(e.enemy.PreviewTexture, drawPosition, Color.White);
             }
+        }
+
+        /// <summary>
+        /// Determines whether the pipe is completely clear; that is,
+        /// if there are no enemies left to be spawned, ever!
+        /// </summary>
+        /// <returns></returns>
+        public bool isClear()
+        {
+            return enemies.Count == 0 && toBeSpawned.Count == 0;
         }
     }
 }

@@ -12,13 +12,18 @@ namespace Frog_Defense.Traps
 
     abstract class Trap
     {
-        protected Arena arena;
-        protected GameUpdater env;
+        protected ArenaManager env;
 
-        protected Trap(Arena arena, GameUpdater env)
+        protected Trap(ArenaManager env)
         {
-            this.arena = arena;
             this.env = env;
+        }
+
+        public static void LoadContent()
+        {
+            SpikeTrap.LoadContent();
+            GunTrap.LoadContent();
+            DartTrap.LoadContent();
         }
 
         public override string ToString()

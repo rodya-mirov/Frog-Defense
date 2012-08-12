@@ -83,8 +83,8 @@ namespace Frog_Defense.Enemies
             get { return previewTexture; }
         }
 
-        public BasicEnemy(Arena arena, GameUpdater env, int startX, int startY)
-            : base(env, arena)
+        public BasicEnemy(ArenaMap arena, ArenaManager manager, int startX, int startY)
+            : base(manager, arena)
         {
             this.xCenter = startX;
             this.yCenter = startY;
@@ -92,6 +92,12 @@ namespace Frog_Defense.Enemies
             this.health = MAX_HEALTH;
 
             hasGoal = false;
+        }
+
+        public override void setPosition(int x, int y)
+        {
+            xCenter = x;
+            yCenter = y;
         }
 
         public override bool IsAlive

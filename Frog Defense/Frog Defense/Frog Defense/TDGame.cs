@@ -26,6 +26,7 @@ namespace Frog_Defense
         //The main menu screens
         private MenuScreen startScreen;
         private MenuScreen deathScreen;
+        private MenuScreen winScreen;
 
         //some pure colors so other things can draw basic shapes easily
         public static Texture2D PureRed
@@ -107,6 +108,9 @@ namespace Frog_Defense
             deathScreen = MenuScreen.makeDeathScreen();
             Components.Add(deathScreen);
 
+            winScreen = MenuScreen.makeWinScreen();
+            Components.Add(winScreen);
+
             setActiveComponent(startScreen);
         }
 
@@ -143,6 +147,16 @@ namespace Frog_Defense
         {
             env.Die();
             setActiveComponent(deathScreen);
+        }
+
+        /// <summary>
+        /// This is what happens when you win!  Disables the GameUpdater
+        /// and goes on to the win screen.
+        /// </summary>
+        public void Win()
+        {
+            env.Win();
+            setActiveComponent(winScreen);
         }
 
         /// <summary>
@@ -214,7 +228,7 @@ namespace Frog_Defense
                 pureGreen = Content.Load<Texture2D>(pureGreenPath);
         }
 
-        private static void loadFonts()
+        public static void loadFonts()
         {
             if (smallFont == null)
                 smallFont = TDGame.MainGame.Content.Load<SpriteFont>("Fonts/SmallFont");

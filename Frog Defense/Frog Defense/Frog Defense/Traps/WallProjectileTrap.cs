@@ -47,8 +47,8 @@ namespace Frog_Defense.Traps
         protected abstract int BulletImageWidth { get; }
         protected abstract int BulletImageHeight { get; }
 
-        protected WallProjectileTrap(Arena arena, GameUpdater env, int centerX, int centerY, Direction facing)
-            : base(arena, env, facing)
+        protected WallProjectileTrap(ArenaManager env, int centerX, int centerY, Direction facing)
+            : base(env, facing)
         {
             position = new Point(centerX, centerY);
 
@@ -116,7 +116,7 @@ namespace Frog_Defense.Traps
                 }
 
                 //next, see if it hit a wall
-                if (!shouldStop && arena.IsInWall(p))
+                if (!shouldStop && env.Map.IsInWall(p))
                 {
                     shouldStop = true;
                 }
