@@ -9,14 +9,25 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Frog_Defense
 {
-    class StartScreen : DrawableGameComponent
+    class MenuScreen : DrawableGameComponent
     {
         private SpriteBatch batch;
         private Menu menu;
 
-        public StartScreen()
+        private MenuScreen(Menu menu)
             : base(TDGame.MainGame)
         {
+            this.menu = menu;
+        }
+
+        public static MenuScreen makeDeathScreen()
+        {
+            return new MenuScreen(Menu.MakeDeathMenu());
+        }
+
+        public static MenuScreen makeStartScreen()
+        {
+            return new MenuScreen(Menu.MakeStartMenu());
         }
 
         public override void Initialize()
@@ -24,8 +35,6 @@ namespace Frog_Defense
             base.Initialize();
 
             batch = new SpriteBatch(GraphicsDevice);
-
-            menu = Menu.MakeStartMenu();
         }
 
         protected override void LoadContent()

@@ -6,25 +6,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Frog_Defense.Menus
 {
-    class ResumeButton : MenuItem
+    class StartButton : MenuItem
     {
-        public ResumeButton(String text, SpriteFont font)
+        public StartButton(String text, SpriteFont font)
             : base(text, font)
         {
         }
-
-        public override bool Active
-        {
-            get { return TDGame.MainGame.HasSuspendedGame; }
-            set { throw new NotImplementedException(); }
-        }
-
 
         public override void GetClicked()
         {
             base.GetClicked();
 
-            TDGame.MainGame.StartPlaying();
+            TDGame.MainGame.BackToMainMenu();
         }
     }
 }

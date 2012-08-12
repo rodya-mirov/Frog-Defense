@@ -25,8 +25,10 @@ namespace Frog_Defense.Menus
         //the number of pixels DOWN to put between menu items
         private const float yBuffer = 10;
 
-        private Menu()
+        private Menu(String text)
         {
+            mainText = text;
+            items = new List<MenuItem>();
         }
 
         public void MouseOver(int mouseX, int mouseY)
@@ -58,13 +60,20 @@ namespace Frog_Defense.Menus
 
         public static Menu MakeStartMenu()
         {
-            Menu output = new Menu();
-            output.mainText = "FROG DEFENSE";
-
-            output.items = new List<MenuItem>();
+            Menu output = new Menu("FROG DEFENSE");
 
             output.addItem(new NewGameButton("New Game", mediumFont));
             output.addItem(new ResumeButton("Resume Game", mediumFont));
+            output.addItem(new ExitButton("Exit Game", mediumFont));
+
+            return output;
+        }
+
+        public static Menu MakeDeathMenu()
+        {
+            Menu output = new Menu("You have died.  Try to avoid that.");
+
+            output.addItem(new StartButton("Back to Main Menu", mediumFont));
             output.addItem(new ExitButton("Exit Game", mediumFont));
 
             return output;

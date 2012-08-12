@@ -34,7 +34,7 @@ namespace Frog_Defense
         }
 
         private WaveTracker waveTracker;
-        private PauseButton pauseButton;
+        private ButtonPanel buttonPanel;
 
         private Arena arena;
         private Queue<Enemy> enemies;
@@ -93,11 +93,11 @@ namespace Frog_Defense
             get { return ArenaOffsetY; }
         }
 
-        private int PauseButtonOffsetX
+        private int ButtonPanelOffsetX
         {
-            get { return Game.GraphicsDevice.Viewport.Width - pauseButton.PixelWidth; }
+            get { return Game.GraphicsDevice.Viewport.Width - buttonPanel.PixelWidth; }
         }
-        private int PauseButtonOffsetY
+        private int ButtonPanelOffsetY
         {
             get { return waveTracker.PixelHeight; }
         }
@@ -120,7 +120,8 @@ namespace Frog_Defense
             this.paused = false;
 
             waveTracker = new WaveTracker(this);
-            pauseButton = new PauseButton(this, SmallFont, 80, 30);
+
+            buttonPanel = ButtonPanel.MakeDefaultPanel(this, smallFont);
         }
 
         protected override void OnEnabledChanged(object sender, EventArgs args)
@@ -133,11 +134,16 @@ namespace Frog_Defense
                 Console.WriteLine("It's GO TIME");
 
                 if (!shouldResumeGame)
-                    resetGame();
+                    ResetGame();
+
+                shouldResumeGame = true;
             }
         }
 
-        private void resetGame()
+        /// <summary>
+        /// Completely starts over the game
+        /// </summary>
+        public void ResetGame()
         {
             arena = new Arena(this);
             player = new PlayerHUD(this, arena, 500);
@@ -148,7 +154,7 @@ namespace Frog_Defense
             traps = new Queue<Trap>();
             trapsToBeAdded = new Queue<Trap>();
 
-            shouldResumeGame = true;
+            shouldResumeGame = false;
         }
 
         protected override void LoadContent()
@@ -232,8 +238,11 @@ namespace Frog_Defense
             {
                 arena.GetClicked();
                 player.GetClicked();
-                if (pauseButton.ContainsPoint(mouseX - PauseButtonOffsetX, mouseY - PauseButtonOffsetY))
-                    pauseButton.GetClicked();
+
+                int xOffset = ButtonPanelOffsetX;
+                int yOffset = ButtonPanelOffsetY;
+
+                buttonPanel.ProcessClick(mouseX - xOffset, mouseY - yOffset);
             }
         }
 
@@ -303,7 +312,7 @@ namespace Frog_Defense
 
             player.Draw(gameTime, batch, PlayerOffsetX, PlayerOffsetY);
 
-            pauseButton.Draw(gameTime, batch, PauseButtonOffsetX, PauseButtonOffsetY, paused);
+            buttonPanel.Draw(gameTime, batch, ButtonPanelOffsetX, ButtonPanelOffsetY, paused);
 
             batch.End();
         }
@@ -341,6 +350,14 @@ namespace Frog_Defense
             }
 
             arena.DrawPausedOverlay(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
+        }
+
+        /// <summary>
+        /// Does a little cleanup, but mostly just invalidates the gamestate for resumption.
+        /// </summary>
+        public void Die()
+        {
+            shouldResumeGame = false;
         }
     }
 }

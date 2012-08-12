@@ -15,7 +15,7 @@ namespace Frog_Defense.Menus
 
         public override void GetClicked()
         {
-            TDGame.MainGame.StartPlaying();
+            TDGame.MainGame.NewGame();
         }
     }
 }

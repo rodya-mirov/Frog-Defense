@@ -112,6 +112,9 @@ namespace Frog_Defense
         public void TakeHit()
         {
             health -= 1;
+
+            if (health <= 0)
+                TDGame.MainGame.Die();
         }
 
         private int mouseX, mouseY;

@@ -109,20 +109,23 @@
   <ItemGroup>
     <Compile Include="Arena.cs" />
     <Compile Include="Buttons\Button.cs" />
+    <Compile Include="Buttons\ButtonPanel.cs" />
+    <Compile Include="Buttons\MenuButton.cs" />
     <Compile Include="Buttons\PauseButton.cs" />
     <Compile Include="Enemies\BasicEnemy.cs" />
     <Compile Include="Enemies\BigBasicEnemy.cs" />
     <Compile Include="Enemies\Enemy.cs" />
     <Compile Include="GameUpdater.cs" />
+    <Compile Include="MenuScreen.cs" />
     <Compile Include="Menus\ExitButton.cs" />
     <Compile Include="Menus\Menu.cs" />
     <Compile Include="Menus\MenuItem.cs" />
     <Compile Include="Menus\NewGameButton.cs" />
     <Compile Include="Menus\ResumeButton.cs" />
+    <Compile Include="Menus\StartOverButton.cs" />
     <Compile Include="PlayerHUD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="StartScreen.cs" />
     <Compile Include="Traps\DartTrap.cs" />
     <Compile Include="Traps\WallProjectileTrap.cs" />
     <Compile Include="Traps\WallTrap.cs" />

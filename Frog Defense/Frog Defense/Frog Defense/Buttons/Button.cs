@@ -7,13 +7,17 @@ using Microsoft.Xna.Framework;
 
 namespace Frog_Defense.Buttons
 {
-    class Button
+    abstract class Button
     {
         protected int width;
         protected int height;
 
+        protected SpriteFont font;
+
         public int PixelWidth { get { return width; } }
         public int PixelHeight { get { return height; } }
+
+        public abstract String Text { get; }
 
         /// <summary>
         /// Constructs a new button filled with the supplied text
@@ -22,10 +26,12 @@ namespace Frog_Defense.Buttons
         /// <param name="font"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Button(int width, int height)
+        public Button(int width, int height, SpriteFont font)
         {
             this.width = width;
             this.height = height;
+
+            this.font = font;
         }
 
         public virtual void Update()

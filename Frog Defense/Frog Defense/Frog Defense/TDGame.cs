@@ -23,8 +23,9 @@ namespace Frog_Defense
         //The main GameUpdater
         private GameUpdater env;
 
-        //The main menu screen
-        private StartScreen menu;
+        //The main menu screens
+        private MenuScreen startScreen;
+        private MenuScreen deathScreen;
 
         //some pure colors so other things can draw basic shapes easily
         public static Texture2D PureRed
@@ -43,6 +44,25 @@ namespace Frog_Defense
 
         GraphicsDeviceManager graphics;
 
+        //also some fonts
+        private static SpriteFont smallFont;
+        public static SpriteFont SmallFont
+        {
+            get { return smallFont; }
+        }
+
+        private static SpriteFont mediumFont;
+        public static SpriteFont MediumFont
+        {
+            get { return mediumFont; }
+        }
+
+        private static SpriteFont bigFont;
+        public static SpriteFont BigFont
+        {
+            get { return bigFont; }
+        }
+
         public TDGame()
         {
             MainGame = this;
@@ -52,24 +72,70 @@ namespace Frog_Defense
             Content.RootDirectory = "Content";
 
             env = new GameUpdater();
-            env.Enabled = false;
-            env.Visible = false;
             Components.Add(env);
 
-            menu = new StartScreen();
-            menu.Enabled = true;
-            menu.Visible = true;
+            startScreen = MenuScreen.makeStartScreen();
+            Components.Add(startScreen);
 
-            Components.Add(menu);
+            deathScreen = MenuScreen.makeDeathScreen();
+            Components.Add(deathScreen);
+
+            setActiveComponent(startScreen);
         }
 
+        /// <summary>
+        /// Goes back to the main menu
+        /// </summary>
+        public void BackToMainMenu()
+        {
+            setActiveComponent(startScreen);
+        }
+
+        /// <summary>
+        /// Resets the current game, then starts it up
+        /// </summary>
+        public void NewGame()
+        {
+            env.ResetGame();
+            setActiveComponent(env);
+        }
+
+        /// <summary>
+        /// Start the game up into play mode.
+        /// </summary>
         public void StartPlaying()
         {
-            menu.Enabled = false;
-            menu.Visible = false;
+            setActiveComponent(env);
+        }
 
-            env.Visible = true;
-            env.Enabled = true;
+        /// <summary>
+        /// This is what happens when you die!  Your health hits zero,
+        /// I mean.  Disables the GameUpdater and goes on to the death screen.
+        /// </summary>
+        public void Die()
+        {
+            env.Die();
+            setActiveComponent(deathScreen);
+        }
+
+        /// <summary>
+        /// Disables all GameComponents except the parameter, which is
+        /// enabled and set to visible.
+        /// </summary>
+        /// <param name="comp"></param>
+        private void setActiveComponent(DrawableGameComponent comp)
+        {
+            foreach (DrawableGameComponent gc in Components)
+            {
+                if (gc != comp)
+                {
+                    gc.Enabled = false;
+                    gc.Visible = false;
+                }
+            }
+
+            comp.Enabled = true;
+            comp.Visible = true;
         }
 
         public bool HasSuspendedGame
@@ -103,6 +169,20 @@ namespace Frog_Defense
 
             if (pureRed == null)
                 pureRed = Content.Load<Texture2D>(pureRedPath);
+
+            loadFonts();
+        }
+
+        private static void loadFonts()
+        {
+            if (smallFont == null)
+                smallFont = TDGame.MainGame.Content.Load<SpriteFont>("Fonts/SmallFont");
+
+            if (mediumFont == null)
+                mediumFont = TDGame.MainGame.Content.Load<SpriteFont>("Fonts/MediumFont");
+
+            if (bigFont == null)
+                bigFont = TDGame.MainGame.Content.Load<SpriteFont>("Fonts/BigFont");
         }
 
         /// <summary>

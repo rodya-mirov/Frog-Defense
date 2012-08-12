@@ -9,24 +9,32 @@ namespace Frog_Defense.Buttons
 {
     class PauseButton : Button
     {
-        protected const String unpausedText = "PAUSE";
+        protected const String unpausedText = "Pause";
         protected Vector2 unpausedSize;
         protected Vector2 unpausedOffset;
 
-        protected const String pausedText = "UNPAUSE";
+        protected const String pausedText = "Unpause";
         protected Vector2 pausedSize;
         protected Vector2 pausedOffset;
 
         protected bool paused;
         protected GameUpdater env;
 
-        protected SpriteFont font;
+        public override string Text
+        {
+            get
+            {
+                if (env.Paused)
+                    return pausedText;
+                else
+                    return unpausedText;
+            }
+        }
 
         public PauseButton(GameUpdater env, SpriteFont font, int width, int height)
-            : base(width, height)
+            : base(width, height, font)
         {
             this.env = env;
-            this.font = font;
 
             unpausedSize = font.MeasureString(unpausedText);
             pausedSize = font.MeasureString(pausedText);
