@@ -35,6 +35,27 @@ namespace Frog_Defense
         private static Texture2D pureRed;
         private const String pureRedPath = "Images/PureColors/Red";
 
+        public static Texture2D PureBlue
+        {
+            get { return pureBlue; }
+        }
+        private static Texture2D pureBlue;
+        private const String pureBluePath = "Images/PureColors/Blue";
+
+        public static Texture2D PureGreen
+        {
+            get { return pureGreen; }
+        }
+        private static Texture2D pureGreen;
+        private const String pureGreenPath = "Images/PureColors/Green";
+
+        public static Texture2D PureWhite
+        {
+            get { return pureWhite; }
+        }
+        private static Texture2D pureWhite;
+        private const String pureWhitePath = "Images/PureColors/White";
+
         public static Texture2D PureBlack
         {
             get { return pureBlack; }
@@ -61,6 +82,12 @@ namespace Frog_Defense
         public static SpriteFont BigFont
         {
             get { return bigFont; }
+        }
+
+        private static SpriteFont hugeFont;
+        public static SpriteFont HugeFont
+        {
+            get { return hugeFont; }
         }
 
         public TDGame()
@@ -164,13 +191,27 @@ namespace Frog_Defense
         {
             base.LoadContent();
 
+            loadColors();
+
+            loadFonts();
+        }
+
+        private void loadColors()
+        {
             if (pureBlack == null)
                 pureBlack = Content.Load<Texture2D>(pureBlackPath);
+
+            if (pureWhite == null)
+                pureWhite = Content.Load<Texture2D>(pureWhitePath);
 
             if (pureRed == null)
                 pureRed = Content.Load<Texture2D>(pureRedPath);
 
-            loadFonts();
+            if (pureBlue == null)
+                pureBlue = Content.Load<Texture2D>(pureBluePath);
+
+            if (pureGreen == null)
+                pureGreen = Content.Load<Texture2D>(pureGreenPath);
         }
 
         private static void loadFonts()
@@ -183,6 +224,9 @@ namespace Frog_Defense
 
             if (bigFont == null)
                 bigFont = TDGame.MainGame.Content.Load<SpriteFont>("Fonts/BigFont");
+
+            if (hugeFont == null)
+                hugeFont = TDGame.MainGame.Content.Load<SpriteFont>("Fonts/HugeFont");
         }
 
         /// <summary>

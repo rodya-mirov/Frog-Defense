@@ -27,7 +27,7 @@ namespace Frog_Defense.Enemies
         /// </summary>
         public override int CashValue
         {
-            get { return 50; }
+            get { return 10; }
         }
 
         private bool hasReachedGoal = false;
@@ -43,14 +43,14 @@ namespace Frog_Defense.Enemies
         //We're using ints for position because XNA gets glitchy when we draw on floats
         private int speed = 2;
 
-        private int xPos, yPos;
+        private int xCenter, yCenter;
         public override int XCenter
         {
-            get { return xPos; }
+            get { return xCenter; }
         }
         public override int YCenter
         {
-            get { return yPos; }
+            get { return yCenter; }
         }
 
         private int goalX, goalY;
@@ -69,18 +69,25 @@ namespace Frog_Defense.Enemies
             get { return imageHeight; }
         }
 
-        private const String imagePath = "Images/Enemies/Enemy";
+        private const String imagePath = "Images/Enemies/BasicEnemy/Image";
         private static Texture2D imageTexture;
         protected virtual Texture2D ImageTexture
         {
             get { return imageTexture; }
         }
 
+        private const String previewPath = "Images/Enemies/BasicEnemy/Preview";
+        private static Texture2D previewTexture;
+        public override Texture2D PreviewTexture
+        {
+            get { return previewTexture; }
+        }
+
         public BasicEnemy(Arena arena, GameUpdater env, int startX, int startY)
             : base(env, arena)
         {
-            this.xPos = startX;
-            this.yPos = startY;
+            this.xCenter = startX;
+            this.yCenter = startY;
 
             this.health = MAX_HEALTH;
 
@@ -97,8 +104,8 @@ namespace Frog_Defense.Enemies
 
         public override bool ContainsPoint(Point p)
         {
-            return xPos - imageWidth / 2 <= p.X && p.X <= xPos + imageWidth / 2
-                && yPos - imageHeight / 2 <= p.Y && p.Y <= yPos + imageHeight / 2;
+            return xCenter - imageWidth / 2 <= p.X && p.X <= xCenter + imageWidth / 2
+                && yCenter - imageHeight / 2 <= p.Y && p.Y <= yCenter + imageHeight / 2;
         }
 
         /// <summary>
@@ -120,6 +127,9 @@ namespace Frog_Defense.Enemies
         {
             if (imageTexture == null)
                 imageTexture = TDGame.MainGame.Content.Load<Texture2D>(imagePath);
+
+            if (previewTexture == null)
+                previewTexture = TDGame.MainGame.Content.Load<Texture2D>(previewPath);
         }
 
         //some parameters to slow the movement down
@@ -129,10 +139,8 @@ namespace Frog_Defense.Enemies
         /// <summary>
         /// Moves!
         /// </summary>
-        public override void Update()
+        protected override void update()
         {
-            base.Update();
-
             UpdateGoal();
 
             MoveTowardGoal();
@@ -146,12 +154,12 @@ namespace Frog_Defense.Enemies
         {
             if (!hasGoal)
             {
-                Point goal = arena.nextWayPoint(xPos, yPos);
+                Point goal = arena.nextWayPoint(xCenter, yCenter);
 
                 goalX = goal.X;
                 goalY = goal.Y;
 
-                if (xPos == goalX && yPos == goalY)
+                if (xCenter == goalX && yCenter == goalY)
                     reachGoal();
 
                 hasGoal = true;
@@ -180,24 +188,24 @@ namespace Frog_Defense.Enemies
 
             framesSinceMove = 0;
 
-            if (goalX < xPos)
+            if (goalX < xCenter)
             {
-                xPos = Math.Max(goalX, xPos - speed);
+                xCenter = Math.Max(goalX, xCenter - speed);
             }
-            else if (goalX > xPos)
+            else if (goalX > xCenter)
             {
-                xPos = Math.Min(goalX, xPos + speed);
+                xCenter = Math.Min(goalX, xCenter + speed);
             }
-            if (goalY < yPos)
+            if (goalY < yCenter)
             {
-                yPos = Math.Max(goalY, yPos - speed);
+                yCenter = Math.Max(goalY, yCenter - speed);
             }
-            else if (goalY > yPos)
+            else if (goalY > yCenter)
             {
-                yPos = Math.Min(goalY, yPos + speed);
+                yCenter = Math.Min(goalY, yCenter + speed);
             }
 
-            if (xPos == goalX && yPos == goalY)
+            if (xCenter == goalX && yCenter == goalY)
                 hasGoal = false;
         }
 
@@ -218,14 +226,14 @@ namespace Frog_Defense.Enemies
             batch.Draw(
                 ImageTexture,
                 new Vector2(
-                    xPos + xOffset - imageWidth / 2,
-                    yPos + yOffset - imageHeight / 2
+                    xCenter + xOffset - imageWidth / 2,
+                    yCenter + yOffset - imageHeight / 2
                     ),
                 tint
                 );
 
             if (isPoisoned)
-                DrawPoison(gameTime, batch, xPos + xOffset - (imageWidth*4)/7, yPos + yOffset - imageHeight / 2, paused);
+                DrawPoison(gameTime, batch, xCenter + xOffset - (imageWidth*4)/7, yCenter + yOffset - imageHeight / 2, paused);
         }
     }
 }

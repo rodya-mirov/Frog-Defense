@@ -918,9 +918,14 @@ namespace Frog_Defense
         {
             if (paused)
             {
-                Vector2 drawPosition = new Vector2();
+                Vector2 size = TDGame.HugeFont.MeasureString("PAUSED");
 
-                batch.DrawString(env.BigFont, "PAUSED", drawPosition, Color.White);
+                Vector2 drawPosition = new Vector2(
+                    arenaOffsetX + (int)((PixelWidth - size.X) / 2),
+                    arenaOffsetY + (int)((PixelHeight - size.Y) / 2)
+                    );
+
+                batch.DrawString(TDGame.HugeFont, "PAUSED", drawPosition, Color.White);
             }
         }
     }

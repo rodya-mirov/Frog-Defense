@@ -6,7 +6,6 @@ Content\Images\Arrows\ArrowDown.xnb
 Content\Images\Arrows\ArrowLeft.xnb
 Content\Images\Arrows\ArrowRight.xnb
 Content\Images\Arrows\ArrowUp.xnb
-Content\Images\Enemies\Enemy.xnb
 Content\Images\Traps\Spikes.xnb
 Content\Images\Traps\GunTrapDown.xnb
 Content\Images\Traps\GunTrapLeft.xnb
@@ -16,7 +15,6 @@ Content\Images\Traps\Bullet.xnb
 Content\Images\Squares\HighlightedSquare.xnb
 Content\Images\Healthbars\EmptyBar.xnb
 Content\Images\Healthbars\FullBar.xnb
-Content\Images\Enemies\BigEnemy.xnb
 Content\Images\TrapPreviews\HighlightedBorder.xnb
 Content\Images\TrapPreviews\SpikesPreview.xnb
 Content\Images\TrapPreviews\GunTrapPreview.xnb
@@ -30,4 +28,11 @@ Content\Images\PureColors\Red.xnb
 Content\Fonts\MediumFont.xnb
 Content\Fonts\BigFont.xnb
 Content\Fonts\SmallFont.xnb
-Content\Images\Enemies\PoisonDrop.xnb
+Content\Images\Enemies\BasicEnemy\Image.xnb
+Content\Images\Enemies\BasicEnemy\Preview.xnb
+Content\Images\Enemies\BigEnemy\Image.xnb
+Content\Images\EnemyEffects\PoisonDrop.xnb
+Content\Images\PureColors\Blue.xnb
+Content\Images\PureColors\Green.xnb
+Content\Images\PureColors\White.xnb
+Content\Fonts\HugeFont.xnb

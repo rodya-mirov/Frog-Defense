@@ -69,6 +69,10 @@ namespace Frog_Defense
             get { return bigFont; }
         }
 
+        //All these offsets determine the location of all the panels
+        //The plan is: WaveTracker is a horizontal bar across the top
+        //Arena, PlayerHUD, and ButtonPanel are horizontally aligned underneath it
+        //ButtonPanel hugs the right, Arena hugs the left, and PlayerHUD hugs the arena on its left
         private int ArenaOffsetX
         {
             get
@@ -80,26 +84,35 @@ namespace Frog_Defense
         {
             get
             {
-                return waveTracker.PixelHeight + 10;
+                return waveTracker.PixelHeight + 10 + WaveTrackerOffsetY;
             }
         }
 
         private int PlayerOffsetX
         {
-            get { return 30 + arena.PixelWidth; }
+            get { return ArenaOffsetX + arena.PixelWidth + 10; }
         }
         private int PlayerOffsetY
         {
             get { return ArenaOffsetY; }
         }
 
+        private int WaveTrackerOffsetX
+        {
+            get { return 0; }
+        }
+        private int WaveTrackerOffsetY
+        {
+            get { return 0; }
+        }
+
         private int ButtonPanelOffsetX
         {
-            get { return Game.GraphicsDevice.Viewport.Width - buttonPanel.PixelWidth; }
+            get { return Game.GraphicsDevice.Viewport.Width - buttonPanel.PixelWidth - ArenaOffsetX; }
         }
         private int ButtonPanelOffsetY
         {
-            get { return waveTracker.PixelHeight; }
+            get { return ArenaOffsetY; }
         }
 
         /// <summary>
@@ -118,8 +131,6 @@ namespace Frog_Defense
 
             this.shouldResumeGame = false;
             this.paused = false;
-
-            waveTracker = new WaveTracker(this);
 
             buttonPanel = ButtonPanel.MakeDefaultPanel(this, smallFont);
         }
@@ -146,6 +157,8 @@ namespace Frog_Defense
         public void ResetGame()
         {
             arena = new Arena(this);
+            waveTracker = new WaveTracker(arena, this);
+
             player = new PlayerHUD(this, arena, 500);
 
             enemies = new Queue<Enemy>();
@@ -206,6 +219,7 @@ namespace Frog_Defense
                 updateTraps();
 
                 arena.Update();
+                waveTracker.Update();
             }
         }
 
@@ -311,7 +325,7 @@ namespace Frog_Defense
             drawArenaAndRelated(gameTime);
 
             player.Draw(gameTime, batch, PlayerOffsetX, PlayerOffsetY);
-
+            waveTracker.Draw(gameTime, batch, WaveTrackerOffsetX, WaveTrackerOffsetY);
             buttonPanel.Draw(gameTime, batch, ButtonPanelOffsetX, ButtonPanelOffsetY, paused);
 
             batch.End();

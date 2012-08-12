@@ -44,6 +44,12 @@ namespace Frog_Defense.Enemies
         protected Arena arena;
         protected GameUpdater env;
 
+        //preview images for WaveTracker
+        public const int PreviewImageWidth = 20;
+        public const int PreviewImageHeight = 20;
+
+        public abstract Texture2D PreviewTexture { get; }
+
         //textures for health bars
         protected const int healthBarWidth = 30;
         protected const int healthBarHeight = 4;
@@ -57,7 +63,7 @@ namespace Frog_Defense.Enemies
         protected const int poisonDropWidth = 8;
         protected const int poisonDropHeight = 8;
 
-        protected const String poisonDropPath = "Images/Enemies/PoisonDrop";
+        protected const String poisonDropPath = "Images/EnemyEffects/PoisonDrop";
         protected static Texture2D poisonDropTexture;
 
         //stuff for getting poisoned
@@ -85,12 +91,27 @@ namespace Frog_Defense.Enemies
         }
 
         /// <summary>
-        /// General Update method.  All extending creatures should
-        /// make sure to use base.Update!
+        /// General Update method.  Does things that all enemies must do!
+        /// Cannot be extended or overriden; specific behaviors should
+        /// implement the update() method.
         /// </summary>
-        public virtual void Update()
+        public void Update()
         {
+            update();
+
             takePoisonDamage();
+        }
+
+        /// <summary>
+        /// This is how enemies will be allowed to extend their behavior-
+        /// the main Update method calls this, then does all the default
+        /// behavior (like taking poison damage).
+        /// 
+        /// The net effect is that it's impossible NOT to call base.Update,
+        /// which is the point!
+        /// </summary>
+        protected virtual void update()
+        {
         }
 
         /// <summary>

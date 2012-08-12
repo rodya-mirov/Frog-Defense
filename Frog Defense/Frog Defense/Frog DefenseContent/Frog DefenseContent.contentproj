@@ -88,13 +88,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\Enemies\Enemy.png">
-      <Name>Enemy</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Images\Traps\Spikes.png">
       <Name>Spikes</Name>
       <Importer>TextureImporter</Importer>
@@ -152,13 +145,6 @@
     </Compile>
     <Compile Include="Images\Healthbars\FullBar.png">
       <Name>FullBar</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Images\Enemies\BigEnemy.png">
-      <Name>BigEnemy</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -238,10 +224,53 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\Enemies\PoisonDrop.png">
+    <Compile Include="Images\Enemies\BasicEnemy\Image.png">
+      <Name>Image</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Enemies\BasicEnemy\Preview.png">
+      <Name>Preview</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\Enemies\BigEnemy\Image.png">
+      <Name>Image</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\EnemyEffects\PoisonDrop.png">
       <Name>PoisonDrop</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\PureColors\Blue.png">
+      <Name>Blue</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\PureColors\Green.png">
+      <Name>Green</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\PureColors\White.png">
+      <Name>White</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Fonts\HugeFont.spritefont">
+      <Name>HugeFont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

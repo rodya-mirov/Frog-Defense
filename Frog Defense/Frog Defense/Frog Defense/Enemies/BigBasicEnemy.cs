@@ -15,10 +15,10 @@ namespace Frog_Defense.Enemies
 
         public override int CashValue
         {
-            get { return 80; }
+            get { return 15; }
         }
 
-        private const String imagePath = "Images/Enemies/BigEnemy";
+        private const String imagePath = "Images/Enemies/BigEnemy/Image";
         private static Texture2D imageTexture;
 
         protected override Texture2D ImageTexture
