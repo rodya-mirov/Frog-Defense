@@ -11,23 +11,26 @@ namespace Frog_Defense
 {
     class MenuScreen : DrawableGameComponent
     {
+        private enum MenuScreenType { Start, Death };
+
         private SpriteBatch batch;
         private Menu menu;
+        private MenuScreenType type;
 
-        private MenuScreen(Menu menu)
+        private MenuScreen(MenuScreenType type)
             : base(TDGame.MainGame)
         {
-            this.menu = menu;
+            this.type = type;
         }
 
         public static MenuScreen makeDeathScreen()
         {
-            return new MenuScreen(Menu.MakeDeathMenu());
+            return new MenuScreen(MenuScreenType.Death);
         }
 
         public static MenuScreen makeStartScreen()
         {
-            return new MenuScreen(Menu.MakeStartMenu());
+            return new MenuScreen(MenuScreenType.Start);
         }
 
         public override void Initialize()
@@ -35,6 +38,20 @@ namespace Frog_Defense
             base.Initialize();
 
             batch = new SpriteBatch(GraphicsDevice);
+
+            switch (type)
+            {
+                case MenuScreenType.Death:
+                    menu = Menu.MakeDeathMenu();
+                    break;
+
+                case MenuScreenType.Start:
+                    menu = Menu.MakeStartMenu();
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         protected override void LoadContent()
