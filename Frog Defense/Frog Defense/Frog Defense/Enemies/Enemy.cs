@@ -54,16 +54,15 @@ namespace Frog_Defense.Enemies
         protected static Texture2D healthBarEmptyTexture;
 
         //stuff for getting poisoned
-        protected Dictionary<int, PoisonCounter> poisonCounters;
-        protected Queue<int> poisonIDs;
+        protected bool isPoisoned;
+        protected PoisonCounter poisonCounter;
 
         protected Enemy(GameUpdater env, Arena arena)
         {
             this.env = env;
             this.arena = arena;
 
-            this.poisonIDs = new Queue<int>();
-            this.poisonCounters = new Dictionary<int, PoisonCounter>();
+            this.isPoisoned = false;
         }
 
         public static void LoadContent()
@@ -81,24 +80,29 @@ namespace Frog_Defense.Enemies
         /// </summary>
         public virtual void Update()
         {
-            int numPoisons = poisonIDs.Count;
+            takePoisonDamage();
+        }
 
-            for (int i = 0; i < numPoisons; i++)
+        /// <summary>
+        /// Called by default in Enemy.Update(); extensions should be
+        /// aware of this behavior.
+        /// 
+        /// Takes poison damage.  Default behavior is, if poisoned,
+        /// to reduce health by poisonCounter.damagePerTick, then
+        /// reduce ticksRemaining by 1.  If ticksRemaining reaches 0,
+        /// then is no longer poisoned.
+        /// 
+        /// Method does nothing if not poisoned.
+        /// </summary>
+        protected virtual void takePoisonDamage()
+        {
+            if (isPoisoned)
             {
-                int id = poisonIDs.Dequeue();
-                PoisonCounter pc = poisonCounters[id];
+                Health -= poisonCounter.damagePerTick;
+                poisonCounter.ticksRemaining--;
 
-                Health -= pc.damagePerTick;
-                pc.ticksRemaining -= 1;
-
-                if (pc.ticksRemaining > 0)
-                {
-                    poisonIDs.Enqueue(id);
-                }
-                else
-                {
-                    poisonCounters.Remove(id);
-                }
+                if (poisonCounter.ticksRemaining <= 0)
+                    isPoisoned = false;
             }
         }
 
@@ -116,12 +120,9 @@ namespace Frog_Defense.Enemies
         /// <param name="damage"></param>
         /// <param name="duration"></param>
         /// <param name="pid"></param>
-        public virtual void GetPoisoned(float damage, int duration, PoisonID pid)
+        public virtual void GetPoisoned(float damage, int duration)
         {
-            int id = pid.ID;
-
-            poisonIDs.Enqueue(id);
-            poisonCounters[id] = new PoisonCounter(damage, duration);
+            poisonCounter = new PoisonCounter(damage, duration);
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace Frog_Defense
     /// </summary>
     class PlayerHUD
     {
-        private int selectedPreviewIndex = -1;
+        private int selectedPreviewIndex;
 
         private int money;
         public int Money
@@ -73,7 +73,7 @@ namespace Frog_Defense
             fixedTraps.Add(new GunTrap(arena, env, -1, -1, Direction.UP));
             fixedTraps.Add(new DartTrap(arena, env, -1, -1, Direction.UP));
 
-            setSelectedTrap(0);
+            setSelectedTrap(-1);
         }
 
         /// <summary>
@@ -162,7 +162,11 @@ namespace Frog_Defense
         private void setSelectedTrap(int index)
         {
             selectedPreviewIndex = index;
-            arena.SelectedTrapType = fixedTraps[index].trapType;
+
+            if (0 <= index && index < fixedTraps.Count)
+                arena.SelectedTrapType = fixedTraps[index].trapType;
+            else
+                arena.SelectedTrapType = TrapType.NoType;
 
             fixPreviewString();
         }

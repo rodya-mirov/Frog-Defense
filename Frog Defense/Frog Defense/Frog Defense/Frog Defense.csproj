@@ -121,7 +121,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="StartScreen.cs" />
     <Compile Include="Traps\DartTrap.cs" />
-    <Compile Include="Traps\PoisonID.cs" />
     <Compile Include="Traps\WallProjectileTrap.cs" />
     <Compile Include="Traps\WallTrap.cs" />
     <Compile Include="Utilities.cs" />

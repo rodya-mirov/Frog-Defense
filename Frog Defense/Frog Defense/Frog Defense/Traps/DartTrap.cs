@@ -22,9 +22,8 @@ namespace Frog_Defense.Traps
             get
             {
                 return "Fires darts in a fixed direction." +
-                    "\nThe darts poison what they hit.\n\nSuccessive hits from the same" +
-                    "\nlauncher increase the duration,\nwhile hits from" +
-                    "separate launchers\nstack independently.";
+                    "\nThe darts poison what they hit.\n\nSuccessive hits replace existing" +
+                    "\npoison effects completely.";
             }
         }
 
@@ -91,8 +90,6 @@ namespace Frog_Defense.Traps
         #endregion
 
         #region POISON_STUFF
-        private PoisonID poisonID;
-
         /// <summary>
         /// The damage PER TICK of poison; this will happen roughly 60 times
         /// per second.
@@ -123,7 +120,6 @@ namespace Frog_Defense.Traps
         public DartTrap(Arena arena, GameUpdater env, int centerX, int centerY, Direction facing)
             : base(arena, env, centerX, centerY, facing)
         {
-            poisonID = PoisonID.GetPoisonID();
         }
 
         /// <summary>
@@ -153,7 +149,7 @@ namespace Frog_Defense.Traps
         protected override bool hitEnemy(Enemy e)
         {
             e.TakeHit(ProjectileDamage);
-            e.GetPoisoned(PoisonDamage, PoisonDuration, poisonID);
+            e.GetPoisoned(PoisonDamage, PoisonDuration);
 
             return true;
         }

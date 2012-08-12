@@ -642,26 +642,55 @@ namespace Frog_Defense
                 highlightedSquare.X = mouseX / squareWidth;
                 highlightedSquare.Y = mouseY / squareHeight;
 
-                int distUp, distDown, distRight, distLeft;
-
-                distUp = mouseY % squareHeight;
-                distDown = squareHeight - distUp;
-                distLeft = mouseX % squareWidth;
-                distRight = squareWidth - distLeft;
-
-                int minDist = Math.Min(distUp, Math.Min(distDown, Math.Min(distLeft, distRight)));
-
-                if (minDist == distUp)
-                    favoredDirection = Direction.DOWN;
-                else if (minDist == distDown)
-                    favoredDirection = Direction.UP;
-                else if (minDist == distRight)
-                    favoredDirection = Direction.LEFT;
-                else
-                    favoredDirection = Direction.RIGHT;
+                determineCurrentDirection();
             }
 
             makeTrap();
+        }
+
+        private void determineCurrentDirection()
+        {
+            int distUp, distDown, distRight, distLeft;
+
+            int x = highlightedSquare.X;
+            int y = highlightedSquare.Y;
+
+            //we don't need an accurate direction if the mouse is off-screen, and
+            //it's not clear what accurate would even mean, anyway
+            if (x < 0 || x >= width || y < 0 || y >= height)
+                return;
+
+            //check the distances to each of the walls, to determine the closest
+            distUp = mousePosition.Y % squareHeight;
+            distDown = squareHeight - distUp;
+            distLeft = mousePosition.X % squareWidth;
+            distRight = squareWidth - distLeft;
+
+            //if any of them is an unoccupied wall, give it a bonus, since it's
+            //what the user would actually want
+            if (y > 0 && floorType[x, y - 1] == SquareType.WALL && !hasWallTrap[Direction.DOWN][x, y - 1])
+                distUp -= squareHeight+squareWidth;
+
+            if (y + 1 < height && floorType[x, y + 1] == SquareType.WALL && !hasWallTrap[Direction.UP][x, y + 1])
+                distDown -= squareHeight + squareWidth;
+
+            if (x > 0 && floorType[x - 1, y] == SquareType.WALL && !hasWallTrap[Direction.RIGHT][x - 1, y])
+                distLeft -= squareHeight + squareWidth;
+
+            if (x + 1 < width && floorType[x + 1, y] == SquareType.WALL && !hasWallTrap[Direction.LEFT][x + 1, y])
+                distRight -= squareHeight + squareWidth;
+
+            //now find the min and pick direction accordingly
+            int minDist = Math.Min(distUp, Math.Min(distDown, Math.Min(distLeft, distRight)));
+
+            if (minDist == distUp)
+                favoredDirection = Direction.DOWN;
+            else if (minDist == distDown)
+                favoredDirection = Direction.UP;
+            else if (minDist == distRight)
+                favoredDirection = Direction.LEFT;
+            else
+                favoredDirection = Direction.RIGHT;
         }
 
         /// <summary>
