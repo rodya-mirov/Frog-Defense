@@ -105,7 +105,7 @@ namespace Frog_Defense.Traps
         /// </summary>
         public int PoisonDuration
         {
-            get { return 600; }
+            get { return 300; }
         }
         #endregion
 

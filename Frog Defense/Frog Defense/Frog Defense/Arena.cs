@@ -154,7 +154,7 @@ namespace Frog_Defense
             setupDefaultArena();
         }
 
-        private int framesBetweenSpawns = 45;
+        private int framesBetweenSpawns = 90;
         private int framesSinceSpawn = 0;
 
         public void Update()
@@ -460,10 +460,10 @@ namespace Frog_Defense
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="batch"></param>
-        public void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
+        public void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
         {
-            drawSquares(gameTime, batch, xOffset, yOffset);
-            drawArrows(batch, xOffset, yOffset);
+            drawSquares(gameTime, batch, xOffset, yOffset, paused);
+            drawArrows(batch, xOffset, yOffset, paused);
         }
 
         /// <summary>
@@ -472,7 +472,7 @@ namespace Frog_Defense
         /// <param name="batch"></param>
         /// <param name="xOffset"></param>
         /// <param name="yOffset"></param>
-        private void drawArrows(SpriteBatch batch, int xOffset, int yOffset)
+        private void drawArrows(SpriteBatch batch, int xOffset, int yOffset, bool paused)
         {
             Texture2D toDraw;
             int drawX, drawY;
@@ -531,7 +531,7 @@ namespace Frog_Defense
         /// <param name="batch"></param>
         /// <param name="xOffset"></param>
         /// <param name="yOffset"></param>
-        private void drawSquares(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
+        private void drawSquares(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
         {
             //Draw the passability grid
             Texture2D toDraw;
@@ -564,7 +564,7 @@ namespace Frog_Defense
                 && floorType[highlightedSquare.X, highlightedSquare.Y] != SquareType.VOID)
             {
                 if (selectedTrap != null)
-                    selectedTrap.Draw(gameTime, batch, xOffset, yOffset);
+                    selectedTrap.Draw(gameTime, batch, xOffset, yOffset, paused);
 
                 batch.Draw(
                     highlightedSquareTexture,
@@ -902,6 +902,25 @@ namespace Frog_Defense
 
                 default:
                     throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Draws a huge PAUSED fact across the screen if it's paused.  Does nothing
+        /// if the game isn't paused.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="batch"></param>
+        /// <param name="arenaOffsetX"></param>
+        /// <param name="arenaOffsetY"></param>
+        /// <param name="paused"></param>
+        public void DrawPausedOverlay(GameTime gameTime, SpriteBatch batch, int arenaOffsetX, int arenaOffsetY, bool paused)
+        {
+            if (paused)
+            {
+                Vector2 drawPosition = new Vector2();
+
+                batch.DrawString(env.BigFont, "PAUSED", drawPosition, Color.White);
             }
         }
     }

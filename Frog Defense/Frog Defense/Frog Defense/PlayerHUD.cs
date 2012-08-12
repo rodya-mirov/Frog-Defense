@@ -188,8 +188,7 @@ namespace Frog_Defense
         public void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
         {
             //Construct the text to draw ...
-            String toDraw = "   Cash: $" + Money;
-            toDraw += "\n   Health: " + Health;
+            String toDraw = "Cash: $" + Money + "\nHealth: " + Health;
 
             //Draw that text
             batch.DrawString(

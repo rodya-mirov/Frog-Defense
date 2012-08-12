@@ -93,7 +93,7 @@ namespace Frog_Defense.Traps
             }
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
+        public override void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
         {
             batch.Draw(
                 imageTexture,

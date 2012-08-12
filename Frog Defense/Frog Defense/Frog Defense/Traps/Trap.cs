@@ -34,7 +34,7 @@ namespace Frog_Defense.Traps
         public abstract String Description { get; }
 
         public abstract void Update(IEnumerable<Enemy> enemies);
-        public abstract void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset);
+        public abstract void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused);
 
         public const int PreviewWidth = 20;
         public const int PreviewHeight = 20;

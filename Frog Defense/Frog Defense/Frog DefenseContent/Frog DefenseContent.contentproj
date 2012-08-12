@@ -138,7 +138,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MediumFont.spritefont">
+    <Compile Include="Fonts\MediumFont.spritefont">
       <Name>MediumFont</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
@@ -176,15 +176,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BigFont.spritefont">
+    <Compile Include="Fonts\BigFont.spritefont">
       <Name>BigFont</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="SmallFont.spritefont">
-      <Name>SmallFont</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
@@ -221,6 +214,25 @@
   <ItemGroup>
     <Compile Include="Images\TrapPreviews\DartTrapPreview.png">
       <Name>DartTrapPreview</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Fonts\SmallFont.spritefont">
+      <Name>SmallFont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\PureColors\Black.png">
+      <Name>Black</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\PureColors\Red.png">
+      <Name>Red</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

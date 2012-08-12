@@ -24,6 +24,13 @@ namespace Frog_Defense.Menus
             get { return mousedOver; }
         }
 
+        protected bool active;
+        public virtual bool Active
+        {
+            get { return active; }
+            set { active = value; }
+        }
+
         public virtual String Text
         {
             get { return text; }
@@ -39,6 +46,7 @@ namespace Frog_Defense.Menus
             this.text = text;
 
             this.font = font;
+            this.active = true;
 
             size = font.MeasureString(text);
         }
@@ -65,11 +73,25 @@ namespace Frog_Defense.Menus
 
         public void Draw(GameTime gameTime, SpriteBatch batch)
         {
+            Color textColor;
+
+            if (Active)
+            {
+                if (mousedOver)
+                    textColor = Color.Yellow;
+                else
+                    textColor = Color.White;
+            }
+            else
+            {
+                textColor = Color.Brown;
+            }
+
             batch.DrawString(
                 font,
                 Text,
                 position,
-                mousedOver ? Color.White : Color.Gray
+                textColor
                 );
         }
     }

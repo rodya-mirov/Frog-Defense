@@ -19,12 +19,14 @@ Content\Images\Healthbars\FullBar.xnb
 Content\Images\Enemies\BigEnemy.xnb
 Content\Images\TrapPreviews\HighlightedBorder.xnb
 Content\Images\TrapPreviews\SpikesPreview.xnb
-Content\MediumFont.xnb
-Content\BigFont.xnb
-Content\SmallFont.xnb
 Content\Images\TrapPreviews\GunTrapPreview.xnb
 Content\Images\Traps\DartTrapDown.xnb
 Content\Images\Traps\DartTrapLeft.xnb
 Content\Images\Traps\DartTrapRight.xnb
 Content\Images\Traps\DartTrapUp.xnb
 Content\Images\TrapPreviews\DartTrapPreview.xnb
+Content\Images\PureColors\Black.xnb
+Content\Images\PureColors\Red.xnb
+Content\Fonts\MediumFont.xnb
+Content\Fonts\BigFont.xnb
+Content\Fonts\SmallFont.xnb

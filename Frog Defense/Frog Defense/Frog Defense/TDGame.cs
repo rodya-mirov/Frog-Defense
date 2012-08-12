@@ -26,6 +26,21 @@ namespace Frog_Defense
         //The main menu screen
         private StartScreen menu;
 
+        //some pure colors so other things can draw basic shapes easily
+        public static Texture2D PureRed
+        {
+            get { return pureRed; }
+        }
+        private static Texture2D pureRed;
+        private const String pureRedPath = "Images/PureColors/Red";
+
+        public static Texture2D PureBlack
+        {
+            get { return pureBlack; }
+        }
+        private static Texture2D pureBlack;
+        private const String pureBlackPath = "Images/PureColors/Black";
+
         GraphicsDeviceManager graphics;
 
         public TDGame()
@@ -57,6 +72,11 @@ namespace Frog_Defense
             env.Enabled = true;
         }
 
+        public bool HasSuspendedGame
+        {
+            get { return env.HasSuspendedGame; }
+        }
+
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -71,11 +91,18 @@ namespace Frog_Defense
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.  It also loads the content of all its components (apparently)
-        /// automatically, so we don't need to do anything here.
+        /// automatically, so we don't need to do anything here except load the
+        /// textures that everyone uses.
         /// </summary>
         protected override void LoadContent()
         {
             base.LoadContent();
+
+            if (pureBlack == null)
+                pureBlack = Content.Load<Texture2D>(pureBlackPath);
+
+            if (pureRed == null)
+                pureRed = Content.Load<Texture2D>(pureRedPath);
         }
 
         /// <summary>

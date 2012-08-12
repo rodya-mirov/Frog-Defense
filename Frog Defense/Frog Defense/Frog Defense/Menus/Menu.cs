@@ -41,7 +41,7 @@ namespace Frog_Defense.Menus
         {
             foreach (MenuItem item in items)
             {
-                if (item.MousedOver)
+                if (item.Active && item.MousedOver)
                     item.GetClicked();
             }
         }
@@ -49,11 +49,11 @@ namespace Frog_Defense.Menus
         public static void LoadContent()
         {
             if (smallFont == null)
-                smallFont = TDGame.MainGame.Content.Load<SpriteFont>("SmallFont");
+                smallFont = TDGame.MainGame.Content.Load<SpriteFont>("Fonts/SmallFont");
             if (mediumFont == null)
-                mediumFont = TDGame.MainGame.Content.Load<SpriteFont>("MediumFont");
+                mediumFont = TDGame.MainGame.Content.Load<SpriteFont>("Fonts/MediumFont");
             if (bigFont == null)
-                bigFont = TDGame.MainGame.Content.Load<SpriteFont>("BigFont");
+                bigFont = TDGame.MainGame.Content.Load<SpriteFont>("Fonts/BigFont");
         }
 
         public static Menu MakeStartMenu()
@@ -64,6 +64,7 @@ namespace Frog_Defense.Menus
             output.items = new List<MenuItem>();
 
             output.addItem(new NewGameButton("New Game", mediumFont));
+            output.addItem(new ResumeButton("Resume Game", mediumFont));
             output.addItem(new ExitButton("Exit Game", mediumFont));
 
             return output;

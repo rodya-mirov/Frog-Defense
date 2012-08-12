@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Frog_Defense.Traps;
 using Microsoft.Xna.Framework.Input;
 using Frog_Defense.Enemies;
+using Frog_Defense.Waves;
+using Frog_Defense.Buttons;
 
 namespace Frog_Defense
 {
@@ -18,11 +20,21 @@ namespace Frog_Defense
     /// </summary>
     class GameUpdater : DrawableGameComponent
     {
+        private bool paused;
+        public bool Paused
+        {
+            get { return paused; }
+            set { paused = value; }
+        }
+
         private PlayerHUD player;
         public PlayerHUD Player
         {
             get { return player; }
         }
+
+        private WaveTracker waveTracker;
+        private PauseButton pauseButton;
 
         private Arena arena;
         private Queue<Enemy> enemies;
@@ -30,6 +42,12 @@ namespace Frog_Defense
 
         private Queue<Trap> traps;
         private Queue<Trap> trapsToBeAdded;
+
+        private bool shouldResumeGame;
+        public bool HasSuspendedGame
+        {
+            get { return shouldResumeGame; }
+        }
 
         private SpriteBatch batch;
 
@@ -55,24 +73,33 @@ namespace Frog_Defense
         {
             get
             {
-                return 30;
+                return 10;
             }
         }
         private int ArenaOffsetY
         {
             get
             {
-                return (TDGame.MainGame.GraphicsDevice.Viewport.Height - arena.PixelHeight) / 2;
+                return waveTracker.PixelHeight + 10;
             }
         }
 
         private int PlayerOffsetX
         {
-            get { return ArenaOffsetX * 2 + arena.PixelWidth; }
+            get { return 30 + arena.PixelWidth; }
         }
         private int PlayerOffsetY
         {
             get { return ArenaOffsetY; }
+        }
+
+        private int PauseButtonOffsetX
+        {
+            get { return Game.GraphicsDevice.Viewport.Width - pauseButton.PixelWidth; }
+        }
+        private int PauseButtonOffsetY
+        {
+            get { return waveTracker.PixelHeight; }
         }
 
         /// <summary>
@@ -83,15 +110,17 @@ namespace Frog_Defense
         {
         }
 
-
-
         public override void Initialize()
         {
             base.Initialize();
 
             batch = new SpriteBatch(TDGame.MainGame.GraphicsDevice);
 
-            resetGame();
+            this.shouldResumeGame = false;
+            this.paused = false;
+
+            waveTracker = new WaveTracker(this);
+            pauseButton = new PauseButton(this, SmallFont, 80, 30);
         }
 
         protected override void OnEnabledChanged(object sender, EventArgs args)
@@ -102,7 +131,9 @@ namespace Frog_Defense
             if (this.Enabled)
             {
                 Console.WriteLine("It's GO TIME");
-                resetGame();
+
+                if (!shouldResumeGame)
+                    resetGame();
             }
         }
 
@@ -116,15 +147,17 @@ namespace Frog_Defense
 
             traps = new Queue<Trap>();
             trapsToBeAdded = new Queue<Trap>();
+
+            shouldResumeGame = true;
         }
 
         protected override void LoadContent()
         {
             base.LoadContent();
 
-            smallFont = TDGame.MainGame.Content.Load<SpriteFont>("SmallFont");
-            mediumFont = TDGame.MainGame.Content.Load<SpriteFont>("MediumFont");
-            bigFont = TDGame.MainGame.Content.Load<SpriteFont>("BigFont");
+            smallFont = TDGame.MainGame.Content.Load<SpriteFont>("Fonts/SmallFont");
+            mediumFont = TDGame.MainGame.Content.Load<SpriteFont>("Fonts/MediumFont");
+            bigFont = TDGame.MainGame.Content.Load<SpriteFont>("Fonts/BigFont");
 
             Arena.LoadContent();
             PlayerHUD.LoadContent();
@@ -142,23 +175,32 @@ namespace Frog_Defense
         {
             base.Update(gameTime);
 
-            while (trapsToBeAdded.Count > 0)
-            {
-                traps.Enqueue(trapsToBeAdded.Dequeue());
-            }
-
-            while (enemiesToBeAdded.Count > 0)
-            {
-                enemies.Enqueue(enemiesToBeAdded.Dequeue());
-            }
-
             updateMouse();
 
-            updateEnemies();
+            if (!TDGame.MainGame.IsActive)
+            {
+                paused = true;
+            }
+                
 
-            updateTraps();
+            if (!paused)
+            {
+                while (trapsToBeAdded.Count > 0)
+                {
+                    traps.Enqueue(trapsToBeAdded.Dequeue());
+                }
 
-            arena.Update();
+                while (enemiesToBeAdded.Count > 0)
+                {
+                    enemies.Enqueue(enemiesToBeAdded.Dequeue());
+                }
+
+                updateEnemies();
+
+                updateTraps();
+
+                arena.Update();
+            }
         }
 
         private int mouseX, mouseY;
@@ -190,6 +232,8 @@ namespace Frog_Defense
             {
                 arena.GetClicked();
                 player.GetClicked();
+                if (pauseButton.ContainsPoint(mouseX - PauseButtonOffsetX, mouseY - PauseButtonOffsetY))
+                    pauseButton.GetClicked();
             }
         }
 
@@ -259,6 +303,8 @@ namespace Frog_Defense
 
             player.Draw(gameTime, batch, PlayerOffsetX, PlayerOffsetY);
 
+            pauseButton.Draw(gameTime, batch, PauseButtonOffsetX, PauseButtonOffsetY, paused);
+
             batch.End();
         }
 
@@ -274,25 +320,27 @@ namespace Frog_Defense
             int arenaOffsetY = ArenaOffsetY;
 
             //Draw the arena and its walls...
-            arena.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY);
+            arena.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
 
             //...draw the traps...
             foreach (Trap t in traps)
             {
-                t.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY);
+                t.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
             }
 
             //...draw the enemies...
             foreach (Enemy e in enemies)
             {
-                e.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY);
+                e.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
             }
 
             //...and their health bars
             foreach (Enemy e in enemies)
             {
-                e.DrawHealthBar(gameTime, batch, arenaOffsetX, arenaOffsetY);
+                e.DrawHealthBar(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
             }
+
+            arena.DrawPausedOverlay(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
         }
     }
 }

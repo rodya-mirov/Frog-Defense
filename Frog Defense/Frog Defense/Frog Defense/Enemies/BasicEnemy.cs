@@ -201,7 +201,7 @@ namespace Frog_Defense.Enemies
                 hasGoal = false;
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
+        public override void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
         {
             Color tint;
 

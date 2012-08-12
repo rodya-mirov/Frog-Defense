@@ -108,6 +108,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arena.cs" />
+    <Compile Include="Buttons\Button.cs" />
+    <Compile Include="Buttons\PauseButton.cs" />
     <Compile Include="Enemies\BasicEnemy.cs" />
     <Compile Include="Enemies\BigBasicEnemy.cs" />
     <Compile Include="Enemies\Enemy.cs" />
@@ -116,6 +118,7 @@
     <Compile Include="Menus\Menu.cs" />
     <Compile Include="Menus\MenuItem.cs" />
     <Compile Include="Menus\NewGameButton.cs" />
+    <Compile Include="Menus\ResumeButton.cs" />
     <Compile Include="PlayerHUD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
@@ -128,6 +131,7 @@
     <Compile Include="Traps\GunTrap.cs" />
     <Compile Include="Traps\SpikeTrap.cs" />
     <Compile Include="Traps\Trap.cs" />
+    <Compile Include="Waves\WaveTracker.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

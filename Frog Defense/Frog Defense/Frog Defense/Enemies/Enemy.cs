@@ -123,6 +123,7 @@ namespace Frog_Defense.Enemies
         public virtual void GetPoisoned(float damage, int duration)
         {
             poisonCounter = new PoisonCounter(damage, duration);
+            isPoisoned = true;
         }
 
         /// <summary>
@@ -140,7 +141,7 @@ namespace Frog_Defense.Enemies
         /// <param name="batch"></param>
         /// <param name="xOffset"></param>
         /// <param name="yOffset"></param>
-        public abstract void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset);
+        public abstract void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused);
 
         /// <summary>
         /// This draws the health bar of the enemy in question.  This can be called separately and
@@ -150,7 +151,7 @@ namespace Frog_Defense.Enemies
         /// <param name="batch"></param>
         /// <param name="xOffset"></param>
         /// <param name="yOffset"></param>
-        public void DrawHealthBar(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
+        public void DrawHealthBar(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
         {
             Rectangle healthRect = new Rectangle(
                 XCenter - PixelWidth / 2 + xOffset,
