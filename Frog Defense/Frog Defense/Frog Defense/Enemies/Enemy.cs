@@ -11,6 +11,11 @@ namespace Frog_Defense.Enemies
     abstract class Enemy
     {
         /// <summary>
+        /// The default number of ticks after this enemy and before the next one.
+        /// </summary>
+        public abstract int TicksAfterSpawn { get; }
+
+        /// <summary>
         /// Whether or not this Enemy object has found its goal
         /// </summary>
         public abstract bool HasReachedGoal { get; }
@@ -28,12 +33,12 @@ namespace Frog_Defense.Enemies
         /// <summary>
         /// The center x-coordinate of the Enemy.
         /// </summary>
-        public abstract int XCenter { get; }
+        public abstract float XCenter { get; }
 
         /// <summary>
         /// The center y-coordinate of the enemy
         /// </summary>
-        public abstract int YCenter { get; }
+        public abstract float YCenter { get; }
 
         public abstract int PixelWidth { get; }
         public abstract int PixelHeight { get; }
@@ -78,12 +83,17 @@ namespace Frog_Defense.Enemies
         protected bool isPoisoned;
         protected PoisonCounter poisonCounter;
 
-        protected Enemy(ArenaManager env, ArenaMap arena)
+        //stuff for scaling
+        protected float scalingFactor;
+
+        protected Enemy(ArenaManager env, ArenaMap arena, float scalingLevel)
         {
             this.env = env;
             this.arena = arena;
 
             this.isPoisoned = false;
+
+            this.scalingFactor = scalingLevel;
         }
 
         public static void LoadContent()
@@ -92,6 +102,7 @@ namespace Frog_Defense.Enemies
 
             BasicEnemy.LoadContent();
             ToughEnemy.LoadContent();
+            QuickEnemy.LoadContent();
         }
 
         private static void loadEffects()
@@ -198,7 +209,7 @@ namespace Frog_Defense.Enemies
         /// <param name="leftX"></param>
         /// <param name="topY"></param>
         /// <param name="paused"></param>
-        protected virtual void DrawPoison(GameTime gameTime, SpriteBatch batch, int leftX, int topY, bool paused)
+        protected virtual void DrawPoison(GameTime gameTime, SpriteBatch batch, float leftX, float topY, bool paused)
         {
             Vector2 drawPosition = new Vector2(leftX, topY);
 
@@ -224,8 +235,8 @@ namespace Frog_Defense.Enemies
         public void DrawHealthBar(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
         {
             Rectangle healthRect = new Rectangle(
-                XCenter - PixelWidth / 2 + xOffset,
-                YCenter - PixelHeight / 2 + yOffset - healthBarHeight - 1,
+                (int)XCenter - PixelWidth / 2 + xOffset,
+                (int)YCenter - PixelHeight / 2 + yOffset - healthBarHeight - 1,
                 healthBarWidth,
                 healthBarHeight
                 );
@@ -234,7 +245,7 @@ namespace Frog_Defense.Enemies
             batch.Draw(healthBarEmptyTexture, healthRect, Color.White);
             
             //then draw the full bar, as appropriate
-            healthRect.Width = (int)((healthBarWidth * Health) / MAX_HEALTH);
+            healthRect.Width = (int)((healthBarWidth * Health) / (this.scalingFactor * MAX_HEALTH));
 
             batch.Draw(healthBarFullTexture, healthRect, Color.White);
         }

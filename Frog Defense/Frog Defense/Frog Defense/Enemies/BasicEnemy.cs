@@ -25,12 +25,10 @@ namespace Frog_Defense.Enemies
         /// <summary>
         /// The cash value dropped by a dead enemy
         /// </summary>
-        public override int CashValue
-        {
-            get { return 10; }
-        }
+        public override int CashValue { get { return 10; } }
+        public override int TicksAfterSpawn { get { return 45; } }
 
-        private bool hasReachedGoal = false;
+        private bool hasReachedGoal;
 
         /// <summary>
         /// Whether or not this enemy has hit a target
@@ -40,15 +38,20 @@ namespace Frog_Defense.Enemies
             get { return hasReachedGoal; }
         }
 
-        //We're using ints for position because XNA gets glitchy when we draw on floats
-        private int speed = 2;
+        /// <summary>
+        /// The number of pixels per tick to move
+        /// </summary>
+        protected virtual float Speed
+        {
+            get { return 1.7f; }
+        }
 
-        private int xCenter, yCenter;
-        public override int XCenter
+        private float xCenter, yCenter;
+        public override float XCenter
         {
             get { return xCenter; }
         }
-        public override int YCenter
+        public override float YCenter
         {
             get { return yCenter; }
         }
@@ -140,17 +143,18 @@ namespace Frog_Defense.Enemies
             }
         }
 
-        public BasicEnemy(ArenaMap arena, ArenaManager manager, int startX, int startY)
-            : base(manager, arena)
+        public BasicEnemy(ArenaMap arena, ArenaManager manager, int startX, int startY, float scale)
+            : base(manager, arena, scale)
         {
             this.xCenter = startX;
             this.yCenter = startY;
 
             Facing = Direction.UP;
 
-            this.health = MAX_HEALTH;
+            this.health = MAX_HEALTH * this.scalingFactor;
 
             hasGoal = false;
+            hasReachedGoal = false;
         }
 
         public override bool conflictsWithSquare(int squareX, int squareY)
@@ -342,19 +346,20 @@ namespace Frog_Defense.Enemies
 
             if (goalX < xCenter)
             {
-                xCenter = Math.Max(goalX, xCenter - speed);
+                xCenter = Math.Max(goalX, xCenter - Speed);
             }
             else if (goalX > xCenter)
             {
-                xCenter = Math.Min(goalX, xCenter + speed);
+                xCenter = Math.Min(goalX, xCenter + Speed);
             }
+
             if (goalY < yCenter)
             {
-                yCenter = Math.Max(goalY, yCenter - speed);
+                yCenter = Math.Max(goalY, yCenter - Speed);
             }
             else if (goalY > yCenter)
             {
-                yCenter = Math.Min(goalY, yCenter + speed);
+                yCenter = Math.Min(goalY, yCenter + Speed);
             }
 
             if (xCenter == goalX && yCenter == goalY)

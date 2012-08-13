@@ -40,7 +40,7 @@ namespace Frog_Defense
         private const String highlightBorderPath = "Images/TrapPreviews/HighlightedBorder";
         private static Texture2D highlightBorderTexture;
 
-        public PlayerHUD(GameUpdater env, int startingMoney = 800)
+        public PlayerHUD(GameUpdater env, int startingMoney = 1000)
         {
             this.money = startingMoney;
             this.env = env;

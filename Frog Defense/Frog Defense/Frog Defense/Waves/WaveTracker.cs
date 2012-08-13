@@ -44,31 +44,49 @@ namespace Frog_Defense.Waves
             this.enemies = new Queue<EnemyTracker>();
             this.toBeSpawned = new Queue<Enemy>();
 
-            loadEnemies();
+            loadDefaultEnemies();
         }
 
-        private void loadEnemies()
+        private void loadDefaultEnemies()
         {
             Enemy e;
 
-            int lag = 180;
+            int waveInterval = 420;
 
-            for (int i = 0; i < 10; i++)
+            int lag = waveInterval;
+
+            for (float level = 1f; level < 4f; level += 1f)
             {
-                e = new BasicEnemy(arena, env, -1, -1);
-                enemies.Enqueue(new EnemyTracker(e, lag));
 
-                lag += 35;
-            }
+                for (int i = 0; i < 15; i++)
+                {
+                    e = new BasicEnemy(arena, env, -1, -1, level);
+                    enemies.Enqueue(new EnemyTracker(e, lag));
 
-            lag += 180;
-            
-            for (int i = 0; i < 10; i++)
-            {
-                e = new ToughEnemy(arena, env, -1, -1);
-                enemies.Enqueue(new EnemyTracker(e, lag));
+                    lag += e.TicksAfterSpawn;
+                }
 
-                lag += 60;
+                lag += waveInterval;
+
+                for (int i = 0; i < 15; i++)
+                {
+                    e = new QuickEnemy(arena, env, -1, -1, level);
+                    enemies.Enqueue(new EnemyTracker(e, lag));
+
+                    lag += e.TicksAfterSpawn;
+                }
+
+                lag += waveInterval;
+
+                for (int i = 0; i < 8; i++)
+                {
+                    e = new ToughEnemy(arena, env, -1, -1, level);
+                    enemies.Enqueue(new EnemyTracker(e, lag));
+
+                    lag += e.TicksAfterSpawn;
+                }
+
+                lag += waveInterval;
             }
         }
 

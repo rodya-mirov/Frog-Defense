@@ -53,4 +53,9 @@ Content\Images\Enemies\ToughEnemy\Down.xnb
 Content\Images\Enemies\ToughEnemy\Left.xnb
 Content\Images\Enemies\ToughEnemy\Right.xnb
 Content\Images\Enemies\ToughEnemy\Up.xnb
+Content\Images\Enemies\QuickEnemy\Down.xnb
+Content\Images\Enemies\QuickEnemy\Left.xnb
+Content\Images\Enemies\QuickEnemy\Preview.xnb
+Content\Images\Enemies\QuickEnemy\Right.xnb
+Content\Images\Enemies\QuickEnemy\Up.xnb
 Maps\DefaultMap.txt

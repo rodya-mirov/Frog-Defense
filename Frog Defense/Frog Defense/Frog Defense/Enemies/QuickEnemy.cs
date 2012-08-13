@@ -6,28 +6,30 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Frog_Defense.Enemies
 {
-    class ToughEnemy : BasicEnemy
+    class QuickEnemy : BasicEnemy
     {
-        /// <summary>
-        /// This is the percentage damage that ToughEnemy actually takes
-        /// </summary>
-        private const float toughnessFactor = .5f;
+        public override int CashValue
+        {
+            get { return 15; }
+        }
 
-        public override int CashValue { get { return 15; } }
-        protected override float Speed { get { return 1.2f; } }
-        public override int TicksAfterSpawn { get { return 65; } }
+        protected override float Speed
+        {
+            get { return 2.5f; }
+        }
+        public override int TicksAfterSpawn { get { return 45; } }
 
-        private const String previewPath = "Images/Enemies/ToughEnemy/Preview";
+        private const String previewPath = "Images/Enemies/QuickEnemy/Preview";
         private static Texture2D previewTexture;
         public override Texture2D PreviewTexture
         {
             get { return previewTexture; }
         }
 
-        private const String leftPath = "Images/Enemies/ToughEnemy/Left";
-        private const String rightPath = "Images/Enemies/ToughEnemy/Right";
-        private const String upPath = "Images/Enemies/ToughEnemy/Up";
-        private const String downPath = "Images/Enemies/ToughEnemy/Down";
+        private const String leftPath = "Images/Enemies/QuickEnemy/Left";
+        private const String rightPath = "Images/Enemies/QuickEnemy/Right";
+        private const String upPath = "Images/Enemies/QuickEnemy/Up";
+        private const String downPath = "Images/Enemies/QuickEnemy/Down";
 
         private static Texture2D leftTexture;
         private static Texture2D rightTexture;
@@ -39,7 +41,7 @@ namespace Frog_Defense.Enemies
         protected override Texture2D UpTexture { get { return upTexture; } }
         protected override Texture2D DownTexture { get { return downTexture; } }
 
-        public ToughEnemy(ArenaMap arena, ArenaManager env, int startX, int startY, float scale)
+        public QuickEnemy(ArenaMap arena, ArenaManager env, int startX, int startY, float scale)
             : base(arena, env, startX, startY, scale)
         {
         }
@@ -60,11 +62,6 @@ namespace Frog_Defense.Enemies
 
             if (previewTexture == null)
                 previewTexture = TDGame.MainGame.Content.Load<Texture2D>(previewPath);
-        }
-
-        public override void TakeHit(float damage)
-        {
-            base.TakeHit(damage * toughnessFactor);
         }
     }
 }
