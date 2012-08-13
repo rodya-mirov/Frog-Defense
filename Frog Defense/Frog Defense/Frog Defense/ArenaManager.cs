@@ -64,7 +64,7 @@ namespace Frog_Defense
 
         public void ResetGame()
         {
-            arenaMap = new ArenaMap(this);
+            arenaMap = ArenaMap.MakeMapFromTextFile("Maps/DefaultMap.txt", this);
             waveTracker = new WaveTracker(arenaMap, this);
 
             enemies = new Queue<Enemy>();

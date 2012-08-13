@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Frog_Defense.Traps;
 using Frog_Defense.Enemies;
+using System.IO;
 
 namespace Frog_Defense
 {
@@ -38,8 +39,8 @@ namespace Frog_Defense
         private Trap selectedTrap;
 
         //Graphically, the size (in pixels) of grid squares.
-        private const int squareWidth = 40;
-        private const int squareHeight = 40;
+        private const int squareWidth = 30;
+        private const int squareHeight = 30;
 
         /// <summary>
         /// The most recent square that was moused over.  The default value,
@@ -84,15 +85,15 @@ namespace Frog_Defense
 
         //textures and paths to find those textures
         //for squares ...
-        private const String passableSquarePath = "Images/Squares/PassableSquare";
+        private const String passableSquarePath = "Images/Squares/PassableSquareMedium";
         private static Texture2D passableSquareTexture;
-        private const String impassableSquarePath = "Images/Squares/ImpassableSquare";
+        private const String impassableSquarePath = "Images/Squares/ImpassableSquareMedium";
         private static Texture2D impassableSquareTexture;
-        private const String startSquarePath = "Images/Squares/StartSquare";
+        private const String startSquarePath = "Images/Squares/StartSquareMedium";
         private static Texture2D startSquareTexture;
-        private const String goalSquarePath = "Images/Squares/GoalSquare";
+        private const String goalSquarePath = "Images/Squares/GoalSquareMedium";
         private static Texture2D goalSquareTexture;
-        private const String highlightedSquarePath = "Images/Squares/HighlightedSquare";
+        private const String highlightedSquarePath = "Images/Squares/HighlightedSquareMedium";
         private static Texture2D highlightedSquareTexture;
 
         //for arrows ...
@@ -138,11 +139,126 @@ namespace Frog_Defense
                 leftArrowTexture = TDGame.MainGame.Content.Load<Texture2D>(leftArrowPath);
         }
 
-        public ArenaMap(ArenaManager env)
+        private ArenaMap(ArenaManager env)
         {
             this.manager = env;
+        }
 
-            setupDefaultArena();
+        /// <summary>
+        /// Parses a file into a map, with the following rules:
+        ///     -   is a (passable) floor tile
+        ///     s   is a spawn point (where enemies come from)
+        ///     h   is a home point (what you defend)
+        ///     everything else is defaulted to an impassable wall tile
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="env"></param>
+        /// <returns></returns>
+        public static ArenaMap MakeMapFromTextFile(String filename, ArenaManager env)
+        {
+            List<string> lines = getLines(filename);
+
+            //stretch every line until they're as long as their longest memer
+            int maxWidth = 0;
+            foreach (string s in lines)
+                maxWidth = Math.Max(maxWidth, s.Length);
+
+            String line;
+            for (int i = 0; i < lines.Count; i++)
+            {
+                line = lines[i];
+                while (line.Length < maxWidth)
+                    line += " ";
+                lines[i] = line;
+            }
+
+            //now we have a width and a height- add a buffer row/col on every side
+            int width = lines[0].Length + 2;
+            int height = lines.Count + 2;
+
+            //now it's as simple as parsing the text
+            ArenaMap output = new ArenaMap(env);
+            output.spawnPositions = new Queue<Point>();
+            output.goalPositions = new Queue<Point>();
+
+            output.width = width;
+            output.height = height;
+            output.floorType = new SquareType[width, height];
+
+            //put walls along the top and bottom
+            for (int x = 0; x < width; x++)
+            {
+                output.floorType[x, 0] = SquareType.WALL;
+                output.floorType[x, height - 1] = SquareType.WALL;
+            }
+
+            //now parse ...
+            //Note the funny bounds are to compensate for the new top
+            //and bottom walls which aren't in the text file
+            for (int y = 1; y + 1 < height; y++)
+            {
+                //similarly here, add the walls ...
+                line = " " + lines[y - 1] + " ";
+
+                for(int x = 0; x < width; x++)
+                {
+                    char c = line[x];
+
+                    if (c == '-')
+                    {
+                        output.floorType[x, y] = SquareType.FLOOR;
+                    }
+                    else if (c == 's')
+                    {
+                        output.floorType[x, y] = SquareType.FLOOR;
+                        output.spawnPositions.Enqueue(new Point(x, y));
+                    }
+                    else if (c == 'h')
+                    {
+                        output.floorType[x, y] = SquareType.FLOOR;
+                        output.goalPositions.Enqueue(new Point(x, y));
+                    }
+                    else
+                    {
+                        output.floorType[x, y] = SquareType.WALL;
+                    }
+                }
+            }
+
+            output.finishMap();
+
+            return output;
+        }
+
+        /// <summary>
+        /// Returns the list of lines which make up a file
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        private static List<string> getLines(String filename)
+        {
+            StreamReader reader = new StreamReader(filename);
+            List<string> lines = new List<string>();
+
+            String line;
+
+            //Can't resist the two-line-loop :) This just piles the lines into the list
+            while ((line = reader.ReadLine()) != null)
+                lines.Add(line);
+
+            reader.Close();
+
+            return lines;
+        }
+
+        /// <summary>
+        /// Returns the default map
+        /// </summary>
+        /// <param name="env"></param>
+        /// <returns></returns>
+        public static ArenaMap DefaultMap(ArenaManager env)
+        {
+            return ArenaMap.MakeMapFromTextFile("Maps/DefaultMap.txt", env);
         }
 
         /// <summary>
@@ -248,10 +364,24 @@ namespace Frog_Defense
                 floorType[2, y] = SquareType.FLOOR;
             }
 
+            finishMap();
+        }
+
+        /// <summary>
+        /// Clears out trap spots, automatically assigns walls and voids, and rigs up the pathing.
+        /// </summary>
+        private void finishMap()
+        {
+            clearTraps();
             autoassignVoid();
             updatePathing();
+        }
 
-            //no traps
+        /// <summary>
+        /// Sets all squares to unoccupied (from a trap perspective).
+        /// </summary>
+        private void clearTraps()
+        {
             hasFloorTrap = new bool[width, height];
 
             hasWallTrap = new Dictionary<Direction, bool[,]>();
@@ -273,10 +403,21 @@ namespace Frog_Defense
             }
         }
 
-        //This method automatically replaces all WALL tiles with VOID
-        //if none of its neighbors (including diagonal!) are FLOOR tiles
+        /// <summary>
+        /// This method automatically replaces all WALL tiles with VOID
+        /// if none of its neighbors (including diagonal!) are FLOOR tiles
+        /// </summary>
         private void autoassignVoid()
         {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (floorType[x, y] == SquareType.VOID)
+                        floorType[x, y] = SquareType.WALL;
+                }
+            }
+
             bool[,] canSwitch = new bool[width, height];
 
             for (int x = 0; x < width; x++)
@@ -509,8 +650,7 @@ namespace Frog_Defense
 
             //now the highlighted square, if appropriate, along with the selected trap
             if (0 <= highlightedSquare.X && highlightedSquare.X < width
-                && 0 <= highlightedSquare.Y && highlightedSquare.Y < height
-                && floorType[highlightedSquare.X, highlightedSquare.Y] != SquareType.VOID)
+                && 0 <= highlightedSquare.Y && highlightedSquare.Y < height)
             {
                 if (selectedTrap != null)
                     selectedTrap.Draw(gameTime, batch, xOffset, yOffset, paused);
@@ -694,9 +834,36 @@ namespace Frog_Defense
 
                     return;
 
+                case TrapType.Dig:
+                    if (manager.Player.AttemptSpend(selectedTrap.Cost))
+                    {
+                        dig();
+                    }
+                    return;
+
                 default:
                     throw new NotImplementedException();
             }
+        }
+
+        /// <summary>
+        /// Digs at the selected location.  Takes care of the cleanup as well.
+        /// </summary>
+        private void dig()
+        {
+            int x = highlightedSquare.X;
+            int y = highlightedSquare.Y;
+
+            if (x < 0 || x >= width || y < 0 || y >= height)
+                throw new IndexOutOfRangeException();
+
+            if (floorType[x, y] != SquareType.WALL && floorType[x, y] != SquareType.VOID)
+                throw new ArgumentException();
+
+            floorType[x, y] = SquareType.FLOOR;
+
+            autoassignVoid();
+            updatePathing();
         }
 
         private void makeTrap()
@@ -743,8 +910,31 @@ namespace Frog_Defense
                     makeWallTrap();
                     break;
 
+                case TrapType.Dig:
+                    makeDigIndicator();
+                    break;
+
                 default:
                     throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Just makes SelectedTrap into a Dig (indicator),
+        /// assuming the highlighted square is a wall or void
+        /// </summary>
+        private void makeDigIndicator()
+        {
+            int x = highlightedSquare.X;
+            int y = highlightedSquare.Y;
+
+            if (floorType[x, y] == SquareType.VOID || floorType[x, y] == SquareType.WALL)
+            {
+                selectedTrap = new Dig(manager, x * squareWidth + squareWidth / 2, y * squareHeight + squareHeight / 2);
+            }
+            else
+            {
+                selectedTrap = null;
             }
         }
 

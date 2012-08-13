@@ -208,6 +208,8 @@ namespace Frog_Defense
             loadColors();
 
             loadFonts();
+
+            Console.WriteLine(GraphicsDevice.Viewport.Bounds.ToString());
         }
 
         private void loadColors()

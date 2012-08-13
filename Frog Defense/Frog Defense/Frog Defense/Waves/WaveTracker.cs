@@ -58,14 +58,14 @@ namespace Frog_Defense.Waves
                 e = new BasicEnemy(arena, env, -1, -1);
                 enemies.Enqueue(new EnemyTracker(e, lag));
 
-                lag += 45;
+                lag += 35;
             }
 
             lag += 180;
             
             for (int i = 0; i < 10; i++)
             {
-                e = new BigBasicEnemy(arena, env, -1, -1);
+                e = new ToughEnemy(arena, env, -1, -1);
                 enemies.Enqueue(new EnemyTracker(e, lag));
 
                 lag += 60;

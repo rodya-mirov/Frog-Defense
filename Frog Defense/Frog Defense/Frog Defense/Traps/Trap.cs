@@ -8,7 +8,7 @@ using Frog_Defense.Enemies;
 
 namespace Frog_Defense.Traps
 {
-    enum TrapType { NoType, SpikeTrap, GunTrap, DartTrap };
+    enum TrapType { NoType, SpikeTrap, GunTrap, DartTrap, Dig };
 
     abstract class Trap
     {
@@ -24,6 +24,7 @@ namespace Frog_Defense.Traps
             SpikeTrap.LoadContent();
             GunTrap.LoadContent();
             DartTrap.LoadContent();
+            Dig.LoadContent();
         }
 
         public override string ToString()

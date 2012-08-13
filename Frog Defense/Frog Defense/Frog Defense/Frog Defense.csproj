@@ -114,7 +114,7 @@
     <Compile Include="Buttons\MenuButton.cs" />
     <Compile Include="Buttons\PauseButton.cs" />
     <Compile Include="Enemies\BasicEnemy.cs" />
-    <Compile Include="Enemies\BigBasicEnemy.cs" />
+    <Compile Include="Enemies\ToughEnemy.cs" />
     <Compile Include="Enemies\Enemy.cs" />
     <Compile Include="GameUpdater.cs" />
     <Compile Include="MenuScreen.cs" />
@@ -128,6 +128,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Traps\DartTrap.cs" />
+    <Compile Include="Traps\Dig.cs" />
     <Compile Include="Traps\WallProjectileTrap.cs" />
     <Compile Include="Traps\WallTrap.cs" />
     <Compile Include="Utilities.cs" />
@@ -140,6 +141,9 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="Maps\DefaultMap.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Frog DefenseContent\Frog DefenseContent.contentproj">

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Frog_Defense.Enemies
 {
-    class BigBasicEnemy : BasicEnemy
+    class ToughEnemy : BasicEnemy
     {
         protected override float MAX_HEALTH
         {
@@ -18,21 +18,21 @@ namespace Frog_Defense.Enemies
             get { return 15; }
         }
 
-        private const String imagePath = "Images/Enemies/BigEnemy/Image";
+        private const String imagePath = "Images/Enemies/ToughEnemy/Image";
         private static Texture2D imageTexture;
         protected override Texture2D ImageTexture
         {
             get { return imageTexture; }
         }
 
-        private const String previewPath = "Images/Enemies/BigEnemy/Preview";
+        private const String previewPath = "Images/Enemies/ToughEnemy/Preview";
         private static Texture2D previewTexture;
         public override Texture2D PreviewTexture
         {
             get { return previewTexture; }
         }
 
-        public BigBasicEnemy(ArenaMap arena, ArenaManager env, int startX, int startY)
+        public ToughEnemy(ArenaMap arena, ArenaManager env, int startX, int startY)
             : base(arena, env, startX, startY)
         {
         }

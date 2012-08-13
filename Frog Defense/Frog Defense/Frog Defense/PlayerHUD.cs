@@ -10,11 +10,9 @@ namespace Frog_Defense
 {
     /// <summary>
     /// The role of this class is a little nebulous.  Fundamentally, it's a
-    /// resource tracker.  But that's just a couple of variables, and they
-    /// could really be stored anywhere.  They just needed a home?
-    /// 
-    /// But this class also displays the HUD, so maybe the name is a little
-    /// wrong.
+    /// resource tracker.  But it's also a HUD!  There was just no reason
+    /// to create a subobject just to track the player's money (there
+    /// was just nothing else going on!)
     /// </summary>
     class PlayerHUD
     {
@@ -67,6 +65,7 @@ namespace Frog_Defense
 
             fixedTraps = new List<Trap>();
 
+            fixedTraps.Add(new Dig(env.ArenaManager, -1, -1));
             fixedTraps.Add(new SpikeTrap(env.ArenaManager, -1, -1));
             fixedTraps.Add(new GunTrap(env.ArenaManager, -1, -1, Direction.UP));
             fixedTraps.Add(new DartTrap(env.ArenaManager, -1, -1, Direction.UP));

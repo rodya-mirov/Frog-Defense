@@ -236,7 +236,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\Enemies\BigEnemy\Image.png">
+    <Compile Include="Images\Enemies\ToughEnemy\Image.png">
       <Name>Image</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -274,8 +274,59 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\Enemies\BigEnemy\Preview.png">
+    <Compile Include="Images\Enemies\ToughEnemy\Preview.png">
       <Name>Preview</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Maps\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\Squares\GoalSquareMedium.png">
+      <Name>GoalSquareMedium</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Squares\HighlightedSquareMedium.png">
+      <Name>HighlightedSquareMedium</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Squares\ImpassableSquareMedium.png">
+      <Name>ImpassableSquareMedium</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Squares\PassableSquareMedium.png">
+      <Name>PassableSquareMedium</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Squares\StartSquareMedium.png">
+      <Name>StartSquareMedium</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\TrapPreviews\ShovelPreview.png">
+      <Name>ShovelPreview</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\Traps\HighlightedBorder.png">
+      <Name>HighlightedBorder</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\Traps\DigIndicator.png">
+      <Name>DigIndicator</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

@@ -83,7 +83,7 @@ namespace Frog_Defense.Enemies
             loadEffects();
 
             BasicEnemy.LoadContent();
-            BigBasicEnemy.LoadContent();
+            ToughEnemy.LoadContent();
         }
 
         private static void loadEffects()
