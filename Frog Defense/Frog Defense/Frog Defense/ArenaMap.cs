@@ -560,6 +560,7 @@ namespace Frog_Defense
         {
             drawSquares(gameTime, batch, xOffset, yOffset, paused);
             drawArrows(batch, xOffset, yOffset, paused);
+            drawHighlightedAndSpecial(gameTime, batch, xOffset, yOffset, paused);
         }
 
         /// <summary>
@@ -659,7 +660,10 @@ namespace Frog_Defense
                         );
                 }
             }
+        }
 
+        private void drawHighlightedAndSpecial(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
+        {
             //now the highlighted square, if appropriate, along with the selected trap
             //we also don't highlight void tiles, because it looks goofy
             if (0 <= highlightedSquare.X && highlightedSquare.X < width
@@ -678,7 +682,7 @@ namespace Frog_Defense
                     Color.White
                     );
             }
-            
+
             //now the starts
             foreach (Point p in spawnPositions)
             {
@@ -1465,30 +1469,6 @@ namespace Frog_Defense
 
                 default:
                     throw new NotImplementedException();
-            }
-        }
-
-        /// <summary>
-        /// Draws a huge PAUSED fact across the screen if it's paused.  Does nothing
-        /// if the game isn't paused.
-        /// </summary>
-        /// <param name="gameTime"></param>
-        /// <param name="batch"></param>
-        /// <param name="arenaOffsetX"></param>
-        /// <param name="arenaOffsetY"></param>
-        /// <param name="paused"></param>
-        public void DrawPausedOverlay(GameTime gameTime, SpriteBatch batch, int arenaOffsetX, int arenaOffsetY, bool paused)
-        {
-            if (paused)
-            {
-                Vector2 size = TDGame.HugeFont.MeasureString("PAUSED");
-
-                Vector2 drawPosition = new Vector2(
-                    arenaOffsetX + (int)((PixelWidth - size.X) / 2),
-                    arenaOffsetY + (int)((PixelHeight - size.Y) / 2)
-                    );
-
-                batch.DrawString(TDGame.HugeFont, "PAUSED", drawPosition, Color.White);
             }
         }
 

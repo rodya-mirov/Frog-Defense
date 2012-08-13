@@ -12,11 +12,16 @@ namespace Frog_Defense
 {
     class ArenaManager
     {
+        private Point arenaTranslation;
+
         private ArenaMap arenaMap;
         public ArenaMap Map { get { return arenaMap; } }
 
         private WaveTracker waveTracker;
         public WaveTracker WaveTracker { get { return waveTracker; } }
+
+        private ScrollPanel scrollPanel;
+        public ScrollPanel ScrollPanel { get { return scrollPanel; } }
 
         private Queue<Enemy> enemies;
         private Queue<Enemy> enemiesToBeAdded;
@@ -26,19 +31,12 @@ namespace Frog_Defense
 
         private GameUpdater env;
 
-        public int PixelWidthArena
-        {
-            get { return arenaMap.PixelWidth; }
-        }
-        public int PixelHeightArena
-        {
-            get { return arenaMap.PixelHeight; }
-        }
-
         public PlayerHUD Player
         {
             get { return env.Player; }
         }
+
+        private const int scrollPanelWidth = 10;
 
         private TrapType selectedTrapType;
         public TrapType SelectedTrapType
@@ -47,10 +45,20 @@ namespace Frog_Defense
             set { selectedTrapType = value; }
         }
 
-        public ArenaManager(GameUpdater env)
+        public ArenaManager(GameUpdater env, int pixelWidth, int pixelHeight)
         {
             this.env = env;
             this.selectedTrapType = TrapType.NoType;
+
+            this.arenaTranslation = new Point(0, 0);
+
+            this.scrollPanel = new ScrollPanel(this, scrollPanelWidth, pixelWidth, pixelHeight);
+        }
+
+        public void scrollMap(int xChange, int yChange)
+        {
+            arenaTranslation.X += xChange;
+            arenaTranslation.Y += yChange;
         }
 
         public static void LoadContent()
@@ -93,7 +101,10 @@ namespace Frog_Defense
 
         public void Update(GameTime gameTime, bool paused)
         {
-            //first, add in all the queued up new friends :)
+            //deal with the scrolling
+            scrollPanel.Update();
+
+            //next, add in all the queued up new friends :)
             foreach (Trap t in trapsToBeAdded)
                 traps.Enqueue(t);
 
@@ -179,27 +190,50 @@ namespace Frog_Defense
 
         public void DrawArena(GameTime gameTime, SpriteBatch batch, int arenaOffsetX, int arenaOffsetY, bool paused)
         {
-            arenaMap.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
+            arenaMap.Draw(gameTime,
+                batch,
+                arenaOffsetX + arenaTranslation.X + scrollPanelWidth,
+                arenaOffsetY + arenaTranslation.Y + scrollPanelWidth,
+                paused);
 
             //...draw the traps...
             foreach (Trap t in traps)
             {
-                t.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
+                t.Draw(
+                    gameTime,
+                    batch,
+                    arenaOffsetX + arenaTranslation.X + scrollPanelWidth,
+                    arenaOffsetY + arenaTranslation.Y + scrollPanelWidth,
+                    paused
+                    );
             }
 
             //...draw the enemies...
             foreach (Enemy e in enemies)
             {
-                e.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
+                e.Draw(
+                    gameTime,
+                    batch,
+                    arenaOffsetX + arenaTranslation.X + scrollPanelWidth,
+                    arenaOffsetY + arenaTranslation.Y + scrollPanelWidth,
+                    paused
+                    );
             }
 
             //...and their health bars
             foreach (Enemy e in enemies)
             {
-                e.DrawHealthBar(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
+                e.DrawHealthBar(
+                    gameTime,
+                    batch,
+                    arenaOffsetX + arenaTranslation.X + scrollPanelWidth,
+                    arenaOffsetY + arenaTranslation.Y + scrollPanelWidth,
+                    paused
+                    );
             }
 
-            arenaMap.DrawPausedOverlay(gameTime, batch, arenaOffsetX, arenaOffsetY, paused);
+            //and finally, draw the scroll bars
+            scrollPanel.Draw(gameTime, batch, arenaOffsetX, arenaOffsetY);
         }
 
         public void spawnEnemy(Enemy e)
@@ -321,6 +355,16 @@ namespace Frog_Defense
                 if (!t.isOnSquare(x, y))
                     traps.Enqueue(t);
             }
+        }
+
+        public void updateMousePosition(int mouseX, int mouseY)
+        {
+            arenaMap.updateMousePosition(
+                mouseX - scrollPanelWidth - arenaTranslation.X,
+                mouseY - scrollPanelWidth - arenaTranslation.Y
+                );
+
+            scrollPanel.updateMousePosition(mouseX, mouseY);
         }
     }
 }

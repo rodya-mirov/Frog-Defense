@@ -53,20 +53,43 @@ namespace Frog_Defense
         {
             get
             {
-                return 10;
+                return 0;
             }
         }
         private int ArenaOffsetY
         {
             get
             {
-                return arenaManager.WaveTracker.PixelHeight + 10 + WaveTrackerOffsetY;
+                return WaveTracker.PixelHeight + WaveTrackerOffsetY;
+            }
+        }
+
+        private int ArenaPixelWidth
+        {
+            get { return 450; }
+        }
+
+        private int ArenaPixelHeight
+        {
+            get { return GraphicsDevice.Viewport.Height - ArenaOffsetY; }
+        }
+
+        private Rectangle ArenaScissorRectangle
+        {
+            get
+            {
+                return new Rectangle(
+                    ArenaOffsetX,
+                    ArenaOffsetY,
+                    ArenaPixelWidth,
+                    ArenaPixelHeight
+                    );
             }
         }
 
         private int PlayerOffsetX
         {
-            get { return ArenaOffsetX + arenaManager.PixelWidthArena + 10; }
+            get { return ArenaOffsetX + ArenaPixelWidth + 10; }
         }
         private int PlayerOffsetY
         {
@@ -108,7 +131,7 @@ namespace Frog_Defense
             this.shouldResumeGame = false;
             this.paused = false;
 
-            arenaManager = new ArenaManager(this);
+            arenaManager = new ArenaManager(this, ArenaPixelWidth, ArenaScissorRectangle.Height);
             buttonPanel = ButtonPanel.MakeDefaultPanel(this, TDGame.SmallFont);
         }
 
@@ -147,6 +170,9 @@ namespace Frog_Defense
             TDGame.loadFonts();
             ArenaManager.LoadContent();
             PlayerHUD.LoadContent();
+
+            rasterizerStateScissor = new RasterizerState() { ScissorTestEnable = true };
+            rasterizerStateNoScissor = new RasterizerState() { ScissorTestEnable = false };
         }
 
         public override void Update(GameTime gameTime)
@@ -181,7 +207,7 @@ namespace Frog_Defense
             mouseY = ms.Y;
 
             //first, tell all the drawable components where the mouse is (in relative coordinates)
-            arenaManager.Map.updateMousePosition(mouseX - ArenaOffsetX, mouseY - ArenaOffsetY);
+            arenaManager.updateMousePosition(mouseX - ArenaOffsetX, mouseY - ArenaOffsetY);
             player.MouseOver(mouseX - PlayerOffsetX, mouseY - PlayerOffsetY);
 
             //second, deal with all the clicking!
@@ -200,15 +226,26 @@ namespace Frog_Defense
             }
         }
 
+        private RasterizerState rasterizerStateScissor, rasterizerStateNoScissor;
+
         public override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             base.Draw(gameTime);
 
-            batch.Begin();
+            //the Arena needs to be drawn separately, because it uses a clipping region
+            batch.GraphicsDevice.ScissorRectangle = ArenaScissorRectangle;
+
+            batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, rasterizerStateScissor);
 
             arenaManager.DrawArena(gameTime, batch, ArenaOffsetX, ArenaOffsetY, paused);
+
+            batch.End();
+
+            //everything else is normal
+            batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, rasterizerStateNoScissor);
+
             player.Draw(gameTime, batch, PlayerOffsetX, PlayerOffsetY);
             arenaManager.WaveTracker.Draw(gameTime, batch, WaveTrackerOffsetX, WaveTrackerOffsetY);
             buttonPanel.Draw(gameTime, batch, ButtonPanelOffsetX, ButtonPanelOffsetY, paused);

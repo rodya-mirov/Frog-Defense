@@ -28,11 +28,11 @@ namespace Frog_Defense.Waves
         private ArenaManager env;
         private ArenaMap arena;
 
-        public int PixelHeight
+        public static int PixelHeight
         {
             get { return 24; }
         }
-        public int PixelWidth
+        public static int PixelWidth
         {
             get { return TDGame.MainGame.GraphicsDevice.Viewport.Width; }
         }
