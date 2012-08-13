@@ -14,7 +14,7 @@ namespace Frog_Defense.Traps
         {
             get { return TrapType.Wall; }
         }
-        public override int Cost { get { return 150; } }
+        public override int Cost { get { return 100; } }
         public override string Name
         {
             get { return "Wall"; }

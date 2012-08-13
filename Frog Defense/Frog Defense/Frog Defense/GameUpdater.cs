@@ -135,7 +135,7 @@ namespace Frog_Defense
         {
             arenaManager.ResetGame();
 
-            player = new PlayerHUD(this, 500);
+            player = new PlayerHUD(this);
 
             shouldResumeGame = false;
         }
