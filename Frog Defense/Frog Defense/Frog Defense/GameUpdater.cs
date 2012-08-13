@@ -190,8 +190,11 @@ namespace Frog_Defense
         }
 
         private int mouseX, mouseY;
-        private bool mouseIsDown = false;
-        private bool mouseWasDown = false;
+        private bool mouseLeftIsDown = false;
+        private bool mouseLeftWasDown = false;
+
+        private bool mouseRightIsDown = false;
+        private bool mouseRightWasDown = false;
 
         /// <summary>
         /// Finds the mouse position (in pixels) and tells the arena about it.
@@ -210,11 +213,11 @@ namespace Frog_Defense
             arenaManager.updateMousePosition(mouseX - ArenaOffsetX, mouseY - ArenaOffsetY);
             player.MouseOver(mouseX - PlayerOffsetX, mouseY - PlayerOffsetY);
 
-            //second, deal with all the clicking!
-            mouseWasDown = mouseIsDown;
-            mouseIsDown = (ms.LeftButton == ButtonState.Pressed);
+            //second, deal with all the left-clicking!
+            mouseLeftWasDown = mouseLeftIsDown;
+            mouseLeftIsDown = (ms.LeftButton == ButtonState.Pressed);
 
-            if (mouseWasDown && !mouseIsDown)
+            if (mouseLeftWasDown && !mouseLeftIsDown)
             {
                 arenaManager.GetClicked();
                 player.GetClicked();
@@ -224,6 +227,12 @@ namespace Frog_Defense
 
                 buttonPanel.ProcessClick(mouseX - xOffset, mouseY - yOffset);
             }
+
+            //...and the right ...
+            mouseRightWasDown = mouseRightIsDown;
+            mouseRightIsDown = (ms.RightButton == ButtonState.Pressed);
+
+            arenaManager.RightClick(mouseRightIsDown);
         }
 
         private RasterizerState rasterizerStateScissor, rasterizerStateNoScissor;

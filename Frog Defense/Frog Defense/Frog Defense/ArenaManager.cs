@@ -82,6 +82,7 @@ namespace Frog_Defense
             trapsToBeAdded = new Queue<Trap>();
 
             framesOfWin = 0;
+            arenaTranslation = new Point(0, 0);
         }
 
         public void GetClicked()
@@ -365,6 +366,11 @@ namespace Frog_Defense
                 );
 
             scrollPanel.updateMousePosition(mouseX, mouseY);
+        }
+
+        public void RightClick(bool mouseRightIsDown)
+        {
+            arenaMap.RightClick(mouseRightIsDown);
         }
     }
 }

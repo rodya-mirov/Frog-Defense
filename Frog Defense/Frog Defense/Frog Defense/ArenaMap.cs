@@ -736,8 +736,23 @@ namespace Frog_Defense
         /// <param name="mouseY"></param>
         public void updateMousePosition(int mouseX, int mouseY)
         {
-            mousePosition.X = mouseX;
-            mousePosition.Y = mouseY;
+            //before we change anything, check if we need to be dragging!
+            if (!mouseRightIsDown)
+            {
+                //if not, just adjust the stuff
+                mousePosition.X = mouseX;
+                mousePosition.Y = mouseY;
+            }
+            else
+            {
+                //if we need to drag ...
+                dragMap(mouseX, mouseY);
+
+                //then by construction our mouse position stays correct
+                //so we change our "new" coordinates to reflect the new reality
+                mouseX = mousePosition.X;
+                mouseY = mousePosition.Y;
+            }
 
             if (mouseX < 0 || mouseY < 0)
             {
@@ -753,6 +768,12 @@ namespace Frog_Defense
             }
 
             makeTrap();
+        }
+
+        private void dragMap(int newMouseX, int newMouseY)
+        {
+            Console.WriteLine(newMouseX + ",\t" + newMouseY);
+            manager.scrollMap(newMouseX - mousePosition.X, newMouseY - mousePosition.Y);
         }
 
         private void determineCurrentDirection()
@@ -1487,6 +1508,13 @@ namespace Frog_Defense
                 nextSpawn.X,
                 nextSpawn.Y
                 );
+        }
+
+        private bool mouseRightIsDown = false;
+
+        public void RightClick(bool mouseRightIsDown)
+        {
+            this.mouseRightIsDown = mouseRightIsDown;
         }
     }
 
