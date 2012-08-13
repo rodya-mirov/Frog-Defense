@@ -56,6 +56,16 @@ namespace Frog_Defense.Enemies
         private int goalX, goalY;
         private bool hasGoal;
 
+        //Also, some data for the current square coordinates the enemy is occupying
+        protected int currentSquareX, currentSquareY;
+        protected int nextSquareX, nextSquareY;
+
+        public override int CurrentSquareX { get { return currentSquareX; } }
+        public override int CurrentSquareY { get { return currentSquareY; } }
+
+        public override int NextSquareX { get { return nextSquareX; } }
+        public override int NextSquareY { get { return nextSquareY; } }
+
         //graphics stuff, the usual
         private const int imageWidth = 30;
         private const int imageHeight = 30;
@@ -94,6 +104,17 @@ namespace Frog_Defense.Enemies
             hasGoal = false;
         }
 
+        public override bool conflictsWithSquare(int squareX, int squareY)
+        {
+            if (this.currentSquareX == squareX && this.currentSquareY == squareY)
+                return true;
+
+            if (this.nextSquareX == squareX && this.nextSquareY == squareY)
+                return true;
+
+            return false;
+        }
+
         public override void shift(int xChange, int yChange, int xSquaresChange, int ySquaresChange)
         {
             xCenter += xChange;
@@ -101,12 +122,26 @@ namespace Frog_Defense.Enemies
 
             goalX += xChange;
             goalY += yChange;
+
+            currentSquareX += xSquaresChange;
+            currentSquareY += ySquaresChange;
+
+            nextSquareX += xSquaresChange;
+            nextSquareY += ySquaresChange;
         }
 
-        public override void setPosition(int x, int y)
+        public override void setPosition(int xCenter, int yCenter, int xSquare, int ySquare)
         {
-            xCenter = x;
-            yCenter = y;
+            this.xCenter = xCenter;
+            this.yCenter = yCenter;
+
+            this.currentSquareX = xSquare;
+            this.currentSquareY = ySquare;
+
+            this.nextSquareX = xSquare;
+            this.nextSquareY = ySquare;
+
+            hasGoal = false;
         }
 
         public override bool IsAlive
@@ -189,12 +224,23 @@ namespace Frog_Defense.Enemies
         /// <summary>
         /// Updates the goal if there isn't one.  Helper method for Update;
         /// not for use in other contexts.
+        /// 
+        /// If the resulting goal is the square it's sitting on,
+        /// it decides it's gotten where it wants to be.
         /// </summary>
         private void UpdateGoal()
         {
             if (!hasGoal)
             {
-                Point goal = arena.nextWayPoint(xCenter, yCenter);
+                currentSquareX = nextSquareX;
+                currentSquareY = nextSquareY;
+
+                Point goal = arena.nextWayPointSquare(currentSquareX, currentSquareY);
+
+                nextSquareX = goal.X;
+                nextSquareY = goal.Y;
+
+                goal = arena.squareCoordinatesToPixels(goal.X, goal.Y);
 
                 goalX = goal.X;
                 goalY = goal.Y;

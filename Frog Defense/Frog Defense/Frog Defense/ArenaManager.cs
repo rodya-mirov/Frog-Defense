@@ -252,12 +252,38 @@ namespace Frog_Defense
         }
 
         /// <summary>
+        /// Determines whether a wall at the specified SQUARE
+        /// coordinates conflicts with any existing enemies;
+        /// returns false in this case (since we can't build a
+        /// wall there).
+        /// </summary>
+        /// <param name="squareX"></param>
+        /// <param name="squareY"></param>
+        /// <returns></returns>
+        public bool CanBuildWall(int squareX, int squareY)
+        {
+            foreach (Enemy e in enemiesToBeAdded)
+            {
+                if (e.conflictsWithSquare(squareX, squareY))
+                    return false;
+            }
+
+            foreach (Enemy e in enemies)
+            {
+                if (e.conflictsWithSquare(squareX, squareY))
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Builds a wall at the assigned coordinates.
         /// Destroys any traps occupying the space!
         /// </summary>
         /// <param name="p"></param>
         /// <param name="p_2"></param>
-        public void Wall(int x, int y)
+        public void BuildWall(int x, int y)
         {
             int n;
             Trap t;

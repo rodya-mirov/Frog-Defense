@@ -11,17 +11,21 @@ namespace Frog_Defense.Traps
     /// <summary>
     /// This trap lies on the floor and passively hurts everything that walks across it.
     /// There is no reload time, no motion, etc.
+    /// 
+    /// Damage-wise, the idea of spikes should be that guns are better damage, but
+    /// if there's no good place for a gun, you can put spikes down for an OK substitute.
     /// </summary>
     class SpikeTrap : Trap
     {
         private int xCenter, yCenter;
 
         //the damage this trap inflicts on every critter that touches it
-        private const float damagePerTick = .1f;
+        //creatures are hit for roughly mainImageWidth ticks, so, for balancing ...
+        private const float damagePerTick = .5f;
 
         //Typical graphics stuff
-        private const int mainImageWidth = 40;
-        private const int mainImageHeight = 40;
+        private const int mainImageWidth = 30;
+        private const int mainImageHeight = 30;
 
         private const String imagePath = "Images/Traps/Spikes";
         private static Texture2D imageTexture;

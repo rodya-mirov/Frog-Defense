@@ -262,38 +262,41 @@ namespace Frog_Defense
         }
 
         /// <summary>
-        /// Returns the next place an Enemy should go, assuming they're
-        /// located at the specified coordinates.
-        /// 
-        /// Note: this cycles between the goal points, so if there are
-        /// multiple good options, repeated calls will return DIFFERENT answers.
-        /// 
-        /// Note: this assumes the input is in pixel coordinates, and the
-        /// output is also in pixel coordinates.  They are not array indices.
-        /// 
-        /// Note: the results of this method may be surprising if the enemy
-        /// is sitting right on an edge :{
+        /// Converts square coordinates into pixel coordinates (still
+        /// relativized to the arenamap itself of course).
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="squareX"></param>
+        /// <param name="squareY"></param>
         /// <returns></returns>
-        public Point nextWayPoint(int x, int y)
+        public Point squareCoordinatesToPixels(int squareX, int squareY)
         {
-            //transform to array indices
-            int xArr = x / squareWidth;
-            int yArr = y / squareHeight;
+            return new Point(
+                squareX * squareWidth + squareWidth / 2,
+                squareY * squareHeight + squareHeight / 2
+                );
+        }
 
-            //if there's no path from here, give up
-            if (bestPaths[xArr, yArr] == null)
-                return new Point(x, y);
+        /// <summary>
+        /// Does the wayfinding in terms of square coordinates;
+        /// if there is a waypoint from here, returns it, else
+        /// returns the same point back again.
+        /// </summary>
+        /// <param name="squareX"></param>
+        /// <param name="squareY"></param>
+        /// <returns></returns>
+        public Point nextWayPointSquare(int squareX, int squareY)
+        {
+            if (bestPaths[squareX, squareY] == null)
+            {
+                return new Point(squareX, squareY);
+            }
+            else
+            {
+                Point goal = bestPaths[squareX, squareY].Dequeue();
+                bestPaths[squareX, squareY].Enqueue(goal);
 
-            //cycle the best path list
-            Point goalArr = bestPaths[xArr, yArr].Dequeue();
-            bestPaths[xArr, yArr].Enqueue(goalArr);
-
-            //return the new point in pixel coordinates, pointing
-            //to the center of the next goal square
-            return new Point(goalArr.X * squareWidth + squareWidth / 2, goalArr.Y * squareHeight + squareHeight / 2);
+                return goal;
+            }
         }
 
         /// <summary>
@@ -842,7 +845,8 @@ namespace Frog_Defense
                     return;
 
                 case TrapType.Wall:
-                    if (manager.Player.AttemptSpend(selectedTrap.Cost))
+                    if (manager.CanBuildWall(highlightedSquare.X, highlightedSquare.Y) &&
+                        manager.Player.AttemptSpend(selectedTrap.Cost))
                     {
                         buildWall();
                     }
@@ -871,7 +875,7 @@ namespace Frog_Defense
                 throw new ArgumentException();
             }
 
-            manager.Wall(highlightedSquare.X, highlightedSquare.Y);
+            manager.BuildWall(highlightedSquare.X, highlightedSquare.Y);
 
             floorType[highlightedSquare.X, highlightedSquare.Y] = SquareType.WALL;
 
@@ -1415,7 +1419,12 @@ namespace Frog_Defense
             Point nextSpawn = spawnPositions.Dequeue();
             spawnPositions.Enqueue(nextSpawn);
 
-            e.setPosition(nextSpawn.X * squareWidth + squareWidth / 2, nextSpawn.Y * squareHeight + squareHeight / 2);
+            e.setPosition(
+                nextSpawn.X * squareWidth + squareWidth / 2,
+                nextSpawn.Y * squareHeight + squareHeight / 2,
+                nextSpawn.X,
+                nextSpawn.Y
+                );
         }
     }
 

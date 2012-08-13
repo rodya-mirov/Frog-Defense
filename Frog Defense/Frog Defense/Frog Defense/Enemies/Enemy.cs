@@ -38,6 +38,12 @@ namespace Frog_Defense.Enemies
         public abstract int PixelWidth { get; }
         public abstract int PixelHeight { get; }
 
+        public abstract int CurrentSquareX { get; }
+        public abstract int CurrentSquareY { get; }
+
+        public abstract int NextSquareX { get; }
+        public abstract int NextSquareY { get; }
+
         protected abstract float MAX_HEALTH { get; }
         protected abstract float Health { get; set; }
 
@@ -198,6 +204,14 @@ namespace Frog_Defense.Enemies
         }
 
         /// <summary>
+        /// Determines whether building a wall here would cause any serious trouble
+        /// </summary>
+        /// <param name="squareX"></param>
+        /// <param name="squareY"></param>
+        /// <returns></returns>
+        public abstract bool conflictsWithSquare(int squareX, int squareY);
+
+        /// <summary>
         /// This draws the health bar of the enemy in question.  This can be called separately and
         /// should *not* be called during the Draw method of the Enemy.
         /// </summary>
@@ -223,7 +237,7 @@ namespace Frog_Defense.Enemies
             batch.Draw(healthBarFullTexture, healthRect, Color.White);
         }
 
-        public abstract void setPosition(int xCenter, int yCenter);
+        public abstract void setPosition(int xCenter, int yCenter, int xSquare, int ySquare);
 
         /// <summary>
         /// Determines whether a ray from the specified point, traveling
