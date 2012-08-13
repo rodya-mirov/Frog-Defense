@@ -25,9 +25,7 @@ Content\Images\Traps\DartTrapUp.xnb
 Content\Images\TrapPreviews\DartTrapPreview.xnb
 Content\Images\PureColors\Black.xnb
 Content\Images\PureColors\Red.xnb
-Content\Images\Enemies\BasicEnemy\Image.xnb
 Content\Images\Enemies\BasicEnemy\Preview.xnb
-Content\Images\Enemies\ToughEnemy\Image.xnb
 Content\Images\EnemyEffects\PoisonDrop.xnb
 Content\Images\PureColors\Blue.xnb
 Content\Images\PureColors\Green.xnb
@@ -47,4 +45,12 @@ Content\Fonts\SmallFont.xnb
 Content\Fonts\HugeFont.xnb
 Content\Images\Traps\WallIndicator.xnb
 Content\Images\TrapPreviews\WallPreview.xnb
+Content\Images\Enemies\BasicEnemy\Down.xnb
+Content\Images\Enemies\BasicEnemy\Left.xnb
+Content\Images\Enemies\BasicEnemy\Right.xnb
+Content\Images\Enemies\BasicEnemy\Up.xnb
+Content\Images\Enemies\ToughEnemy\Down.xnb
+Content\Images\Enemies\ToughEnemy\Left.xnb
+Content\Images\Enemies\ToughEnemy\Right.xnb
+Content\Images\Enemies\ToughEnemy\Up.xnb
 Maps\DefaultMap.txt

@@ -79,8 +79,22 @@ namespace Frog_Defense.Enemies
             get { return imageHeight; }
         }
 
-        private const String imagePath = "Images/Enemies/BasicEnemy/Image";
-        private static Texture2D imageTexture;
+        private const String leftPath = "Images/Enemies/BasicEnemy/Left";
+        private const String rightPath = "Images/Enemies/BasicEnemy/Right";
+        private const String upPath = "Images/Enemies/BasicEnemy/Up";
+        private const String downPath = "Images/Enemies/BasicEnemy/Down";
+
+        private static Texture2D leftTexture;
+        private static Texture2D rightTexture;
+        private static Texture2D upTexture;
+        private static Texture2D downTexture;
+
+        protected virtual Texture2D LeftTexture { get { return leftTexture; } }
+        protected virtual Texture2D RightTexture { get { return rightTexture; } }
+        protected virtual Texture2D UpTexture { get { return upTexture; } }
+        protected virtual Texture2D DownTexture { get { return downTexture; } }
+
+        private Texture2D imageTexture;
         protected virtual Texture2D ImageTexture
         {
             get { return imageTexture; }
@@ -93,11 +107,46 @@ namespace Frog_Defense.Enemies
             get { return previewTexture; }
         }
 
+        //facing is a visual indicator
+        private Direction facing;
+        protected Direction Facing
+        {
+            get { return facing; }
+            set
+            {
+                facing = value;
+
+                switch (facing)
+                {
+                    case Direction.UP:
+                        imageTexture = UpTexture;
+                        break;
+
+                    case Direction.DOWN:
+                        imageTexture = DownTexture;
+                        break;
+
+                    case Direction.LEFT:
+                        imageTexture = LeftTexture;
+                        break;
+
+                    case Direction.RIGHT:
+                        imageTexture = RightTexture;
+                        break;
+
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+        }
+
         public BasicEnemy(ArenaMap arena, ArenaManager manager, int startX, int startY)
             : base(manager, arena)
         {
             this.xCenter = startX;
             this.yCenter = startY;
+
+            Facing = Direction.UP;
 
             this.health = MAX_HEALTH;
 
@@ -200,8 +249,17 @@ namespace Frog_Defense.Enemies
         /// </summary>
         public static new void LoadContent()
         {
-            if (imageTexture == null)
-                imageTexture = TDGame.MainGame.Content.Load<Texture2D>(imagePath);
+            if (leftTexture == null)
+                leftTexture = TDGame.MainGame.Content.Load<Texture2D>(leftPath);
+
+            if (rightTexture == null)
+                rightTexture = TDGame.MainGame.Content.Load<Texture2D>(rightPath);
+
+            if (upTexture == null)
+                upTexture = TDGame.MainGame.Content.Load<Texture2D>(upPath);
+
+            if (downTexture == null)
+                downTexture = TDGame.MainGame.Content.Load<Texture2D>(downPath);
 
             if (previewTexture == null)
                 previewTexture = TDGame.MainGame.Content.Load<Texture2D>(previewPath);
@@ -247,6 +305,14 @@ namespace Frog_Defense.Enemies
 
                 if (xCenter == goalX && yCenter == goalY)
                     reachGoal();
+                else if (xCenter < goalX)
+                    Facing = Direction.RIGHT;
+                else if (xCenter > goalX)
+                    Facing = Direction.LEFT;
+                else if (yCenter < goalY)
+                    Facing = Direction.DOWN;
+                else
+                    Facing = Direction.UP;
 
                 hasGoal = true;
             }

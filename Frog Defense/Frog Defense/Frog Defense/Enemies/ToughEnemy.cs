@@ -18,19 +18,27 @@ namespace Frog_Defense.Enemies
             get { return 15; }
         }
 
-        private const String imagePath = "Images/Enemies/ToughEnemy/Image";
-        private static Texture2D imageTexture;
-        protected override Texture2D ImageTexture
-        {
-            get { return imageTexture; }
-        }
-
         private const String previewPath = "Images/Enemies/ToughEnemy/Preview";
         private static Texture2D previewTexture;
         public override Texture2D PreviewTexture
         {
             get { return previewTexture; }
         }
+
+        private const String leftPath = "Images/Enemies/ToughEnemy/Left";
+        private const String rightPath = "Images/Enemies/ToughEnemy/Right";
+        private const String upPath = "Images/Enemies/ToughEnemy/Up";
+        private const String downPath = "Images/Enemies/ToughEnemy/Down";
+
+        private static Texture2D leftTexture;
+        private static Texture2D rightTexture;
+        private static Texture2D upTexture;
+        private static Texture2D downTexture;
+
+        protected override Texture2D LeftTexture { get { return leftTexture; } }
+        protected override Texture2D RightTexture { get { return rightTexture; } }
+        protected override Texture2D UpTexture { get { return upTexture; } }
+        protected override Texture2D DownTexture { get { return downTexture; } }
 
         public ToughEnemy(ArenaMap arena, ArenaManager env, int startX, int startY)
             : base(arena, env, startX, startY)
@@ -39,8 +47,17 @@ namespace Frog_Defense.Enemies
 
         public static new void LoadContent()
         {
-            if (imageTexture == null)
-                imageTexture = TDGame.MainGame.Content.Load<Texture2D>(imagePath);
+            if (leftTexture == null)
+                leftTexture = TDGame.MainGame.Content.Load<Texture2D>(leftPath);
+
+            if (rightTexture == null)
+                rightTexture = TDGame.MainGame.Content.Load<Texture2D>(rightPath);
+
+            if (upTexture == null)
+                upTexture = TDGame.MainGame.Content.Load<Texture2D>(upPath);
+
+            if (downTexture == null)
+                downTexture = TDGame.MainGame.Content.Load<Texture2D>(downPath);
 
             if (previewTexture == null)
                 previewTexture = TDGame.MainGame.Content.Load<Texture2D>(previewPath);
