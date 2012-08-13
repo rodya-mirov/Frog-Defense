@@ -44,5 +44,28 @@ namespace Frog_Defense.Traps
 
         public const int PreviewWidth = 20;
         public const int PreviewHeight = 20;
+
+        /// <summary>
+        /// Shifts the given enemy by the specified amount, given in both
+        /// squares and pixels.  The two are guaranteed to be equivalent measures.
+        /// </summary>
+        /// <param name="xChange"></param>
+        /// <param name="yChange"></param>
+        /// <param name="xSquaresChange"></param>
+        /// <param name="ySquaresChange"></param>
+        public abstract void shift(int xChange, int yChange, int xSquaresChange, int ySquaresChange);
+
+        /// <summary>
+        /// Returns true iff this is a wall trap and attached to a wall
+        /// with square coordinates (x, y).  All non-wall-traps will uniformly
+        /// return false.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public virtual bool touchesWall(int x, int y)
+        {
+            return false;
+        }
     }
 }

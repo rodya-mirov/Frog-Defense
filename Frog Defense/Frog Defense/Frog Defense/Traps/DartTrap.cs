@@ -117,8 +117,8 @@ namespace Frog_Defense.Traps
         /// <param name="centerX">The centerX of the gun</param>
         /// <param name="centerY">The centerY of the gun</param>
         /// <param name="facing"></param>
-        public DartTrap(ArenaManager env, int centerX, int centerY, Direction facing)
-            : base(env, centerX, centerY, facing)
+        public DartTrap(ArenaManager env, int centerX, int centerY, int xSquare, int ySquare, Direction facing)
+            : base(env, centerX, centerY, xSquare, ySquare, facing)
         {
         }
 

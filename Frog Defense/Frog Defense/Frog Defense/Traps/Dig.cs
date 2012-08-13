@@ -74,5 +74,11 @@ namespace Frog_Defense.Traps
         {
             //does nothing, nothing to do
         }
+
+        public override void shift(int xChange, int yChange, int xSquaresChange, int ySquaresChange)
+        {
+            xCenter += xChange;
+            yCenter += yChange;
+        }
     }
 }

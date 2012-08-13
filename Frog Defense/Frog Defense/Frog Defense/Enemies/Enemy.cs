@@ -234,6 +234,16 @@ namespace Frog_Defense.Enemies
         /// <param name="dir"></param>
         /// <returns></returns>
         public abstract bool touchesRay(int xOrigin, int yOrigin, Direction dir);
+
+        /// <summary>
+        /// Shifts the given enemy by the specified amount, given in both
+        /// squares and pixels.  The two are guaranteed to be equivalent measures.
+        /// </summary>
+        /// <param name="xChange"></param>
+        /// <param name="yChange"></param>
+        /// <param name="xSquaresChange"></param>
+        /// <param name="ySquaresChange"></param>
+        public abstract void shift(int xChange, int yChange, int xSquaresChange, int ySquaresChange);
     }
 
     struct PoisonCounter

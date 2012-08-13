@@ -94,6 +94,15 @@ namespace Frog_Defense.Enemies
             hasGoal = false;
         }
 
+        public override void shift(int xChange, int yChange, int xSquaresChange, int ySquaresChange)
+        {
+            xCenter += xChange;
+            yCenter += yChange;
+
+            goalX += xChange;
+            goalY += yChange;
+        }
+
         public override void setPosition(int x, int y)
         {
             xCenter = x;

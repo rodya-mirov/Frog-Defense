@@ -207,5 +207,48 @@ namespace Frog_Defense
             arenaMap.putInSpawn(e);
             enemiesToBeAdded.Enqueue(e);
         }
+
+        public void shiftObjects(int xChange, int yChange, int xSquareChange, int ySquareChange)
+        {
+            foreach (Enemy e in enemiesToBeAdded)
+                e.shift(xChange, yChange, xSquareChange, ySquareChange);
+
+            foreach (Enemy e in enemies)
+                e.shift(xChange, yChange, xSquareChange, ySquareChange);
+
+            foreach(Trap t in trapsToBeAdded)
+                t.shift(xChange, yChange, xSquareChange, ySquareChange);
+
+            foreach(Trap t in traps)
+                t.shift(xChange, yChange, xSquareChange, ySquareChange);
+        }
+
+        /// <summary>
+        /// Marks the wall at (x, y) as destroyed and kills all related traps.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public void Dig(int x, int y)
+        {
+            int n;
+
+            n = trapsToBeAdded.Count;
+
+            for (int i = 0; i < n; i++)
+            {
+                Trap t = trapsToBeAdded.Dequeue();
+                if (!t.touchesWall(x, y))
+                    trapsToBeAdded.Enqueue(t);
+            }
+
+            n = traps.Count;
+
+            for (int i = 0; i < n; i++)
+            {
+                Trap t = traps.Dequeue();
+                if (!t.touchesWall(x, y))
+                    traps.Enqueue(t);
+            }
+        }
     }
 }

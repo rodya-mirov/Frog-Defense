@@ -43,8 +43,8 @@ namespace Frog_Defense.Traps
         protected abstract int BulletImageWidth { get; }
         protected abstract int BulletImageHeight { get; }
 
-        protected WallProjectileTrap(ArenaManager env, int centerX, int centerY, Direction facing)
-            : base(env, facing)
+        protected WallProjectileTrap(ArenaManager env, int centerX, int centerY, int xSquare, int ySquare, Direction facing)
+            : base(env, facing, xSquare, ySquare)
         {
             position = new Point(centerX, centerY);
 
@@ -72,7 +72,6 @@ namespace Frog_Defense.Traps
 
             projectilePositions = new Queue<Point>();
         }
-
 
         /// <summary>
         /// Shoots the gun, if it sees anything, and continues the bullet rain if possible.
@@ -221,6 +220,23 @@ namespace Frog_Defense.Traps
                 Color.White
                 );
 
+        }
+
+        public override void shift(int xChange, int yChange, int xSquaresChange, int ySquaresChange)
+        {
+            position.X += xChange;
+            position.Y += yChange;
+
+            xSquare += xSquaresChange;
+            ySquare += ySquaresChange;
+
+            for (int i = 0; i < projectilePositions.Count; i++)
+            {
+                Point p = projectilePositions.Dequeue();
+                p.X += xChange;
+                p.Y += yChange;
+                projectilePositions.Enqueue(p);
+            }
         }
     }
 }

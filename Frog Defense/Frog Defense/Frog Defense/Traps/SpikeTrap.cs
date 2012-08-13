@@ -93,6 +93,12 @@ namespace Frog_Defense.Traps
             }
         }
 
+        public override void shift(int xChange, int yChange, int xSquaresChange, int ySquaresChange)
+        {
+            xPos += xChange;
+            yPos += yChange;
+        }
+
         public override void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
         {
             batch.Draw(

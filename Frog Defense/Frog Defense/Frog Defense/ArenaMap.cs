@@ -863,6 +863,8 @@ namespace Frog_Defense
                 throw new ArgumentException();
             }
 
+            manager.Dig(highlightedSquare.X, highlightedSquare.Y);
+
 
             if (highlightedSquare.X == width - 1)
             {
@@ -1004,6 +1006,8 @@ namespace Frog_Defense
                 goalPositions.Enqueue(p);
             }
 
+            manager.shiftObjects(squareWidth, 0, 1, 0);
+
             autoassignVoid();
             updatePathing();
         }
@@ -1125,6 +1129,8 @@ namespace Frog_Defense
 
             autoassignVoid();
             updatePathing();
+
+            manager.shiftObjects(0, squareHeight, 0, 1);
         }
         #endregion EXPANDING_MAP
 
@@ -1261,11 +1267,11 @@ namespace Frog_Defense
             switch (manager.SelectedTrapType)
             {
                 case TrapType.GunTrap:
-                    selectedTrap = new GunTrap(manager, xpos, ypos, favoredDirection);
+                    selectedTrap = new GunTrap(manager, xpos, ypos, highlightedSquare.X, highlightedSquare.Y, favoredDirection);
                     return;
 
                 case TrapType.DartTrap:
-                    selectedTrap = new DartTrap(manager, xpos, ypos, favoredDirection);
+                    selectedTrap = new DartTrap(manager, xpos, ypos, highlightedSquare.X, highlightedSquare.Y, favoredDirection);
                     return;
 
                 default:
