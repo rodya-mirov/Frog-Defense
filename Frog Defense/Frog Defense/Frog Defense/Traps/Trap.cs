@@ -8,15 +8,19 @@ using Frog_Defense.Enemies;
 
 namespace Frog_Defense.Traps
 {
-    enum TrapType { NoType, SpikeTrap, GunTrap, DartTrap, Dig };
+    enum TrapType { NoType, SpikeTrap, GunTrap, DartTrap, Dig, Wall };
 
     abstract class Trap
     {
         protected ArenaManager env;
+        protected int floorSquareX, floorSquareY;
 
-        protected Trap(ArenaManager env)
+        protected Trap(ArenaManager env, int floorSquareX, int floorSquareY)
         {
             this.env = env;
+
+            this.floorSquareX = floorSquareX;
+            this.floorSquareY = floorSquareY;
         }
 
         public static void LoadContent()
@@ -25,6 +29,7 @@ namespace Frog_Defense.Traps
             GunTrap.LoadContent();
             DartTrap.LoadContent();
             Dig.LoadContent();
+            BuildWall.LoadContent();
         }
 
         public override string ToString()
@@ -48,12 +53,18 @@ namespace Frog_Defense.Traps
         /// <summary>
         /// Shifts the given enemy by the specified amount, given in both
         /// squares and pixels.  The two are guaranteed to be equivalent measures.
+        /// 
+        /// Make sure to call base.shift !
         /// </summary>
         /// <param name="xChange"></param>
         /// <param name="yChange"></param>
         /// <param name="xSquaresChange"></param>
         /// <param name="ySquaresChange"></param>
-        public abstract void shift(int xChange, int yChange, int xSquaresChange, int ySquaresChange);
+        public virtual void shift(int xChange, int yChange, int xSquaresChange, int ySquaresChange)
+        {
+            this.floorSquareX += xSquaresChange;
+            this.floorSquareY += ySquaresChange;
+        }
 
         /// <summary>
         /// Returns true iff this is a wall trap and attached to a wall
@@ -66,6 +77,18 @@ namespace Frog_Defense.Traps
         public virtual bool touchesWall(int x, int y)
         {
             return false;
+        }
+
+        /// <summary>
+        /// Determines whether a specific trap is using the square
+        /// supplied.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public bool isOnSquare(int x, int y)
+        {
+            return floorSquareX == x && floorSquareY == y;
         }
     }
 }

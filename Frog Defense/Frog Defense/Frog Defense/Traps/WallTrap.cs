@@ -13,7 +13,7 @@ namespace Frog_Defense.Traps
             get { return facing; }
         }
 
-        protected int xSquare, ySquare;
+        protected int wallSquareX, wallSquareY;
 
         /// <summary>
         /// Constructs a new WallTrap.  The square coordinates should be
@@ -25,39 +25,47 @@ namespace Frog_Defense.Traps
         /// <param name="xSquare"></param>
         /// <param name="ySquare"></param>
         protected WallTrap(ArenaManager env, Direction facing, int xSquare, int ySquare)
-            : base(env)
+            : base(env, xSquare, ySquare)
         {
             this.facing = facing;
+
+            this.wallSquareX = xSquare;
+            this.wallSquareY = ySquare;
 
             switch (facing)
             {
                 case Direction.UP:
-                    ySquare++;
+                    this.wallSquareY++;
                     break;
 
                 case Direction.DOWN:
-                    ySquare--;
+                    this.wallSquareY--;
                     break;
 
                 case Direction.RIGHT:
-                    xSquare--;
+                    this.wallSquareX--;
                     break;
 
                 case Direction.LEFT:
-                    xSquare++;
+                    this.wallSquareX++;
                     break;
 
                 default:
                     throw new NotImplementedException();
             }
+        }
 
-            this.xSquare = xSquare;
-            this.ySquare = ySquare;
+        public override void shift(int xChange, int yChange, int xSquaresChange, int ySquaresChange)
+        {
+            base.shift(xChange, yChange, xSquaresChange, ySquaresChange);
+
+            this.wallSquareX += xSquaresChange;
+            this.wallSquareY += ySquaresChange;
         }
 
         public override bool touchesWall(int x, int y)
         {
-            return xSquare == x && ySquare == y;
+            return wallSquareX == x && wallSquareY == y;
         }
     }
 }

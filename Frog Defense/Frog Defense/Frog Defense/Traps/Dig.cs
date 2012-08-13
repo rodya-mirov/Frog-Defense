@@ -45,8 +45,8 @@ namespace Frog_Defense.Traps
         private const string imagePath = "Images/Traps/DigIndicator";
         private static Texture2D imageTexture;
 
-        public Dig(ArenaManager env, int xCenter, int yCenter)
-            : base(env)
+        public Dig(ArenaManager env, int xCenter, int yCenter, int floorSquareX, int floorSquareY)
+            : base(env, floorSquareX, floorSquareY)
         {
             this.xCenter = xCenter;
             this.yCenter = yCenter;
@@ -77,8 +77,8 @@ namespace Frog_Defense.Traps
 
         public override void shift(int xChange, int yChange, int xSquaresChange, int ySquaresChange)
         {
-            xCenter += xChange;
-            yCenter += yChange;
+            //this should never happen!
+            throw new NotImplementedException();
         }
     }
 }

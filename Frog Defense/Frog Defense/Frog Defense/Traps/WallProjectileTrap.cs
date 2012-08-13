@@ -224,11 +224,10 @@ namespace Frog_Defense.Traps
 
         public override void shift(int xChange, int yChange, int xSquaresChange, int ySquaresChange)
         {
+            base.shift(xChange, yChange, xSquaresChange, ySquaresChange);
+
             position.X += xChange;
             position.Y += yChange;
-
-            xSquare += xSquaresChange;
-            ySquare += ySquaresChange;
 
             for (int i = 0; i < projectilePositions.Count; i++)
             {

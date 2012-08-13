@@ -127,6 +127,7 @@
     <Compile Include="PlayerHUD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Traps\BuildWall.cs" />
     <Compile Include="Traps\DartTrap.cs" />
     <Compile Include="Traps\Dig.cs" />
     <Compile Include="Traps\WallProjectileTrap.cs" />

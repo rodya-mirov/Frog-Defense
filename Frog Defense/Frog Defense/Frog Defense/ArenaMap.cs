@@ -841,9 +841,42 @@ namespace Frog_Defense
                     }
                     return;
 
+                case TrapType.Wall:
+                    if (manager.Player.AttemptSpend(selectedTrap.Cost))
+                    {
+                        buildWall();
+                    }
+                    return;
+
                 default:
                     throw new NotImplementedException();
             }
+        }
+
+        /// <summary>
+        /// Builds a wall at the selected location.  Handles the cleanup
+        /// as well!
+        /// </summary>
+        private void buildWall()
+        {
+            //these shouldn't happen, they're in there for testing
+            if (highlightedSquare.X < 0 || highlightedSquare.X >= width
+                || highlightedSquare.Y < 0 || highlightedSquare.Y >= height)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            if (floorType[highlightedSquare.X, highlightedSquare.Y] != SquareType.FLOOR)
+            {
+                throw new ArgumentException();
+            }
+
+            manager.Wall(highlightedSquare.X, highlightedSquare.Y);
+
+            floorType[highlightedSquare.X, highlightedSquare.Y] = SquareType.WALL;
+
+            autoassignVoid();
+            updatePathing();
         }
 
         /// <summary>
@@ -1178,12 +1211,43 @@ namespace Frog_Defense
                     makeWallTrap();
                     break;
 
+                //dig is different
                 case TrapType.Dig:
                     makeDigIndicator();
                     break;
 
+                //as is wall
+                case TrapType.Wall:
+                    makeWallIndicator();
+                    break;
+
                 default:
                     throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Makes SelectedTrap into a wall indicator, 
+        /// assuming the highlighted square is a floor
+        /// </summary>
+        private void makeWallIndicator()
+        {
+            int x = highlightedSquare.X;
+            int y = highlightedSquare.Y;
+
+            if (floorType[x, y] == SquareType.FLOOR)
+            {
+                selectedTrap = new BuildWall(
+                    manager,
+                    x * squareWidth + squareWidth / 2,
+                    y * squareHeight + squareHeight / 2,
+                    x,
+                    y
+                    );
+            }
+            else
+            {
+                selectedTrap = null;
             }
         }
 
@@ -1198,7 +1262,13 @@ namespace Frog_Defense
 
             if (floorType[x, y] == SquareType.VOID || floorType[x, y] == SquareType.WALL)
             {
-                selectedTrap = new Dig(manager, x * squareWidth + squareWidth / 2, y * squareHeight + squareHeight / 2);
+                selectedTrap = new Dig(
+                    manager,
+                    x * squareWidth + squareWidth / 2,
+                    y * squareHeight + squareHeight / 2,
+                    x,
+                    y
+                    );
             }
             else
             {
@@ -1301,7 +1371,9 @@ namespace Frog_Defense
                     selectedTrap = new SpikeTrap(
                         manager,
                         highlightedSquare.X * squareWidth + squareWidth / 2,
-                        highlightedSquare.Y * squareHeight + squareHeight / 2
+                        highlightedSquare.Y * squareHeight + squareHeight / 2,
+                        highlightedSquare.X,
+                        highlightedSquare.Y
                         );
                     break;
 

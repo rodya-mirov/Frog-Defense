@@ -250,5 +250,35 @@ namespace Frog_Defense
                     traps.Enqueue(t);
             }
         }
+
+        /// <summary>
+        /// Builds a wall at the assigned coordinates.
+        /// Destroys any traps occupying the space!
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="p_2"></param>
+        public void Wall(int x, int y)
+        {
+            int n;
+            Trap t;
+
+            n = trapsToBeAdded.Count;
+
+            for (int i = 0; i < n; i++)
+            {
+                t = trapsToBeAdded.Dequeue();
+                if (!t.isOnSquare(x, y))
+                    trapsToBeAdded.Enqueue(t);
+            }
+
+            n = traps.Count;
+
+            for (int i = 0; i < n; i++)
+            {
+                t = traps.Dequeue();
+                if (!t.isOnSquare(x, y))
+                    traps.Enqueue(t);
+            }
+        }
     }
 }

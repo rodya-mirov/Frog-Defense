@@ -14,7 +14,7 @@ namespace Frog_Defense.Traps
     /// </summary>
     class SpikeTrap : Trap
     {
-        private int xPos, yPos;
+        private int xCenter, yCenter;
 
         //the damage this trap inflicts on every critter that touches it
         private const float damagePerTick = .1f;
@@ -57,11 +57,11 @@ namespace Frog_Defense.Traps
             get { return 100; }
         }
 
-        public SpikeTrap(ArenaManager env, int x, int y)
-            : base(env)
+        public SpikeTrap(ArenaManager env, int xCenter, int yCenter, int floorSquareX, int floorSquareY)
+            : base(env, floorSquareX, floorSquareY)
         {
-            this.xPos = x;
-            this.yPos = y;
+            this.xCenter = xCenter;
+            this.yCenter = yCenter;
         }
 
         public static new void LoadContent()
@@ -80,11 +80,11 @@ namespace Frog_Defense.Traps
         /// <param name="enemies">The collection of enemies to possibly hurt.</param>
         public override void Update(IEnumerable<Enemy> enemies)
         {
-            int minX = xPos - mainImageWidth / 2;
-            int maxX = xPos + mainImageWidth / 2;
+            int minX = xCenter - mainImageWidth / 2;
+            int maxX = xCenter + mainImageWidth / 2;
 
-            int minY = yPos - mainImageHeight / 2;
-            int maxY = yPos + mainImageHeight / 2;
+            int minY = yCenter - mainImageHeight / 2;
+            int maxY = yCenter + mainImageHeight / 2;
 
             foreach (Enemy e in enemies)
             {
@@ -95,8 +95,10 @@ namespace Frog_Defense.Traps
 
         public override void shift(int xChange, int yChange, int xSquaresChange, int ySquaresChange)
         {
-            xPos += xChange;
-            yPos += yChange;
+            base.shift(xChange, yChange, xSquaresChange, ySquaresChange);
+
+            xCenter += xChange;
+            yCenter += yChange;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
@@ -104,8 +106,8 @@ namespace Frog_Defense.Traps
             batch.Draw(
                 imageTexture,
                 new Vector2(
-                    xPos + xOffset - mainImageWidth / 2,
-                    yPos + yOffset - mainImageHeight / 2
+                    xCenter + xOffset - mainImageWidth / 2,
+                    yCenter + yOffset - mainImageHeight / 2
                     ),
                 Color.White
                 );
