@@ -851,20 +851,282 @@ namespace Frog_Defense
         /// </summary>
         private void dig()
         {
-            int x = highlightedSquare.X;
-            int y = highlightedSquare.Y;
-
-            if (x < 0 || x >= width || y < 0 || y >= height)
+            if (highlightedSquare.X < 0 || highlightedSquare.X >= width
+                || highlightedSquare.Y < 0 || highlightedSquare.Y >= height)
+            {
                 throw new IndexOutOfRangeException();
+            }
 
-            if (floorType[x, y] != SquareType.WALL && floorType[x, y] != SquareType.VOID)
+            if (floorType[highlightedSquare.X, highlightedSquare.Y] != SquareType.WALL
+                && floorType[highlightedSquare.X, highlightedSquare.Y] != SquareType.VOID)
+            {
                 throw new ArgumentException();
+            }
 
-            floorType[x, y] = SquareType.FLOOR;
+
+            if (highlightedSquare.X == width - 1)
+            {
+                addRightWall();
+            }
+            if (highlightedSquare.X == 0)
+            {
+                addLeftWall();
+            }
+
+            if (highlightedSquare.Y == height - 1)
+            {
+                addBottomWall();
+            }
+            if (highlightedSquare.Y == 0)
+            {
+                addTopWall();
+            }
+
+            floorType[highlightedSquare.X, highlightedSquare.Y] = SquareType.FLOOR;
 
             autoassignVoid();
             updatePathing();
         }
+
+        #region EXPANDING_MAP
+        private void addRightWall()
+        {
+            //move over the map
+            SquareType[,] newFloorType = new SquareType[width + 1, height];
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    newFloorType[x, y] = floorType[x, y];
+                }
+
+                newFloorType[width, y] = SquareType.WALL;
+            }
+
+            //and the trap data
+            bool[,] newFloorTraps = new bool[width + 1, height];
+
+            Dictionary<Direction, bool[,]> newWallTraps = new Dictionary<Direction, bool[,]>();
+            newWallTraps[Direction.DOWN] = new bool[width + 1, height];
+            newWallTraps[Direction.UP] = new bool[width + 1, height];
+            newWallTraps[Direction.RIGHT] = new bool[width + 1, height];
+            newWallTraps[Direction.LEFT] = new bool[width + 1, height];
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    newFloorTraps[x, y] = hasFloorTrap[x, y];
+                    newWallTraps[Direction.DOWN][x, y] = hasWallTrap[Direction.DOWN][x, y];
+                    newWallTraps[Direction.UP][x, y] = hasWallTrap[Direction.UP][x, y];
+                    newWallTraps[Direction.RIGHT][x, y] = hasWallTrap[Direction.RIGHT][x, y];
+                    newWallTraps[Direction.LEFT][x, y] = hasWallTrap[Direction.LEFT][x, y];
+                }
+
+                newFloorTraps[width, y] = false;
+                newWallTraps[Direction.DOWN][width, y] = false;
+                newWallTraps[Direction.UP][width, y] = false;
+                newWallTraps[Direction.RIGHT][width, y] = false;
+                newWallTraps[Direction.LEFT][width, y] = false;
+            }
+
+            this.floorType = newFloorType;
+            this.hasFloorTrap = newFloorTraps;
+            this.hasWallTrap = newWallTraps;
+
+            width++;
+
+            autoassignVoid();
+            updatePathing();
+        }
+
+        private void addLeftWall()
+        {
+            //move over the map
+            SquareType[,] newFloorType = new SquareType[width + 1, height];
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    newFloorType[x + 1, y] = floorType[x, y];
+                }
+
+                newFloorType[0, y] = SquareType.WALL;
+            }
+
+            //and the trap data
+            bool[,] newFloorTraps = new bool[width + 1, height];
+
+            Dictionary<Direction, bool[,]> newWallTraps = new Dictionary<Direction, bool[,]>();
+            newWallTraps[Direction.DOWN] = new bool[width + 1, height];
+            newWallTraps[Direction.UP] = new bool[width + 1, height];
+            newWallTraps[Direction.RIGHT] = new bool[width + 1, height];
+            newWallTraps[Direction.LEFT] = new bool[width + 1, height];
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    newFloorTraps[x + 1, y] = hasFloorTrap[x, y];
+                    newWallTraps[Direction.DOWN][x + 1, y] = hasWallTrap[Direction.DOWN][x, y];
+                    newWallTraps[Direction.UP][x + 1, y] = hasWallTrap[Direction.UP][x, y];
+                    newWallTraps[Direction.RIGHT][x + 1, y] = hasWallTrap[Direction.RIGHT][x, y];
+                    newWallTraps[Direction.LEFT][x + 1, y] = hasWallTrap[Direction.LEFT][x, y];
+                }
+
+                newFloorTraps[0, y] = false;
+                newWallTraps[Direction.DOWN][0, y] = false;
+                newWallTraps[Direction.UP][0, y] = false;
+                newWallTraps[Direction.RIGHT][0, y] = false;
+                newWallTraps[Direction.LEFT][0, y] = false;
+            }
+
+            this.floorType = newFloorType;
+            this.hasFloorTrap = newFloorTraps;
+            this.hasWallTrap = newWallTraps;
+
+            width++;
+            highlightedSquare.X++;
+
+            for (int i = 0; i < spawnPositions.Count; i++)
+            {
+                Point p = spawnPositions.Dequeue();
+                p.X++;
+                spawnPositions.Enqueue(p);
+            }
+
+            for (int i = 0; i < goalPositions.Count; i++)
+            {
+                Point p = goalPositions.Dequeue();
+                p.X++;
+                goalPositions.Enqueue(p);
+            }
+
+            autoassignVoid();
+            updatePathing();
+        }
+
+        private void addBottomWall()
+        {
+            //move over the map
+            SquareType[,] newFloorType = new SquareType[width, height + 1];
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    newFloorType[x, y] = floorType[x, y];
+                }
+
+                newFloorType[x, height] = SquareType.WALL;
+            }
+
+            //and the trap data
+            bool[,] newFloorTraps = new bool[width, height + 1];
+
+            Dictionary<Direction, bool[,]> newWallTraps = new Dictionary<Direction, bool[,]>();
+            newWallTraps[Direction.DOWN] = new bool[width, height + 1];
+            newWallTraps[Direction.UP] = new bool[width, height + 1];
+            newWallTraps[Direction.RIGHT] = new bool[width, height + 1];
+            newWallTraps[Direction.LEFT] = new bool[width, height + 1];
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    newFloorTraps[x, y] = hasFloorTrap[x, y];
+                    newWallTraps[Direction.DOWN][x, y] = hasWallTrap[Direction.DOWN][x, y];
+                    newWallTraps[Direction.UP][x, y] = hasWallTrap[Direction.UP][x, y];
+                    newWallTraps[Direction.RIGHT][x, y] = hasWallTrap[Direction.RIGHT][x, y];
+                    newWallTraps[Direction.LEFT][x, y] = hasWallTrap[Direction.LEFT][x, y];
+                }
+
+                newFloorTraps[x, height] = false;
+                newWallTraps[Direction.DOWN][x, height] = false;
+                newWallTraps[Direction.UP][x, height] = false;
+                newWallTraps[Direction.RIGHT][x, height] = false;
+                newWallTraps[Direction.LEFT][x, height] = false;
+            }
+
+            this.floorType = newFloorType;
+            this.hasFloorTrap = newFloorTraps;
+            this.hasWallTrap = newWallTraps;
+
+            height++;
+
+            autoassignVoid();
+            updatePathing();
+        }
+
+        private void addTopWall()
+        {
+            //move over the map
+            SquareType[,] newFloorType = new SquareType[width, height + 1];
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    newFloorType[x, y + 1] = floorType[x, y];
+                }
+
+                newFloorType[x, 0] = SquareType.WALL;
+            }
+
+            //and the trap data
+            bool[,] newFloorTraps = new bool[width, height + 1];
+
+            Dictionary<Direction, bool[,]> newWallTraps = new Dictionary<Direction, bool[,]>();
+            newWallTraps[Direction.DOWN] = new bool[width, height + 1];
+            newWallTraps[Direction.UP] = new bool[width, height + 1];
+            newWallTraps[Direction.RIGHT] = new bool[width, height + 1];
+            newWallTraps[Direction.LEFT] = new bool[width, height + 1];
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    newFloorTraps[x, y + 1] = hasFloorTrap[x, y];
+                    newWallTraps[Direction.DOWN][x, y + 1] = hasWallTrap[Direction.DOWN][x, y];
+                    newWallTraps[Direction.UP][x, y + 1] = hasWallTrap[Direction.UP][x, y];
+                    newWallTraps[Direction.RIGHT][x, y + 1] = hasWallTrap[Direction.RIGHT][x, y];
+                    newWallTraps[Direction.LEFT][x, y + 1] = hasWallTrap[Direction.LEFT][x, y];
+                }
+
+                newFloorTraps[x, 0] = false;
+                newWallTraps[Direction.DOWN][x, 0] = false;
+                newWallTraps[Direction.UP][x, 0] = false;
+                newWallTraps[Direction.RIGHT][x, 0] = false;
+                newWallTraps[Direction.LEFT][x, 0] = false;
+            }
+
+            this.floorType = newFloorType;
+            this.hasFloorTrap = newFloorTraps;
+            this.hasWallTrap = newWallTraps;
+
+            height++;
+            highlightedSquare.Y++;
+
+            for (int i = 0; i < spawnPositions.Count; i++)
+            {
+                Point p = spawnPositions.Dequeue();
+                p.Y++;
+                spawnPositions.Enqueue(p);
+            }
+
+            for (int i = 0; i < goalPositions.Count; i++)
+            {
+                Point p = goalPositions.Dequeue();
+                p.Y++;
+                goalPositions.Enqueue(p);
+            }
+
+            autoassignVoid();
+            updatePathing();
+        }
+        #endregion EXPANDING_MAP
 
         private void makeTrap()
         {
