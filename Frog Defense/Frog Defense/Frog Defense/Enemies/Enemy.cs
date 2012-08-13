@@ -44,6 +44,8 @@ namespace Frog_Defense.Enemies
         public abstract int NextSquareX { get; }
         public abstract int NextSquareY { get; }
 
+        public Point NextSquare { get { return new Point(NextSquareX, NextSquareY); } }
+
         protected abstract float MAX_HEALTH { get; }
         protected abstract float Health { get; set; }
 

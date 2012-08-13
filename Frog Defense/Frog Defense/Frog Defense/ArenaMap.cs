@@ -892,6 +892,42 @@ namespace Frog_Defense
 
             autoassignVoid();
             updatePathing();
+
+            //undo the wall if it stranded some enemies ...
+            if (enemiesAreStranded())
+            {
+                //un-wall
+                floorType[highlightedSquare.X, highlightedSquare.Y] = SquareType.FLOOR;
+
+                //un-spend
+                manager.Player.AddMoney(selectedTrap.Cost);
+
+                //fix pathing and back to normal
+                autoassignVoid();
+                updatePathing();
+            }
+        }
+
+        /// <summary>
+        /// Determines whether any current enemies or any spawn points lack a path
+        /// to some target which interests them ...
+        /// </summary>
+        /// <returns></returns>
+        public bool enemiesAreStranded()
+        {
+            foreach (Point p in spawnPositions)
+            {
+                if (bestPaths[p.X, p.Y] == null)
+                    return true;
+            }
+
+            foreach (Point p in manager.EnemyTargets())
+            {
+                if (bestPaths[p.X, p.Y] == null)
+                    return true;
+            }
+
+            return false;
         }
 
         /// <summary>

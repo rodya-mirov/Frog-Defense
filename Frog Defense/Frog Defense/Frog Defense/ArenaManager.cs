@@ -252,6 +252,22 @@ namespace Frog_Defense
         }
 
         /// <summary>
+        /// Returns an enumerable collection of all the points
+        /// the current enemies are immediately moving toward.
+        /// </summary>
+        /// <param name="squareX"></param>
+        /// <param name="squareY"></param>
+        /// <returns></returns>
+        public IEnumerable<Point> EnemyTargets()
+        {
+            List<Point> output = new List<Point>();
+            foreach (Enemy e in enemies)
+                output.Add(e.NextSquare);
+
+            return output;
+        }
+
+        /// <summary>
         /// Determines whether a wall at the specified SQUARE
         /// coordinates conflicts with any existing enemies;
         /// returns false in this case (since we can't build a
