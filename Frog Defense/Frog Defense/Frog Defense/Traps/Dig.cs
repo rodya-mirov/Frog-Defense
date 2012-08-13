@@ -25,7 +25,7 @@ namespace Frog_Defense.Traps
             get
             {
                 return "Completely removes a wall tile,"
-                  + "\nassuming that wall is not the\nedge of the map.";
+                  + "\nassuming that wall can be\nreached from a home tile.";
             }
         }
         public override TrapType trapType

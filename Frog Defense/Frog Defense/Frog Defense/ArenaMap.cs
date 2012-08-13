@@ -493,6 +493,9 @@ namespace Frog_Defense
             {
                 recordPathLengths[p.X, p.Y] = 0;
                 activePoints.Enqueue(new PathTracker(p.X, p.Y, 1));
+
+                bestPaths[p.X, p.Y] = new Queue<Point>();
+                bestPaths[p.X, p.Y].Enqueue(p);
             }
 
             while (activePoints.Count > 0)
@@ -578,6 +581,12 @@ namespace Frog_Defense
 
                     foreach (Point adj in bestPaths[x, y])
                     {
+                        //If the point is a goal point, it links to itself
+                        //to distinguish goal points from stranded points
+                        //but we don't want to draw that arrow, so just cancel
+                        if (adj.X == x && adj.Y == y)
+                            continue;
+
                         if (adj.X < x)
                         {
                             drawX = x * squareWidth + xOffset - arrowWidth / 2;
@@ -652,8 +661,10 @@ namespace Frog_Defense
             }
 
             //now the highlighted square, if appropriate, along with the selected trap
+            //we also don't highlight void tiles, because it looks goofy
             if (0 <= highlightedSquare.X && highlightedSquare.X < width
-                && 0 <= highlightedSquare.Y && highlightedSquare.Y < height)
+                && 0 <= highlightedSquare.Y && highlightedSquare.Y < height
+                && floorType[highlightedSquare.X, highlightedSquare.Y] != SquareType.VOID)
             {
                 if (selectedTrap != null)
                     selectedTrap.Draw(gameTime, batch, xOffset, yOffset, paused);
@@ -894,8 +905,7 @@ namespace Frog_Defense
                 throw new IndexOutOfRangeException();
             }
 
-            if (floorType[highlightedSquare.X, highlightedSquare.Y] != SquareType.WALL
-                && floorType[highlightedSquare.X, highlightedSquare.Y] != SquareType.VOID)
+            if (floorType[highlightedSquare.X, highlightedSquare.Y] != SquareType.WALL)
             {
                 throw new ArgumentException();
             }
@@ -1257,14 +1267,16 @@ namespace Frog_Defense
 
         /// <summary>
         /// Just makes SelectedTrap into a Dig (indicator),
-        /// assuming the highlighted square is a wall or void
+        /// assuming the highlighted square is a wall, and that it
+        /// borders a square that can path to a home square (no
+        /// stranded digging!)
         /// </summary>
         private void makeDigIndicator()
         {
             int x = highlightedSquare.X;
             int y = highlightedSquare.Y;
 
-            if (floorType[x, y] == SquareType.VOID || floorType[x, y] == SquareType.WALL)
+            if (floorType[x, y] == SquareType.WALL && bordersConnectedSquare(x, y))
             {
                 selectedTrap = new Dig(
                     manager,
@@ -1278,6 +1290,40 @@ namespace Frog_Defense
             {
                 selectedTrap = null;
             }
+        }
+
+        /// <summary>
+        /// Returns true precisely when the given square coordinates
+        /// border a square that has an existing path to some home tile
+        /// (or are themselves a connected floor tile!)
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        private bool bordersConnectedSquare(int x, int y)
+        {
+            //check self
+            if (x >= 0 && x < width && y >= 0 && y < height && bestPaths[x, y] != null)
+                return true;
+
+            //check right
+            if (x + 1 >= 0 && x + 1 < width && y >= 0 && y < height && bestPaths[x + 1, y] != null)
+                return true;
+
+            //check left
+            if (x - 1 >= 0 && x - 1 < width && y >= 0 && y < height && bestPaths[x - 1, y] != null)
+                return true;
+
+            //check up
+            if (x >= 0 && x < width && y - 1 >= 0 && y - 1 < height && bestPaths[x, y - 1] != null)
+                return true;
+
+            //check down
+            if (x >= 0 && x < width && y + 1 >= 0 && y + 1 < height && bestPaths[x, y + 1] != null)
+                return true;
+
+            //guess not?
+            return false;
         }
 
         private void makeWallTrap()
