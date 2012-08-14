@@ -114,6 +114,7 @@
     <Compile Include="Buttons\MenuButton.cs" />
     <Compile Include="Buttons\PauseButton.cs" />
     <Compile Include="Enemies\BasicEnemy.cs" />
+    <Compile Include="Enemies\ImmuneEnemy.cs" />
     <Compile Include="Enemies\QuickEnemy.cs" />
     <Compile Include="Enemies\ToughEnemy.cs" />
     <Compile Include="Enemies\Enemy.cs" />

@@ -50,7 +50,7 @@ namespace Frog_Defense.Traps
 
         public override string Description
         {
-            get { return "Deals continuous damage to all\nenemies standing on it."; }
+            get { return "Deals continuous damage to\nall enemies standing on it."; }
         }
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace Frog_Defense.Traps
         {
             get
             {
-                return "Completely removes a wall tile,"
+                return "Completely removes a wall,"
                   + "\nassuming that wall can be\nreached from a home tile.";
             }
         }

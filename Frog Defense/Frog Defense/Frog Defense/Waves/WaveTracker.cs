@@ -58,7 +58,7 @@ namespace Frog_Defense.Waves
             for (float level = 1f; level < 4f; level += 1f)
             {
 
-                for (int i = 0; i < 15; i++)
+                for (int i = 0; i < 12; i++)
                 {
                     e = new BasicEnemy(arena, env, -1, -1, level);
                     enemies.Enqueue(new EnemyTracker(e, lag));
@@ -68,7 +68,7 @@ namespace Frog_Defense.Waves
 
                 lag += waveInterval;
 
-                for (int i = 0; i < 15; i++)
+                for (int i = 0; i < 18; i++)
                 {
                     e = new QuickEnemy(arena, env, -1, -1, level);
                     enemies.Enqueue(new EnemyTracker(e, lag));
@@ -81,6 +81,16 @@ namespace Frog_Defense.Waves
                 for (int i = 0; i < 8; i++)
                 {
                     e = new ToughEnemy(arena, env, -1, -1, level);
+                    enemies.Enqueue(new EnemyTracker(e, lag));
+
+                    lag += e.TicksAfterSpawn;
+                }
+
+                lag += waveInterval;
+
+                for (int i = 0; i < 15; i++)
+                {
+                    e = new ImmuneEnemy(arena, env, -1, -1, level);
                     enemies.Enqueue(new EnemyTracker(e, lag));
 
                     lag += e.TicksAfterSpawn;

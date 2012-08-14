@@ -21,9 +21,9 @@ namespace Frog_Defense.Traps
         {
             get
             {
-                return "Fires darts in a fixed direction." +
-                    "\nThe darts poison what they hit.\n\nSuccessive hits replace existing" +
-                    "\npoison effects completely.";
+                return "Fires poisonous darts." +
+                    "\n\nSuccessive hits reset the" +
+                    "\npoison's duration.";
             }
         }
 

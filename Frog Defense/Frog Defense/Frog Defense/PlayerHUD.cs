@@ -69,11 +69,15 @@ namespace Frog_Defense
             fixedTraps.Add(new DigPit(env.ArenaManager, -1, -1, -1, -1));
             fixedTraps.Add(new BuildWall(env.ArenaManager, -1, -1, -1, -1));
 
+            //basically, make a newline in the previews
+            while (fixedTraps.Count % previewsPerRow != 0)
+                fixedTraps.Add(null);
+
             fixedTraps.Add(new SpikeTrap(env.ArenaManager, -1, -1, -1, -1));
 
             fixedTraps.Add(new GunTrap(env.ArenaManager, -1, -1, -1, -1, Direction.UP));
-            fixedTraps.Add(new DartTrap(env.ArenaManager, -1, -1, -1, -1, Direction.UP));
             fixedTraps.Add(new CannonTrap(env.ArenaManager, -1, -1, -1, -1, Direction.UP));
+            fixedTraps.Add(new DartTrap(env.ArenaManager, -1, -1, -1, -1, Direction.UP));
 
             setSelectedTrap(-1);
         }
@@ -157,8 +161,9 @@ namespace Frog_Defense
 
             //now convert into index form
             int index = relevantX + relevantY * previewsPerRow;
-
-            if (0 <= index && index < fixedTraps.Count)
+            
+            //check if the index is valid and not pointing to an empty "spacer" trap
+            if (0 <= index && index < fixedTraps.Count && fixedTraps[index] != null)
             {
                 setSelectedTrap(index);
             }
@@ -206,7 +211,7 @@ namespace Frog_Defense
             drawPreviews(gameTime, batch, xOffset, yOffset);
         }
 
-        private int previewsPerRow = 10;
+        private int previewsPerRow = 7;
 
         private float mainYBuffer = 20;
 
@@ -233,7 +238,10 @@ namespace Frog_Defense
 
             while (index < fixedTraps.Count)
             {
-                batch.Draw(fixedTraps[index].PreviewTexture, new Vector2(xPos, yPos), Color.White);
+                if (fixedTraps[index] != null)
+                {
+                    batch.Draw(fixedTraps[index].PreviewTexture, new Vector2(xPos, yPos), Color.White);
+                }
 
                 if (index == selectedPreviewIndex)
                     batch.Draw(highlightBorderTexture, new Vector2(xPos, yPos), Color.White);

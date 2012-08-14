@@ -63,4 +63,9 @@ Content\Images\Traps\CannonTrap\CannonBall.xnb
 Content\Images\Squares\PitSquareMedium.xnb
 Content\Images\Traps\Pickaxe.xnb
 Content\Images\TrapPreviews\PickaxePreview.xnb
+Content\Images\Enemies\ImmuneEnemy\Down.xnb
+Content\Images\Enemies\ImmuneEnemy\Left.xnb
+Content\Images\Enemies\ImmuneEnemy\Preview.xnb
+Content\Images\Enemies\ImmuneEnemy\Right.xnb
+Content\Images\Enemies\ImmuneEnemy\Up.xnb
 Maps\DefaultMap.txt

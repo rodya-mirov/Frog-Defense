@@ -66,7 +66,7 @@ namespace Frog_Defense
 
         private int ArenaPixelWidth
         {
-            get { return 450; }
+            get { return 550; }
         }
 
         private int ArenaPixelHeight

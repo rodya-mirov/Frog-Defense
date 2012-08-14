@@ -24,7 +24,7 @@ namespace Frog_Defense.Traps
         }
         public override string Description
         {
-            get { return "Fires bullets in a fixed direction."; }
+            get { return "Fires lots of little bullets."; }
         }
 
         public override int Cost { get { return 100; } }
