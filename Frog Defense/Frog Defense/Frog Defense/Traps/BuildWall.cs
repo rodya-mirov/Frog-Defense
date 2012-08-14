@@ -67,6 +67,22 @@ namespace Frog_Defense.Traps
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// This should never happen, since the wall is never "placed"
+        /// </summary>
+        public override float VisualXCenter
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        /// <summary>
+        /// This should never happen, since the wall is never "placed"
+        /// </summary>
+        public override float VisualYCenter
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         public override void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
         {
             Vector2 drawPosition = new Vector2(

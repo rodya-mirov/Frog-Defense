@@ -55,11 +55,11 @@ namespace Frog_Defense.Enemies
         }
 
         private float xCenter, yCenter;
-        public override float XCenter
+        public override float VisualXCenter
         {
             get { return xCenter; }
         }
-        public override float YCenter
+        public override float VisualYCenter
         {
             get { return yCenter; }
         }

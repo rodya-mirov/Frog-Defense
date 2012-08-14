@@ -80,5 +80,21 @@ namespace Frog_Defense.Traps
             //this should never happen!
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// This should never happen, since the wall is never "placed"
+        /// </summary>
+        public override float VisualXCenter
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        /// <summary>
+        /// This should never happen, since the wall is never "placed"
+        /// </summary>
+        public override float VisualYCenter
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

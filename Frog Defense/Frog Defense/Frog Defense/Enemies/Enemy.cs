@@ -33,12 +33,12 @@ namespace Frog_Defense.Enemies
         /// <summary>
         /// The center x-coordinate of the Enemy.
         /// </summary>
-        public abstract float XCenter { get; }
+        public abstract float VisualXCenter { get; }
 
         /// <summary>
         /// The center y-coordinate of the enemy
         /// </summary>
-        public abstract float YCenter { get; }
+        public abstract float VisualYCenter { get; }
 
         public abstract int PixelWidth { get; }
         public abstract int PixelHeight { get; }
@@ -236,8 +236,8 @@ namespace Frog_Defense.Enemies
         public void DrawHealthBar(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
         {
             Rectangle healthRect = new Rectangle(
-                (int)XCenter - PixelWidth / 2 + xOffset,
-                (int)YCenter - PixelHeight / 2 + yOffset - healthBarHeight - 1,
+                (int)VisualXCenter - PixelWidth / 2 + xOffset,
+                (int)VisualYCenter - PixelHeight / 2 + yOffset - healthBarHeight - 1,
                 healthBarWidth,
                 healthBarHeight
                 );

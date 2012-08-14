@@ -19,6 +19,9 @@ namespace Frog_Defense.Traps
     {
         private int xCenter, yCenter;
 
+        public override float VisualXCenter { get { return xCenter; } }
+        public override float VisualYCenter { get { return yCenter; } }
+
         //the damage this trap inflicts on every critter that touches it
         //creatures are hit for roughly mainImageWidth ticks, so, for balancing ...
         private const float damagePerTick = .5f;
@@ -92,7 +95,7 @@ namespace Frog_Defense.Traps
 
             foreach (Enemy e in enemies)
             {
-                if (e.XCenter >= minX && e.XCenter <= maxX && e.YCenter >= minY && e.YCenter <= maxY)
+                if (e.VisualXCenter >= minX && e.VisualXCenter <= maxX && e.VisualYCenter >= minY && e.VisualYCenter <= maxY)
                     e.TakeHit(damagePerTick);
             }
         }

@@ -12,6 +12,8 @@ namespace Frog_Defense.Traps
     {
         //location parameters
         protected Point position;
+        public override float VisualXCenter { get { return position.X; } }
+        public override float VisualYCenter { get { return position.Y; } }
 
         //contains subobjects which are bullets
         protected Queue<Point> projectilePositions;

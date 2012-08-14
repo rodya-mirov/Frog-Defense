@@ -281,6 +281,9 @@ namespace Frog_Defense
 
         private void drawTrapInformation(SpriteBatch batch, float xPos, float yPos)
         {
+            Enemy e;
+            Trap t;
+
             switch(PreviewType)
             {
                 case SelectedPreviewType.TrapPreview:
@@ -291,11 +294,44 @@ namespace Frog_Defense
                     break;
 
                 case SelectedPreviewType.EnemyPreview:
-                    Enemy e = env.ArenaManager.WaveTracker.SelectedEnemy;
-                    if (e.IsAlive)
+                    e = env.ArenaManager.WaveTracker.SelectedEnemy;
+                    if (e != null && e.IsAlive)
                     {
                         batch.DrawString(TDGame.SmallFont,
-                            env.ArenaManager.WaveTracker.SelectedEnemy.ToString(),
+                            e.ToString(),
+                            new Vector2(xPos, yPos),
+                            Color.White
+                            );
+                    }
+                    else
+                    {
+                        PreviewType = SelectedPreviewType.None;
+                    }
+                    break;
+
+                case SelectedPreviewType.TrapExisting:
+                    t = env.ArenaManager.SelectedTrapToShow;
+
+                    if (t != null)
+                    {
+                        batch.DrawString(TDGame.SmallFont,
+                            t.ToString(),
+                            new Vector2(xPos, yPos),
+                            Color.White
+                            );
+                    }
+                    else
+                    {
+                        PreviewType = SelectedPreviewType.None;
+                    }
+                    break;
+
+                case SelectedPreviewType.EnemyExisting:
+                    e = env.ArenaManager.SelectedEnemyToShow;
+                    if (e != null && e.IsAlive)
+                    {
+                        batch.DrawString(TDGame.SmallFont,
+                            e.ToString(),
                             new Vector2(xPos, yPos),
                             Color.White
                             );

@@ -88,6 +88,20 @@ namespace Frog_Defense
         public void GetClicked()
         {
             arenaMap.GetClicked();
+
+            if (Player.PreviewType != SelectedPreviewType.TrapPreview)
+            {
+                if (mousedEnemy != null)
+                {
+                    selectedEnemyToShow = mousedEnemy;
+                    Player.PreviewType = SelectedPreviewType.EnemyExisting;
+                }
+                else if (mousedTrap != null)
+                {
+                    selectedTrapToShow = mousedTrap;
+                    Player.PreviewType = SelectedPreviewType.TrapExisting;
+                }
+            }
         }
 
         public void addTrap(Trap t)
@@ -364,7 +378,58 @@ namespace Frog_Defense
                 mouseY - scrollPanelWidth - arenaTranslation.Y
                 );
 
+            pickMousedOverTarget(
+                mouseX - scrollPanelWidth - arenaTranslation.X,
+                mouseY - scrollPanelWidth - arenaTranslation.Y
+                );
+
             scrollPanel.updateMousePosition(mouseX, mouseY);
+        }
+
+        private Enemy mousedEnemy, selectedEnemyToShow;
+        private Trap mousedTrap, selectedTrapToShow;
+        private const float mouseSquareThreshold = 100f;
+
+        public Enemy SelectedEnemyToShow { get { return selectedEnemyToShow; } }
+        public Trap SelectedTrapToShow { get { return selectedTrapToShow; } }
+
+        /// <summary>
+        /// Determines the closest enemy/trap, if there is one close
+        /// enough, to the given coordinates.  Coordinates are assumed
+        /// to be relativized to the arena.
+        /// </summary>
+        /// <param name="mx"></param>
+        /// <param name="my"></param>
+        private void pickMousedOverTarget(int mx, int my)
+        {
+            //ignore all traps/enemies outside the threshold
+            float bestSquareDistance = mouseSquareThreshold;
+            float possibleSquareDistance;
+
+            mousedTrap = null;
+            mousedEnemy = null;
+
+            foreach (Trap t in traps)
+            {
+                possibleSquareDistance = (mx - t.VisualXCenter) * (mx - t.VisualXCenter) + (my - t.VisualYCenter) * (my - t.VisualYCenter);
+                if (possibleSquareDistance < bestSquareDistance)
+                {
+                    mousedTrap = t;
+                    mousedEnemy = null;
+                    bestSquareDistance = possibleSquareDistance;
+                }
+            }
+
+            foreach (Enemy e in enemies)
+            {
+                possibleSquareDistance = (mx - e.VisualXCenter) * (mx - e.VisualXCenter) + (my - e.VisualYCenter) * (my - e.VisualYCenter);
+                if (possibleSquareDistance < bestSquareDistance)
+                {
+                    mousedTrap = null;
+                    mousedEnemy = e;
+                    bestSquareDistance = possibleSquareDistance;
+                }
+            }
         }
 
         public void RightClick(bool mouseRightIsDown)

@@ -52,6 +52,9 @@ namespace Frog_Defense.Traps
         public abstract int Cost { get; }
         public virtual int SellPrice { get { return Cost / 2; } }
 
+        public abstract float VisualXCenter { get; }
+        public abstract float VisualYCenter { get; }
+
         public abstract Texture2D PreviewTexture { get; }
         public abstract String Description { get; }
 
