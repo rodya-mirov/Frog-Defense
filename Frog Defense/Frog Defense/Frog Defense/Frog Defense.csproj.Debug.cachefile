@@ -1,13 +1,8 @@
-Content\Images\Squares\ImpassableSquare.xnb
-Content\Images\Squares\PassableSquare.xnb
-Content\Images\Squares\GoalSquare.xnb
-Content\Images\Squares\StartSquare.xnb
 Content\Images\Arrows\ArrowDown.xnb
 Content\Images\Arrows\ArrowLeft.xnb
 Content\Images\Arrows\ArrowRight.xnb
 Content\Images\Arrows\ArrowUp.xnb
 Content\Images\Traps\Spikes.xnb
-Content\Images\Squares\HighlightedSquare.xnb
 Content\Images\Healthbars\EmptyBar.xnb
 Content\Images\Healthbars\FullBar.xnb
 Content\Images\TrapPreviews\HighlightedBorder.xnb
@@ -65,4 +60,7 @@ Content\Images\Traps\CannonTrap\CannonTrapRight.xnb
 Content\Images\Traps\CannonTrap\CannonTrapUp.xnb
 Content\Images\TrapPreviews\CannonPreview.xnb
 Content\Images\Traps\CannonTrap\CannonBall.xnb
+Content\Images\Squares\PitSquareMedium.xnb
+Content\Images\Traps\Pickaxe.xnb
+Content\Images\TrapPreviews\PickaxePreview.xnb
 Maps\DefaultMap.txt

@@ -10,7 +10,7 @@ using System.IO;
 
 namespace Frog_Defense
 {
-    enum SquareType { FLOOR, WALL, VOID };
+    enum SquareType { FLOOR, PIT, WALL, VOID };
 
     /// <summary>
     /// This is just a map for the Arena; it should have as little unrelated functionality as possible!
@@ -87,6 +87,8 @@ namespace Frog_Defense
         //for squares ...
         private const String passableSquarePath = "Images/Squares/PassableSquareMedium";
         private static Texture2D passableSquareTexture;
+        private const String pitSquarePath = "Images/Squares/PitSquareMedium";
+        private static Texture2D pitSquareTexture;
         private const String impassableSquarePath = "Images/Squares/ImpassableSquareMedium";
         private static Texture2D impassableSquareTexture;
         private const String startSquarePath = "Images/Squares/StartSquareMedium";
@@ -116,6 +118,9 @@ namespace Frog_Defense
 
             if (passableSquareTexture == null)
                 passableSquareTexture = TDGame.MainGame.Content.Load<Texture2D>(passableSquarePath);
+
+            if (pitSquareTexture == null)
+                pitSquareTexture = TDGame.MainGame.Content.Load<Texture2D>(pitSquarePath);
 
             if (goalSquareTexture == null)
                 goalSquareTexture = TDGame.MainGame.Content.Load<Texture2D>(goalSquarePath);
@@ -642,11 +647,12 @@ namespace Frog_Defense
             {
                 for (int y = 0; y < height; y++)
                 {
-
                     if (floorType[x, y] == SquareType.VOID)
                         continue;
                     else if (floorType[x, y] == SquareType.FLOOR)
                         toDraw = passableSquareTexture;
+                    else if (floorType[x, y] == SquareType.PIT)
+                        toDraw = pitSquareTexture;
                     else //it must be the wall
                         toDraw = impassableSquareTexture;
 
@@ -873,18 +879,19 @@ namespace Frog_Defense
 
                     return;
 
-                case TrapType.Dig:
+                case TrapType.MineWall:
                     if (manager.Player.AttemptSpend(selectedTrap.Cost))
                     {
-                        dig();
+                        mineWall();
                     }
                     return;
 
                 case TrapType.Wall:
+                case TrapType.DigPit:
                     if (manager.CanBuildWall(highlightedSquare.X, highlightedSquare.Y) &&
                         manager.Player.AttemptSpend(selectedTrap.Cost))
                     {
-                        buildWall();
+                        buildBlock();
                     }
                     return;
 
@@ -897,7 +904,7 @@ namespace Frog_Defense
         /// Builds a wall at the selected location.  Handles the cleanup
         /// as well!
         /// </summary>
-        private void buildWall()
+        private void buildBlock()
         {
             //these shouldn't happen, they're in there for testing
             if (highlightedSquare.X < 0 || highlightedSquare.X >= width
@@ -911,9 +918,21 @@ namespace Frog_Defense
                 throw new ArgumentException();
             }
 
-            manager.BuildWall(highlightedSquare.X, highlightedSquare.Y);
+            manager.ClearTraps(highlightedSquare.X, highlightedSquare.Y);
 
-            floorType[highlightedSquare.X, highlightedSquare.Y] = SquareType.WALL;
+            switch (selectedTrap.trapType)
+            {
+                case TrapType.Wall:
+                    floorType[highlightedSquare.X, highlightedSquare.Y] = SquareType.WALL;
+                    break;
+
+                case TrapType.DigPit:
+                    floorType[highlightedSquare.X, highlightedSquare.Y] = SquareType.PIT;
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
 
             autoassignVoid();
             updatePathing();
@@ -956,9 +975,9 @@ namespace Frog_Defense
         }
 
         /// <summary>
-        /// Digs at the selected location.  Takes care of the cleanup as well.
+        /// Mines at the selected location.  Takes care of the cleanup as well.
         /// </summary>
-        private void dig()
+        private void mineWall()
         {
             if (highlightedSquare.X < 0 || highlightedSquare.X >= width
                 || highlightedSquare.Y < 0 || highlightedSquare.Y >= height)
@@ -971,7 +990,7 @@ namespace Frog_Defense
                 throw new ArgumentException();
             }
 
-            manager.Dig(highlightedSquare.X, highlightedSquare.Y);
+            manager.MineWall(highlightedSquare.X, highlightedSquare.Y);
 
 
             if (highlightedSquare.X == width - 1)
@@ -1287,14 +1306,15 @@ namespace Frog_Defense
                     makeWallTrap();
                     break;
 
-                //dig is different
-                case TrapType.Dig:
-                    makeDigIndicator();
+                //mining is different
+                case TrapType.MineWall:
+                    makeMiningIndicator();
                     break;
 
-                //as is wall
+                //as is blocking
                 case TrapType.Wall:
-                    makeWallIndicator();
+                case TrapType.DigPit:
+                    makeBlockingIndicator();
                     break;
 
                 default:
@@ -1303,23 +1323,41 @@ namespace Frog_Defense
         }
 
         /// <summary>
-        /// Makes SelectedTrap into a wall indicator, 
+        /// Makes SelectedTrap into a blocking indicator, 
         /// assuming the highlighted square is a floor
         /// </summary>
-        private void makeWallIndicator()
+        private void makeBlockingIndicator()
         {
             int x = highlightedSquare.X;
             int y = highlightedSquare.Y;
 
             if (floorType[x, y] == SquareType.FLOOR)
             {
-                selectedTrap = new BuildWall(
-                    manager,
-                    x * squareWidth + squareWidth / 2,
-                    y * squareHeight + squareHeight / 2,
-                    x,
-                    y
-                    );
+                switch (manager.SelectedTrapType)
+                {
+                    case TrapType.Wall:
+                        selectedTrap = new BuildWall(
+                            manager,
+                            x * squareWidth + squareWidth / 2,
+                            y * squareHeight + squareHeight / 2,
+                            x,
+                            y
+                            );
+                        break;
+
+                    case TrapType.DigPit:
+                        selectedTrap = new DigPit(
+                            manager,
+                            x * squareWidth + squareWidth / 2,
+                            y * squareHeight + squareHeight / 2,
+                            x,
+                            y
+                            );
+                        break;
+
+                    default:
+                        throw new NotImplementedException();
+                }
             }
             else
             {
@@ -1328,19 +1366,19 @@ namespace Frog_Defense
         }
 
         /// <summary>
-        /// Just makes SelectedTrap into a Dig (indicator),
+        /// Just makes SelectedTrap into a Mining indicator,
         /// assuming the highlighted square is a wall, and that it
         /// borders a square that can path to a home square (no
-        /// stranded digging!)
+        /// stranded mining!)
         /// </summary>
-        private void makeDigIndicator()
+        private void makeMiningIndicator()
         {
             int x = highlightedSquare.X;
             int y = highlightedSquare.Y;
 
             if (floorType[x, y] == SquareType.WALL && bordersConnectedSquare(x, y))
             {
-                selectedTrap = new Dig(
+                selectedTrap = new MineWall(
                     manager,
                     x * squareWidth + squareWidth / 2,
                     y * squareHeight + squareHeight / 2,

@@ -8,7 +8,7 @@ using Frog_Defense.Enemies;
 
 namespace Frog_Defense.Traps
 {
-    enum TrapType { NoType, SpikeTrap, GunTrap, DartTrap, Dig, Wall, CannonTrap };
+    enum TrapType { NoType, SpikeTrap, GunTrap, DartTrap, MineWall, Wall, CannonTrap, DigPit };
 
     abstract class Trap
     {
@@ -31,7 +31,8 @@ namespace Frog_Defense.Traps
             DartTrap.LoadContent();
             CannonTrap.LoadContent();
 
-            Dig.LoadContent();
+            MineWall.LoadContent();
+            DigPit.LoadContent();
             BuildWall.LoadContent();
         }
 

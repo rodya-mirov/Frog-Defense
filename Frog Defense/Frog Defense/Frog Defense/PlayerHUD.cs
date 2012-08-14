@@ -65,7 +65,8 @@ namespace Frog_Defense
 
             fixedTraps = new List<Trap>();
 
-            fixedTraps.Add(new Dig(env.ArenaManager, -1, -1, -1, -1));
+            fixedTraps.Add(new MineWall(env.ArenaManager, -1, -1, -1, -1));
+            fixedTraps.Add(new DigPit(env.ArenaManager, -1, -1, -1, -1));
             fixedTraps.Add(new BuildWall(env.ArenaManager, -1, -1, -1, -1));
 
             fixedTraps.Add(new SpikeTrap(env.ArenaManager, -1, -1, -1, -1));

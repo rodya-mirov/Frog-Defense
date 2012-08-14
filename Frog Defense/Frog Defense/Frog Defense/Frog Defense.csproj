@@ -132,7 +132,8 @@
     <Compile Include="Traps\BuildWall.cs" />
     <Compile Include="Traps\CannonTrap.cs" />
     <Compile Include="Traps\DartTrap.cs" />
-    <Compile Include="Traps\Dig.cs" />
+    <Compile Include="Traps\DigPit.cs" />
+    <Compile Include="Traps\MineWall.cs" />
     <Compile Include="Traps\WallProjectileTrap.cs" />
     <Compile Include="Traps\WallTrap.cs" />
     <Compile Include="Utilities.cs" />

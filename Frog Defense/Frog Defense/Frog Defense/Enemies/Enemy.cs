@@ -222,7 +222,7 @@ namespace Frog_Defense.Enemies
         /// <param name="squareX"></param>
         /// <param name="squareY"></param>
         /// <returns></returns>
-        public abstract bool conflictsWithSquare(int squareX, int squareY);
+        public abstract bool isInvolvedWithSquare(int squareX, int squareY);
 
         /// <summary>
         /// This draws the health bar of the enemy in question.  This can be called separately and

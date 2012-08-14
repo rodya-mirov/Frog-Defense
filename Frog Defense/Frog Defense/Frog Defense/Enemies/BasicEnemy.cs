@@ -157,7 +157,7 @@ namespace Frog_Defense.Enemies
             hasReachedGoal = false;
         }
 
-        public override bool conflictsWithSquare(int squareX, int squareY)
+        public override bool isInvolvedWithSquare(int squareX, int squareY)
         {
             if (this.currentSquareX == squareX && this.currentSquareY == squareY)
                 return true;

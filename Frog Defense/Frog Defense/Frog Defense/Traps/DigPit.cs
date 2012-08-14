@@ -8,29 +8,29 @@ using Frog_Defense.Enemies;
 
 namespace Frog_Defense.Traps
 {
-    class Dig : Trap
+    class DigPit : Trap
     {
         private int xCenter, yCenter;
 
         public override string Name
         {
-            get { return "Dig"; }
+            get { return "Dig Pit"; }
         }
         public override int Cost
         {
-            get { return 20; }
+            get { return 50; }
         }
         public override string Description
         {
             get
             {
-                return "Completely removes a wall tile,"
-                  + "\nassuming that wall can be\nreached from a home tile.";
+                return "Digs a pit in a floor,"
+                  + "\nwhich nothing can walk over.";
             }
         }
         public override TrapType trapType
         {
-            get { return TrapType.Dig; }
+            get { return TrapType.DigPit; }
         }
 
         private const string previewPath = "Images/TrapPreviews/ShovelPreview";
@@ -45,7 +45,7 @@ namespace Frog_Defense.Traps
         private const string imagePath = "Images/Traps/DigIndicator";
         private static Texture2D imageTexture;
 
-        public Dig(ArenaManager env, int xCenter, int yCenter, int floorSquareX, int floorSquareY)
+        public DigPit(ArenaManager env, int xCenter, int yCenter, int floorSquareX, int floorSquareY)
             : base(env, floorSquareX, floorSquareY)
         {
             this.xCenter = xCenter;

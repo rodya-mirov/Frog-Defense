@@ -20,12 +20,12 @@ namespace Frog_Defense.Traps
         }
         public override string Description
         {
-            get { return "Fires large cannonballs\nwhich can knock enemies around."; }
+            get { return "Fires large cannonballs."; }
         }
 
         public override int Cost { get { return 200; } }
         protected override float ProjectileDamage { get { return 20; } }
-        protected override int ReloadFrames { get { return 30; } }
+        protected override int ReloadFrames { get { return 20; } }
 
         //standard image stuff: Gun
         protected override int imageWidth { get { return 30; } }

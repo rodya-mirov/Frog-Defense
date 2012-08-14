@@ -42,30 +42,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\Squares\ImpassableSquare.png">
-      <Name>ImpassableSquare</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Images\Squares\PassableSquare.png">
-      <Name>PassableSquare</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Images\Squares\GoalSquare.png">
-      <Name>GoalSquare</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Images\Squares\StartSquare.png">
-      <Name>StartSquare</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Images\Arrows\ArrowDown.png">
       <Name>ArrowDown</Name>
       <Importer>TextureImporter</Importer>
@@ -90,13 +66,6 @@
   <ItemGroup>
     <Compile Include="Images\Traps\Spikes.png">
       <Name>Spikes</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Images\Squares\HighlightedSquare.png">
-      <Name>HighlightedSquare</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -439,6 +408,27 @@
   <ItemGroup>
     <Compile Include="Images\Traps\CannonTrap\CannonBall.png">
       <Name>CannonBall</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\Squares\PitSquareMedium.png">
+      <Name>PitSquareMedium</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\Traps\Pickaxe.png">
+      <Name>Pickaxe</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\TrapPreviews\PickaxePreview.png">
+      <Name>PickaxePreview</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

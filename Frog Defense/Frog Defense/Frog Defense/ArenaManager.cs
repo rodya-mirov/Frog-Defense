@@ -263,7 +263,7 @@ namespace Frog_Defense
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public void Dig(int x, int y)
+        public void MineWall(int x, int y)
         {
             int n;
 
@@ -315,13 +315,13 @@ namespace Frog_Defense
         {
             foreach (Enemy e in enemiesToBeAdded)
             {
-                if (e.conflictsWithSquare(squareX, squareY))
+                if (e.isInvolvedWithSquare(squareX, squareY))
                     return false;
             }
 
             foreach (Enemy e in enemies)
             {
-                if (e.conflictsWithSquare(squareX, squareY))
+                if (e.isInvolvedWithSquare(squareX, squareY))
                     return false;
             }
 
@@ -329,12 +329,11 @@ namespace Frog_Defense
         }
 
         /// <summary>
-        /// Builds a wall at the assigned coordinates.
         /// Destroys any traps occupying the space!
         /// </summary>
         /// <param name="p"></param>
         /// <param name="p_2"></param>
-        public void BuildWall(int x, int y)
+        public void ClearTraps(int x, int y)
         {
             int n;
             Trap t;
