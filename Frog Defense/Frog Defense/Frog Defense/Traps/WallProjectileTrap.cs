@@ -17,15 +17,11 @@ namespace Frog_Defense.Traps
         protected Queue<Point> projectilePositions;
 
         //various parameters for the gun
-        protected virtual int bulletSpeed
-        {
-            get { return 2; }
-        }
+        protected virtual int bulletSpeed { get { return 2; } }
+
         protected abstract float ProjectileDamage { get; }
-        protected virtual int reloadFrames
-        {
-            get { return 15; }
-        }
+        protected virtual int ReloadFrames { get { return 15; } }
+
         protected int framesSinceFiring = 0;
 
         //texture stuff
@@ -164,7 +160,7 @@ namespace Frog_Defense.Traps
         private void fireIfPossible(IEnumerable<Enemy> enemies)
         {
             //first, check if the gun is loaded, and if not, spend your time on that
-            if (framesSinceFiring < reloadFrames)
+            if (framesSinceFiring < ReloadFrames)
             {
                 framesSinceFiring += 1;
                 return;

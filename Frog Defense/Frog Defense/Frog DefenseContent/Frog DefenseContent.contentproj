@@ -95,35 +95,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\Traps\GunTrapDown.png">
-      <Name>GunTrapDown</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Images\Traps\GunTrapLeft.png">
-      <Name>GunTrapLeft</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Images\Traps\GunTrapRight.png">
-      <Name>GunTrapRight</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Images\Traps\GunTrapUp.png">
-      <Name>GunTrapUp</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Images\Traps\Bullet.png">
-      <Name>Bullet</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Images\Squares\HighlightedSquare.png">
       <Name>HighlightedSquare</Name>
       <Importer>TextureImporter</Importer>
@@ -176,22 +147,22 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\Traps\DartTrapDown.png">
+    <Compile Include="Images\Traps\DartTrap\DartTrapDown.png">
       <Name>DartTrapDown</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\Traps\DartTrapLeft.png">
+    <Compile Include="Images\Traps\DartTrap\DartTrapLeft.png">
       <Name>DartTrapLeft</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\Traps\DartTrapRight.png">
+    <Compile Include="Images\Traps\DartTrap\DartTrapRight.png">
       <Name>DartTrapRight</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\Traps\DartTrapUp.png">
+    <Compile Include="Images\Traps\DartTrap\DartTrapUp.png">
       <Name>DartTrapUp</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -398,6 +369,76 @@
     </Compile>
     <Compile Include="Images\Enemies\QuickEnemy\Up.png">
       <Name>Up</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\Traps\GunTrap\Bullet.png">
+      <Name>Bullet</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Traps\GunTrap\GunTrapDown.png">
+      <Name>GunTrapDown</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Traps\GunTrap\GunTrapLeft.png">
+      <Name>GunTrapLeft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Traps\GunTrap\GunTrapRight.png">
+      <Name>GunTrapRight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Traps\GunTrap\GunTrapUp.png">
+      <Name>GunTrapUp</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\Traps\DartTrap\Bullet.png">
+      <Name>Bullet</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\Traps\CannonTrap\CannonTrapDown.png">
+      <Name>CannonTrapDown</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Traps\CannonTrap\CannonTrapLeft.png">
+      <Name>CannonTrapLeft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Traps\CannonTrap\CannonTrapRight.png">
+      <Name>CannonTrapRight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Traps\CannonTrap\CannonTrapUp.png">
+      <Name>CannonTrapUp</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\TrapPreviews\CannonPreview.png">
+      <Name>CannonPreview</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\Traps\CannonTrap\CannonBall.png">
+      <Name>CannonBall</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

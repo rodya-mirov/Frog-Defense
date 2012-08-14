@@ -132,7 +132,7 @@ namespace Frog_Defense.Waves
             //now draw each enemy's preview
             foreach (EnemyTracker e in enemies)
             {
-                Vector2 drawPosition = new Vector2(xOffset + 1 + e.ticksRemaining/2 - Enemy.PreviewImageWidth, yOffset + 1);
+                Vector2 drawPosition = new Vector2(xOffset + 1 + e.ticksRemaining/2 - Enemy.PreviewImageWidth, yOffset + 2);
                 batch.Draw(e.enemy.PreviewTexture, drawPosition, Color.White);
             }
         }

@@ -864,6 +864,7 @@ namespace Frog_Defense
 
                 case TrapType.GunTrap:
                 case TrapType.DartTrap:
+                case TrapType.CannonTrap:
                     if (manager.Player.AttemptSpend(selectedTrap.Cost))
                     {
                         manager.addTrap(selectedTrap);
@@ -1282,6 +1283,7 @@ namespace Frog_Defense
                 //as are "on the wall"-type traps
                 case TrapType.GunTrap:
                 case TrapType.DartTrap:
+                case TrapType.CannonTrap:
                     makeWallTrap();
                     break;
 
@@ -1452,6 +1454,10 @@ namespace Frog_Defense
 
                 case TrapType.DartTrap:
                     selectedTrap = new DartTrap(manager, xpos, ypos, highlightedSquare.X, highlightedSquare.Y, favoredDirection);
+                    return;
+
+                case TrapType.CannonTrap:
+                    selectedTrap = new CannonTrap(manager, xpos, ypos, highlightedSquare.X, highlightedSquare.Y, favoredDirection);
                     return;
 
                 default:

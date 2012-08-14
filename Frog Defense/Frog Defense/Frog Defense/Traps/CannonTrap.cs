@@ -3,66 +3,61 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using Frog_Defense.Enemies;
 
 namespace Frog_Defense.Traps
 {
-    /// <summary>
-    /// This trap is affixed to the center of a wall, and fires at the closest target.
-    /// It hits that target for flat damage.
-    /// </summary>
-    class GunTrap : WallProjectileTrap
+    class CannonTrap : WallProjectileTrap
     {
         public override TrapType trapType
         {
-            get { return TrapType.GunTrap; }
+            get { return TrapType.CannonTrap; }
         }
         public override string Name
         {
-            get { return "Pellet Gun"; }
+            get { return "Cannon"; }
         }
         public override string Description
         {
-            get { return "Fires bullets in a fixed direction."; }
+            get { return "Fires large cannonballs\nwhich can knock enemies around."; }
         }
 
-        public override int Cost { get { return 100; } }
-        protected override float ProjectileDamage { get { return 10; } }
+        public override int Cost { get { return 200; } }
+        protected override float ProjectileDamage { get { return 20; } }
+        protected override int ReloadFrames { get { return 30; } }
 
         //standard image stuff: Gun
         protected override int imageWidth { get { return 30; } }
         protected override int imageHeight { get { return 30; } }
 
-        private const String upGunPath = "Images/Traps/GunTrap/GunTrapUp";
+        private const String upGunPath = "Images/Traps/CannonTrap/CannonTrapUp";
         private static Texture2D upGunTexture;
         protected override Texture2D UpTexture
         {
             get { return upGunTexture; }
         }
 
-        private const String downGunPath = "Images/Traps/GunTrap/GunTrapDown";
+        private const String downGunPath = "Images/Traps/CannonTrap/CannonTrapDown";
         private static Texture2D downGunTexture;
         protected override Texture2D DownTexture
         {
             get { return downGunTexture; }
         }
 
-        private const String rightGunPath = "Images/Traps/GunTrap/GunTrapRight";
+        private const String rightGunPath = "Images/Traps/CannonTrap/CannonTrapRight";
         private static Texture2D rightGunTexture;
         protected override Texture2D RightTexture
         {
             get { return rightGunTexture; }
         }
 
-        private const String leftGunPath = "Images/Traps/GunTrap/GunTrapLeft";
+        private const String leftGunPath = "Images/Traps/CannonTrap/CannonTrapLeft";
         private static Texture2D leftGunTexture;
         protected override Texture2D LeftTexture
         {
             get { return leftGunTexture; }
         }
 
-        private const String previewGunPath = "Images/TrapPreviews/GunTrapPreview";
+        private const String previewGunPath = "Images/TrapPreviews/CannonPreview";
         private static Texture2D previewTexture;
         public override Texture2D PreviewTexture
         {
@@ -70,10 +65,10 @@ namespace Frog_Defense.Traps
         }
 
         //standard image stuff: Bullet
-        protected override int BulletImageWidth { get { return 2; } }
-        protected override int BulletImageHeight { get { return 2; } }
+        protected override int BulletImageWidth { get { return 10; } }
+        protected override int BulletImageHeight { get { return 10; } }
 
-        private const String bulletPath = "Images/Traps/GunTrap/Bullet";
+        private const String bulletPath = "Images/Traps/CannonTrap/CannonBall";
         private static Texture2D bulletTexture;
         protected override Texture2D BulletTexture
         {
@@ -88,7 +83,7 @@ namespace Frog_Defense.Traps
         /// <param name="centerX">The centerX of the gun</param>
         /// <param name="centerY">The centerY of the gun</param>
         /// <param name="facing"></param>
-        public GunTrap(ArenaManager env, int centerX, int centerY, int xSquare, int ySquare, Direction facing)
+        public CannonTrap(ArenaManager env, int centerX, int centerY, int xSquare, int ySquare, Direction facing)
             : base(env, centerX, centerY, xSquare, ySquare, facing)
         {
         }

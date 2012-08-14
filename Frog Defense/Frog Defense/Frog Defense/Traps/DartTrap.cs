@@ -27,43 +27,36 @@ namespace Frog_Defense.Traps
             }
         }
 
-        public override int Cost
-        {
-            get { return 150; }
-        }
-
-        protected override float ProjectileDamage
-        {
-            get { return 4; }
-        }
+        public override int Cost { get { return 150; } }
+        protected override float ProjectileDamage { get { return 4; } }
 
         #region IMAGE_STUFF
         //standard image stuff: Gun
         protected override int imageWidth { get { return 30; } }
         protected override int imageHeight { get { return 30; } }
 
-        private const String upGunPath = "Images/Traps/DartTrapUp";
+        private const String upGunPath = "Images/Traps/DartTrap/DartTrapUp";
         private static Texture2D upGunTexture;
         protected override Texture2D UpTexture
         {
             get { return upGunTexture; }
         }
 
-        private const String downGunPath = "Images/Traps/DartTrapDown";
+        private const String downGunPath = "Images/Traps/DartTrap/DartTrapDown";
         private static Texture2D downGunTexture;
         protected override Texture2D DownTexture
         {
             get { return downGunTexture; }
         }
 
-        private const String rightGunPath = "Images/Traps/DartTrapRight";
+        private const String rightGunPath = "Images/Traps/DartTrap/DartTrapRight";
         private static Texture2D rightGunTexture;
         protected override Texture2D RightTexture
         {
             get { return rightGunTexture; }
         }
 
-        private const String leftGunPath = "Images/Traps/DartTrapLeft";
+        private const String leftGunPath = "Images/Traps/DartTrap/DartTrapLeft";
         private static Texture2D leftGunTexture;
         protected override Texture2D LeftTexture
         {
@@ -81,7 +74,7 @@ namespace Frog_Defense.Traps
         protected override int BulletImageWidth { get { return 2; } }
         protected override int BulletImageHeight { get { return 2; } }
 
-        private const String bulletPath = "Images/Traps/Bullet";
+        private const String bulletPath = "Images/Traps/DartTrap/Bullet";
         private static Texture2D bulletTexture;
         protected override Texture2D BulletTexture
         {

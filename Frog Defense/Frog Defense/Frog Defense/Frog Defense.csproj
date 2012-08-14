@@ -130,6 +130,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="ScrollPanel.cs" />
     <Compile Include="Traps\BuildWall.cs" />
+    <Compile Include="Traps\CannonTrap.cs" />
     <Compile Include="Traps\DartTrap.cs" />
     <Compile Include="Traps\Dig.cs" />
     <Compile Include="Traps\WallProjectileTrap.cs" />
