@@ -212,6 +212,7 @@ namespace Frog_Defense
             //first, tell all the drawable components where the mouse is (in relative coordinates)
             arenaManager.updateMousePosition(mouseX - ArenaOffsetX, mouseY - ArenaOffsetY);
             player.MouseOver(mouseX - PlayerOffsetX, mouseY - PlayerOffsetY);
+            arenaManager.WaveTracker.UpdateMousePosition(mouseX - WaveTrackerOffsetX, mouseY - WaveTrackerOffsetY);
 
             //second, deal with all the left-clicking!
             mouseLeftWasDown = mouseLeftIsDown;
@@ -221,6 +222,7 @@ namespace Frog_Defense
             {
                 arenaManager.GetClicked();
                 player.GetClicked();
+                arenaManager.WaveTracker.GetClicked();
 
                 int xOffset = ButtonPanelOffsetX;
                 int yOffset = ButtonPanelOffsetY;

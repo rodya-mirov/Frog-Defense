@@ -246,7 +246,7 @@ namespace Frog_Defense.Enemies
             batch.Draw(healthBarEmptyTexture, healthRect, Color.White);
             
             //then draw the full bar, as appropriate
-            healthRect.Width = (int)((healthBarWidth * Health) / (this.scalingFactor * MAX_HEALTH));
+            healthRect.Width = (int)((healthBarWidth * Health) / (MAX_HEALTH));
 
             batch.Draw(healthBarFullTexture, healthRect, Color.White);
         }

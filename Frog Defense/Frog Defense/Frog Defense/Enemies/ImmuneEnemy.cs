@@ -8,6 +8,9 @@ namespace Frog_Defense.Enemies
 {
     class ImmuneEnemy : BasicEnemy
     {
+        protected override string EnemyType { get { return "Immune Enemy"; } }
+        protected override string Description { get { return "Cannot be poisoned."; } }
+
         public override int CashValue
         {
             get { return 15; }

@@ -34,7 +34,8 @@ namespace Frog_Defense.Buttons
             ButtonPanel output = new ButtonPanel();
 
             output.buttons.Add(new PauseButton(env, font, buttonWidth, buttonHeight));
-            output.buttons.Add(new MenuButton("Main Menu", font, buttonWidth, buttonHeight));
+            output.buttons.Add(new MenuButton(font, buttonWidth, buttonHeight));
+            output.buttons.Add(new ClearSelectionButton(env, buttonWidth, buttonHeight, font));
 
             return output;
         }

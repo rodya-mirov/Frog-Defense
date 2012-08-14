@@ -162,7 +162,7 @@ namespace Frog_Defense
 
                 if (enemy.HasReachedGoal)
                 {
-                    Player.TakeHit();
+                    Player.TakePlayerHit();
                 }
                 else if (enemy.IsAlive)
                 {

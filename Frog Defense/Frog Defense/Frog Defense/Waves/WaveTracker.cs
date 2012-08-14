@@ -125,6 +125,63 @@ namespace Frog_Defense.Waves
             }
         }
 
+        private int mouseX, mouseY;
+        private bool mouseOnScreen;
+        private Enemy mousedOverEnemy, selectedEnemy;
+        public Enemy SelectedEnemy
+        {
+            get { return selectedEnemy; }
+        }
+
+        public void UpdateMousePosition(int mouseX, int mouseY)
+        {
+            this.mouseX = mouseX;
+            this.mouseY = mouseY;
+
+            if (mouseX >= 0 && mouseX < PixelWidth && mouseY >= 0 && mouseY < PixelHeight)
+            {
+                mouseOnScreen = true;
+                updateMousedOverEnemy();
+            }
+            else
+            {
+                mouseOnScreen = false;
+            }
+        }
+
+        private const int mouseoverTolerance = 8;
+        private void updateMousedOverEnemy()
+        {
+            int lagEstimate = mouseX * 2;
+
+            mousedOverEnemy = null;
+
+            foreach (EnemyTracker et in enemies)
+            {
+                if (Math.Abs(et.ticksRemaining - lagEstimate) <= mouseoverTolerance)
+                {
+                    mousedOverEnemy = et.enemy;
+                    break;
+                }
+                else if (et.ticksRemaining > lagEstimate)
+                {
+                    break;
+                }
+            }
+        }
+
+        public void GetClicked()
+        {
+            if (mouseOnScreen)
+            {
+                if (mousedOverEnemy != null)
+                {
+                    selectedEnemy = mousedOverEnemy;
+                    env.Player.PreviewType = SelectedPreviewType.EnemyPreview;
+                }
+            }
+        }
+
         public void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
         {
             //draw the backdrop ...
@@ -142,7 +199,7 @@ namespace Frog_Defense.Waves
             //now draw each enemy's preview
             foreach (EnemyTracker e in enemies)
             {
-                Vector2 drawPosition = new Vector2(xOffset + 1 + e.ticksRemaining/2 - Enemy.PreviewImageWidth, yOffset + 2);
+                Vector2 drawPosition = new Vector2(xOffset + 1 + e.ticksRemaining/2 - Enemy.PreviewImageWidth / 2, yOffset + 2);
                 batch.Draw(e.enemy.PreviewTexture, drawPosition, Color.White);
             }
         }

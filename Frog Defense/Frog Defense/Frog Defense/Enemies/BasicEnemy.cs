@@ -9,6 +9,14 @@ namespace Frog_Defense.Enemies
 {
     class BasicEnemy : Enemy
     {
+        //string info
+        public override string ToString()
+        {
+            return EnemyType + "\nHealth: " + (int)health + "\nMax Health: " + MAX_HEALTH + "\n" + Description;
+        }
+        protected virtual string EnemyType { get { return "Basic Enemy"; } }
+        protected virtual string Description { get { return "No special properties."; } }
+
         //Health info
         protected override float Health
         {
@@ -19,7 +27,7 @@ namespace Frog_Defense.Enemies
 
         protected override float MAX_HEALTH
         {
-            get { return 100; }
+            get { return 100f * scalingFactor; }
         }
 
         /// <summary>
@@ -151,7 +159,7 @@ namespace Frog_Defense.Enemies
 
             Facing = Direction.UP;
 
-            this.health = MAX_HEALTH * this.scalingFactor;
+            this.health = MAX_HEALTH;
 
             hasGoal = false;
             hasReachedGoal = false;

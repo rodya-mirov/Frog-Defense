@@ -36,15 +36,22 @@ namespace Frog_Defense.Traps
             Build.LoadContent();
         }
 
-        public override string ToString()
+        public string BuyString()
         {
             return Name + "\nCost: $" + Cost + "\n" + Description;
+        }
+
+        public string SelfString()
+        {
+            return Name + "\nSell Price: $" + SellPrice + "\n" + Description;
         }
 
         public abstract TrapType trapType { get; }
 
         public abstract String Name { get; }
         public abstract int Cost { get; }
+        public virtual int SellPrice { get { return Cost / 2; } }
+
         public abstract Texture2D PreviewTexture { get; }
         public abstract String Description { get; }
 

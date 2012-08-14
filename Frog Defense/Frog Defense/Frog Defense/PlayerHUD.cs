@@ -5,9 +5,13 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Frog_Defense.Traps;
+using Frog_Defense.Enemies;
 
 namespace Frog_Defense
 {
+    enum SelectedPreviewType { EnemyExisting, EnemyPreview, TrapExisting, TrapPreview, None };
+
+
     /// <summary>
     /// The role of this class is a little nebulous.  Fundamentally, it's a
     /// resource tracker.  But it's also a HUD!  There was just no reason
@@ -16,6 +20,18 @@ namespace Frog_Defense
     /// </summary>
     class PlayerHUD
     {
+        private SelectedPreviewType previewType;
+        public SelectedPreviewType PreviewType
+        {
+            get { return previewType; }
+            set
+            {
+                previewType = value;
+                if (previewType != SelectedPreviewType.TrapPreview)
+                    setSelectedTrap(-1);
+            }
+        }
+
         private int selectedPreviewIndex;
 
         private int money;
@@ -46,6 +62,8 @@ namespace Frog_Defense
             this.env = env;
 
             this.health = STARTING_HEALTH;
+
+            PreviewType = SelectedPreviewType.TrapPreview;
 
             previewX = 0;
             previewY = TDGame.MediumFont.MeasureString("A\nA").Y + mainYBuffer; //the height of a 2-line string and a buffer
@@ -106,7 +124,7 @@ namespace Frog_Defense
         /// <summary>
         /// What happens when an enemy finds a house!  Health reduced by one.
         /// </summary>
-        public void TakeHit()
+        public void TakePlayerHit()
         {
             health -= 1;
 
@@ -157,6 +175,7 @@ namespace Frog_Defense
             if (0 <= index && index < fixedTraps.Count && fixedTraps[index] != null)
             {
                 setSelectedTrap(index);
+                PreviewType = SelectedPreviewType.TrapPreview;
             }
         }
 
@@ -178,7 +197,7 @@ namespace Frog_Defense
         {
             if (0 <= selectedPreviewIndex && selectedPreviewIndex < fixedTraps.Count)
             {
-                previewString = fixedTraps[selectedPreviewIndex].ToString();
+                previewString = fixedTraps[selectedPreviewIndex].BuyString();
             }
             else
             {
@@ -202,7 +221,7 @@ namespace Frog_Defense
             drawPreviews(gameTime, batch, xOffset, yOffset);
         }
 
-        private int previewsPerRow = 7;
+        private const int previewsPerRow = 7;
 
         private float mainYBuffer = 20;
 
@@ -257,7 +276,42 @@ namespace Frog_Defense
 
             yPos += Trap.PreviewHeight + yBuffer + mainYBuffer;
 
-            batch.DrawString(TDGame.SmallFont, previewString, new Vector2(xPos, yPos), Color.White);
+            drawTrapInformation(batch, xPos, yPos);
+        }
+
+        private void drawTrapInformation(SpriteBatch batch, float xPos, float yPos)
+        {
+            switch(PreviewType)
+            {
+                case SelectedPreviewType.TrapPreview:
+                    batch.DrawString(TDGame.SmallFont,
+                        previewString,
+                        new Vector2(xPos, yPos),
+                        Color.White);
+                    break;
+
+                case SelectedPreviewType.EnemyPreview:
+                    Enemy e = env.ArenaManager.WaveTracker.SelectedEnemy;
+                    if (e.IsAlive)
+                    {
+                        batch.DrawString(TDGame.SmallFont,
+                            env.ArenaManager.WaveTracker.SelectedEnemy.ToString(),
+                            new Vector2(xPos, yPos),
+                            Color.White
+                            );
+                    }
+                    else
+                    {
+                        PreviewType = SelectedPreviewType.None;
+                    }
+                    break;
+
+                case SelectedPreviewType.None:
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }

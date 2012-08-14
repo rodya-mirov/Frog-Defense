@@ -8,6 +8,9 @@ namespace Frog_Defense.Enemies
 {
     class ToughEnemy : BasicEnemy
     {
+        protected override string EnemyType { get { return "Tough Enemy"; } }
+        protected override string Description { get { return "Takes less damage from\nguns and spikes."; } }
+
         /// <summary>
         /// This is the percentage damage that ToughEnemy actually takes
         /// </summary>

@@ -8,6 +8,9 @@ namespace Frog_Defense.Enemies
 {
     class QuickEnemy : BasicEnemy
     {
+        protected override string EnemyType { get { return "Quick Enemy"; } }
+        protected override string Description { get { return "Faster than normal."; } }
+
         public override int CashValue
         {
             get { return 15; }

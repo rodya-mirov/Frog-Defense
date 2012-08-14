@@ -7,18 +7,18 @@ using Microsoft.Xna.Framework;
 
 namespace Frog_Defense.Buttons
 {
-    class MenuButton : Button
+    class ClearSelectionButton : Button
     {
-        public override string Text
-        {
-            get { return "Main Menu"; }
-        }
+        public override string Text { get { return "Clear"; } }
 
         private int textOffsetX, textOffsetY;
+        private GameUpdater env;
 
-        public MenuButton(SpriteFont font, int width, int height)
+        public ClearSelectionButton(GameUpdater env, int width, int height, SpriteFont font)
             : base(width, height, font)
         {
+            this.env = env;
+
             Vector2 measurements = font.MeasureString(Text);
             textOffsetX = (int)((width - measurements.X) / 2);
             textOffsetY = (int)((height - measurements.Y) / 2);
@@ -26,9 +26,7 @@ namespace Frog_Defense.Buttons
 
         public override void GetClicked()
         {
-            base.GetClicked();
-
-            TDGame.MainGame.BackToMainMenu();
+            env.Player.PreviewType = SelectedPreviewType.None;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
