@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
+using Frog_Defense.Enemies;
+using Microsoft.Xna.Framework;
 
 namespace Frog_Defense.Traps
 {
@@ -110,6 +112,17 @@ namespace Frog_Defense.Traps
 
             if (previewTexture == null)
                 previewTexture = TDGame.MainGame.Content.Load<Texture2D>(previewGunPath);
+        }
+
+        /// <summary>
+        /// Don't just hit them.  Hit them hard!
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        protected override bool hitEnemy(Enemy e)
+        {
+            e.TakeHit(ProjectileDamage);
+            return true;
         }
     }
 }

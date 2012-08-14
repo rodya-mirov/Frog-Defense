@@ -165,7 +165,7 @@ namespace Frog_Defense.Enemies
         }
 
         /// <summary>
-        /// What it sounds like!
+        /// Deal with a new hit that does some intended damage ...
         /// </summary>
         /// <param name="damage"></param>
         public abstract void TakeHit(float damage);
