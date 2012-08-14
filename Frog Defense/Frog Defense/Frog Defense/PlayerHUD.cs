@@ -315,7 +315,7 @@ namespace Frog_Defense
                     if (t != null)
                     {
                         batch.DrawString(TDGame.SmallFont,
-                            t.ToString(),
+                            t.SelfString(),
                             new Vector2(xPos, yPos),
                             Color.White
                             );

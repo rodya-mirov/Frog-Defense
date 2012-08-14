@@ -729,6 +729,8 @@ namespace Frog_Defense
             return floorType[xArr, yArr] == SquareType.WALL;
         }
 
+        private bool mouseIsOnScreen;
+
         /// <summary>
         /// Notifies the Arena of the current position of the mouse in coordinates
         /// relative to the Arena (so (0,0) should be the upper-left corner of the Arena).
@@ -740,8 +742,10 @@ namespace Frog_Defense
         /// </summary>
         /// <param name="mouseX"></param>
         /// <param name="mouseY"></param>
-        public void updateMousePosition(int mouseX, int mouseY)
+        public void updateMousePosition(int mouseX, int mouseY, bool mouseIsOnScreen)
         {
+            this.mouseIsOnScreen = mouseIsOnScreen;
+
             //before we change anything, check if we need to be dragging!
             if (!mouseRightIsDown)
             {
@@ -834,28 +838,39 @@ namespace Frog_Defense
         /// Valid positions are passable positions without traps on them, and
         /// which do not have the goal or start square on them.
         /// </summary>
-        public void GetClicked()
+        public void GetLeftClicked()
         {
-            //first, if the mouse is off-screen, be done with it
-            if (highlightedSquare.X < 0 || highlightedSquare.X >= width || highlightedSquare.Y < 0 || highlightedSquare.Y >= height)
-                return;
+            if (mouseIsOnScreen)
+            {
+                //first, if the mouse is off-arena, clear out the selected trap (if on-screen) and be done with it
+                if (highlightedSquare.X < 0 || highlightedSquare.X >= width || highlightedSquare.Y < 0 || highlightedSquare.Y >= height)
+                {
+                    manager.Player.PreviewType = SelectedPreviewType.None;
+                    return;
+                }
 
-            placeTrap();
+                placeTrap();
+            }
         }
 
         /// <summary>
         /// This attempts to place selectedTrap permanently in the arena.  Assumes that highlightedSquare
         /// is the appropriate position and selectedTrap is current!  If it's impossible to place the trap,
-        /// it will silently do nothing (this is intended behavior, so it can be safely called whether or
-        /// not a trap is ready to be placed here).
+        /// it will tell the Player to forget about its trap-putting intentions :)
         /// </summary>
         private void placeTrap()
         {
             if (selectedTrap == null)
+            {
+                manager.Player.PreviewType = SelectedPreviewType.None;
                 return;
+            }
 
             if (manager.Player.Money < selectedTrap.Cost)
+            {
+                manager.Player.PreviewType = SelectedPreviewType.None;
                 return;
+            }
 
             manager.Player.Spend(selectedTrap.Cost);
 
@@ -886,6 +901,8 @@ namespace Frog_Defense
                 case TrapType.Wall:
                     if (manager.CanBuildWall(highlightedSquare.X, highlightedSquare.Y))
                         buildBlockingTile();
+                    else
+                        manager.Player.PreviewType = SelectedPreviewType.None;
 
                     return;
 
@@ -894,7 +911,11 @@ namespace Frog_Defense
                     switch (floorType[highlightedSquare.X, highlightedSquare.Y])
                     {
                         case SquareType.FLOOR:
-                            buildBlockingTile();
+                            if (manager.CanBuildWall(highlightedSquare.X, highlightedSquare.Y))
+                                buildBlockingTile();
+                            else
+                                manager.Player.PreviewType = SelectedPreviewType.None;
+
                             break;
 
                         case SquareType.PIT:
@@ -951,6 +972,9 @@ namespace Frog_Defense
 
                 //un-spend
                 manager.Player.AddMoney(selectedTrap.Cost);
+                
+                //clear trap preference
+                manager.Player.PreviewType = SelectedPreviewType.None;
 
                 //fix pathing and back to normal
                 autoassignVoid();

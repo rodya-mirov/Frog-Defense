@@ -87,7 +87,7 @@ namespace Frog_Defense
 
         public void GetClicked()
         {
-            arenaMap.GetClicked();
+            arenaMap.GetLeftClicked();
 
             if (Player.PreviewType != SelectedPreviewType.TrapPreview)
             {
@@ -371,11 +371,12 @@ namespace Frog_Defense
             }
         }
 
-        public void updateMousePosition(int mouseX, int mouseY)
+        public void updateMousePosition(int mouseX, int mouseY, bool mouseInArena)
         {
             arenaMap.updateMousePosition(
                 mouseX - scrollPanelWidth - arenaTranslation.X,
-                mouseY - scrollPanelWidth - arenaTranslation.Y
+                mouseY - scrollPanelWidth - arenaTranslation.Y,
+                mouseInArena
                 );
 
             pickMousedOverTarget(

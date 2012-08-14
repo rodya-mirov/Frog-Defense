@@ -111,7 +111,6 @@
     <Compile Include="ArenaManager.cs" />
     <Compile Include="Buttons\Button.cs" />
     <Compile Include="Buttons\ButtonPanel.cs" />
-    <Compile Include="Buttons\ClearSelectionButton.cs" />
     <Compile Include="Buttons\MenuButton.cs" />
     <Compile Include="Buttons\PauseButton.cs" />
     <Compile Include="Enemies\BasicEnemy.cs" />

@@ -209,8 +209,11 @@ namespace Frog_Defense
             mouseX = ms.X;
             mouseY = ms.Y;
 
+            bool mouseInArena = (mouseX >= ArenaOffsetX && mouseX < ArenaOffsetX + ArenaPixelWidth)
+                && (mouseY >= ArenaOffsetY && mouseY < ArenaOffsetY + ArenaPixelHeight);
+
             //first, tell all the drawable components where the mouse is (in relative coordinates)
-            arenaManager.updateMousePosition(mouseX - ArenaOffsetX, mouseY - ArenaOffsetY);
+            arenaManager.updateMousePosition(mouseX - ArenaOffsetX, mouseY - ArenaOffsetY, mouseInArena);
             player.MouseOver(mouseX - PlayerOffsetX, mouseY - PlayerOffsetY);
             arenaManager.WaveTracker.UpdateMousePosition(mouseX - WaveTrackerOffsetX, mouseY - WaveTrackerOffsetY);
 
