@@ -25,7 +25,8 @@ namespace Frog_Defense.Traps
             get
             {
                 return "Digs a pit in a floor,"
-                  + "\nwhich nothing can walk over.";
+                  + "\nwhich nothing can walk over."
+                  + "\n\nCan also be used to\nfill in a pit.";
             }
         }
         public override TrapType trapType

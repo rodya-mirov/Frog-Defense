@@ -51,14 +51,14 @@ namespace Frog_Defense.Waves
         {
             Enemy e;
 
-            int waveInterval = 420;
+            int waveInterval = 600;
 
             int lag = waveInterval;
 
             for (float level = 1f; level < 7f; level += 1f)
             {
 
-                for (int i = 0; i < 12; i++)
+                for (int i = 0; i < 15; i++)
                 {
                     e = new BasicEnemy(arena, env, -1, -1, level);
                     enemies.Enqueue(new EnemyTracker(e, lag));

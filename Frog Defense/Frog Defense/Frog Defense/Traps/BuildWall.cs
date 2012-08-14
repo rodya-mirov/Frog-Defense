@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace Frog_Defense.Traps
 {
-    class BuildWall : Trap
+    class Build : Trap
     {
         public override TrapType trapType
         {
@@ -17,11 +17,11 @@ namespace Frog_Defense.Traps
         public override int Cost { get { return 100; } }
         public override string Name
         {
-            get { return "Wall"; }
+            get { return "Construction"; }
         }
         public override string Description
         {
-            get { return "Builds an impassable wall.\n\nIt's better for everyone\nif you don't block paths..."; }
+            get { return "Builds an impassable wall."; }
         }
 
         //image stuff
@@ -40,7 +40,7 @@ namespace Frog_Defense.Traps
         //position stuff
         private int xCenter, yCenter;
 
-        public BuildWall(ArenaManager env, int xCenter, int yCenter, int xSquare, int ySquare)
+        public Build(ArenaManager env, int xCenter, int yCenter, int xSquare, int ySquare)
             : base(env, xSquare, ySquare)
         {
             this.xCenter = xCenter;

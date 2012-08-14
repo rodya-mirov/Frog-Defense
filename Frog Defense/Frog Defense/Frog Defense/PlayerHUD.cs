@@ -67,7 +67,7 @@ namespace Frog_Defense
 
             fixedTraps.Add(new MineWall(env.ArenaManager, -1, -1, -1, -1));
             fixedTraps.Add(new DigPit(env.ArenaManager, -1, -1, -1, -1));
-            fixedTraps.Add(new BuildWall(env.ArenaManager, -1, -1, -1, -1));
+            fixedTraps.Add(new Build(env.ArenaManager, -1, -1, -1, -1));
 
             //basically, make a newline in the previews
             while (fixedTraps.Count % previewsPerRow != 0)
@@ -83,22 +83,13 @@ namespace Frog_Defense
         }
 
         /// <summary>
-        /// If there is enough money to pay the amount, reduces money by the specified
-        /// amount.  Otherwise, NO MONEY IS SPENT (it does not just "spend all it has")
+        /// Spends some money (can go negative, check first)
         /// </summary>
         /// <param name="cash"></param>
         /// <returns></returns>
-        public bool AttemptSpend(int cash)
+        public void Spend(int cash)
         {
-            if (cash <= money)
-            {
-                money -= cash;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            money -= cash;
         }
 
         /// <summary>

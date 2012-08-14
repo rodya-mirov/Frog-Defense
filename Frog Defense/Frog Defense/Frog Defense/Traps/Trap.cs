@@ -33,7 +33,7 @@ namespace Frog_Defense.Traps
 
             MineWall.LoadContent();
             DigPit.LoadContent();
-            BuildWall.LoadContent();
+            Build.LoadContent();
         }
 
         public override string ToString()
