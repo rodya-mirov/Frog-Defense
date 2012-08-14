@@ -19,8 +19,17 @@ namespace Frog_Defense
 
         private ArenaManager manager;
 
+        private bool enabled;
+        public bool Enabled
+        {
+            get { return enabled; }
+            set { enabled = value; }
+        }
+
         public ScrollPanel(ArenaManager manager, int thickness, int width, int height)
         {
+            this.Enabled = false;
+
             this.manager = manager;
 
             this.thickness = thickness;
@@ -40,17 +49,20 @@ namespace Frog_Defense
 
         public void Update()
         {
-            if (mouseInBottom)
-                manager.scrollMap(0, -mouseOverSpeed);
+            if (Enabled)
+            {
+                if (mouseInBottom)
+                    manager.scrollMap(0, -mouseOverSpeed);
 
-            if (mouseInTop)
-                manager.scrollMap(0, mouseOverSpeed);
+                if (mouseInTop)
+                    manager.scrollMap(0, mouseOverSpeed);
 
-            if (mouseInLeft)
-                manager.scrollMap(mouseOverSpeed, 0);
+                if (mouseInLeft)
+                    manager.scrollMap(mouseOverSpeed, 0);
 
-            if (mouseInRight)
-                manager.scrollMap(-mouseOverSpeed, 0);
+                if (mouseInRight)
+                    manager.scrollMap(-mouseOverSpeed, 0);
+            }
         }
 
         /// <summary>

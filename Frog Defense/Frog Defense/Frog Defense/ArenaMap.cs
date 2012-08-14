@@ -772,7 +772,6 @@ namespace Frog_Defense
 
         private void dragMap(int newMouseX, int newMouseY)
         {
-            Console.WriteLine(newMouseX + ",\t" + newMouseY);
             manager.scrollMap(newMouseX - mousePosition.X, newMouseY - mousePosition.Y);
         }
 
