@@ -55,7 +55,7 @@ namespace Frog_Defense.Waves
 
             int lag = waveInterval;
 
-            for (float level = 1f; level < 4f; level += 1f)
+            for (float level = 1f; level < 7f; level += 1f)
             {
 
                 for (int i = 0; i < 12; i++)
