@@ -15,8 +15,16 @@ namespace Frog_Defense.Buttons
         }
 
         private int textOffsetX, textOffsetY;
+        public override int TextOffsetX
+        {
+            get { return textOffsetX; }
+        }
+        public override int TextOffsetY
+        {
+            get { return textOffsetY; }
+        }
 
-        public MenuButton(SpriteFont font, int width, int height)
+        public MenuButton(int width, int height, SpriteFont font)
             : base(width, height, font)
         {
             Vector2 measurements = font.MeasureString(Text);
@@ -29,15 +37,6 @@ namespace Frog_Defense.Buttons
             base.GetClicked();
 
             TDGame.MainGame.BackToMainMenu();
-        }
-
-        public override void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
-        {
-            base.Draw(gameTime, batch, xOffset, yOffset, paused);
-
-            Vector2 drawPosition = new Vector2(xOffset + textOffsetX, yOffset + textOffsetY);
-
-            batch.DrawString(font, Text, drawPosition, Color.White);
         }
     }
 }

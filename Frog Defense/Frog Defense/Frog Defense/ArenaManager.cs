@@ -89,17 +89,17 @@ namespace Frog_Defense
         {
             arenaMap.GetLeftClicked();
 
-            if (Player.PreviewType != SelectedPreviewType.TrapPreview)
+            if (Player.DetailViewType != DetailViewType.TrapPreview)
             {
                 if (mousedEnemy != null)
                 {
                     selectedEnemyToShow = mousedEnemy;
-                    Player.PreviewType = SelectedPreviewType.EnemyExisting;
+                    Player.DetailViewType = DetailViewType.EnemyExisting;
                 }
                 else if (mousedTrap != null)
                 {
                     selectedTrapToShow = mousedTrap;
-                    Player.PreviewType = SelectedPreviewType.TrapExisting;
+                    Player.DetailViewType = DetailViewType.TrapExisting;
                 }
             }
         }
@@ -436,6 +436,31 @@ namespace Frog_Defense
         public void RightClick(bool mouseRightIsDown)
         {
             arenaMap.RightClick(mouseRightIsDown);
+        }
+
+        /// <summary>
+        /// If there is a selected trap, it sells it and gives the money to the player.
+        /// If not, does nothing.
+        /// </summary>
+        public void SellTrap()
+        {
+            if (SelectedTrapToShow != null)
+            {
+                int n = traps.Count;
+                for (int i = 0; i < n; i++)
+                {
+                    Trap t = traps.Dequeue();
+                    if (t != SelectedTrapToShow)
+                        traps.Enqueue(t);
+                }
+
+                Player.AddMoney(SelectedTrapToShow.SellPrice);
+
+                if (traps.Count != n - 1)
+                    throw new Exception("I'm just so confused");
+
+                selectedTrapToShow = null;
+            }
         }
     }
 }

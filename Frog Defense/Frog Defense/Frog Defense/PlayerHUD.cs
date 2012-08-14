@@ -9,7 +9,7 @@ using Frog_Defense.Enemies;
 
 namespace Frog_Defense
 {
-    enum SelectedPreviewType { EnemyExisting, EnemyPreview, TrapExisting, TrapPreview, None };
+    enum DetailViewType { EnemyExisting, EnemyPreview, TrapExisting, TrapPreview, None };
 
 
     /// <summary>
@@ -20,14 +20,14 @@ namespace Frog_Defense
     /// </summary>
     class PlayerHUD
     {
-        private SelectedPreviewType previewType;
-        public SelectedPreviewType PreviewType
+        private DetailViewType previewType;
+        public DetailViewType DetailViewType
         {
             get { return previewType; }
             set
             {
                 previewType = value;
-                if (previewType != SelectedPreviewType.TrapPreview)
+                if (previewType != DetailViewType.TrapPreview)
                     setSelectedTrap(-1);
             }
         }
@@ -63,7 +63,7 @@ namespace Frog_Defense
 
             this.health = STARTING_HEALTH;
 
-            PreviewType = SelectedPreviewType.TrapPreview;
+            DetailViewType = DetailViewType.TrapPreview;
 
             previewX = 0;
             previewY = TDGame.MediumFont.MeasureString("A\nA").Y + mainYBuffer; //the height of a 2-line string and a buffer
@@ -175,7 +175,7 @@ namespace Frog_Defense
             if (0 <= index && index < fixedTraps.Count && fixedTraps[index] != null)
             {
                 setSelectedTrap(index);
-                PreviewType = SelectedPreviewType.TrapPreview;
+                DetailViewType = DetailViewType.TrapPreview;
             }
         }
 
@@ -284,16 +284,16 @@ namespace Frog_Defense
             Enemy e;
             Trap t;
 
-            switch(PreviewType)
+            switch(DetailViewType)
             {
-                case SelectedPreviewType.TrapPreview:
+                case DetailViewType.TrapPreview:
                     batch.DrawString(TDGame.SmallFont,
                         previewString,
                         new Vector2(xPos, yPos),
                         Color.White);
                     break;
 
-                case SelectedPreviewType.EnemyPreview:
+                case DetailViewType.EnemyPreview:
                     e = env.ArenaManager.WaveTracker.SelectedEnemy;
                     if (e != null && e.IsAlive)
                     {
@@ -305,11 +305,11 @@ namespace Frog_Defense
                     }
                     else
                     {
-                        PreviewType = SelectedPreviewType.None;
+                        DetailViewType = DetailViewType.None;
                     }
                     break;
 
-                case SelectedPreviewType.TrapExisting:
+                case DetailViewType.TrapExisting:
                     t = env.ArenaManager.SelectedTrapToShow;
 
                     if (t != null)
@@ -322,11 +322,11 @@ namespace Frog_Defense
                     }
                     else
                     {
-                        PreviewType = SelectedPreviewType.None;
+                        DetailViewType = DetailViewType.None;
                     }
                     break;
 
-                case SelectedPreviewType.EnemyExisting:
+                case DetailViewType.EnemyExisting:
                     e = env.ArenaManager.SelectedEnemyToShow;
                     if (e != null && e.IsAlive)
                     {
@@ -338,11 +338,11 @@ namespace Frog_Defense
                     }
                     else
                     {
-                        PreviewType = SelectedPreviewType.None;
+                        DetailViewType = DetailViewType.None;
                     }
                     break;
 
-                case SelectedPreviewType.None:
+                case DetailViewType.None:
                     break;
 
                 default:

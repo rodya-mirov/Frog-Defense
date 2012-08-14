@@ -177,7 +177,7 @@ namespace Frog_Defense.Waves
                 if (mousedOverEnemy != null)
                 {
                     selectedEnemy = mousedOverEnemy;
-                    env.Player.PreviewType = SelectedPreviewType.EnemyPreview;
+                    env.Player.DetailViewType = DetailViewType.EnemyPreview;
                 }
             }
         }

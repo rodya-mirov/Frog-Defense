@@ -11,7 +11,7 @@ namespace Frog_Defense.Buttons
     {
         private List<Button> buttons;
 
-        private const int buttonWidth = 80;
+        private const int buttonWidth = 90;
         private const int buttonHeight = 30;
 
         public int PixelWidth
@@ -34,7 +34,8 @@ namespace Frog_Defense.Buttons
             ButtonPanel output = new ButtonPanel();
 
             output.buttons.Add(new PauseButton(env, font, buttonWidth, buttonHeight));
-            output.buttons.Add(new MenuButton(font, buttonWidth, buttonHeight));
+            output.buttons.Add(new MenuButton(buttonWidth, buttonHeight, font));
+            output.buttons.Add(new SellButton(env, buttonWidth, buttonHeight, font));
 
             return output;
         }

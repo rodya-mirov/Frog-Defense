@@ -17,6 +17,9 @@ namespace Frog_Defense.Buttons
         public int PixelWidth { get { return width; } }
         public int PixelHeight { get { return height; } }
 
+        public abstract int TextOffsetX { get; }
+        public abstract int TextOffsetY { get; }
+
         public abstract String Text { get; }
 
         /// <summary>
@@ -55,6 +58,7 @@ namespace Frog_Defense.Buttons
 
         public virtual void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
         {
+            //draw the button
             Rectangle drawRect = new Rectangle(xOffset, yOffset, width, height);
 
             batch.Draw(TDGame.PureBlack, drawRect, Color.White);
@@ -65,6 +69,11 @@ namespace Frog_Defense.Buttons
             drawRect.Height -= 2;
 
             batch.Draw(TDGame.PureRed, drawRect, Color.White);
+
+            //draw the text
+            Vector2 drawPosition = new Vector2(xOffset + TextOffsetX, yOffset + TextOffsetY);
+
+            batch.DrawString(font, Text, drawPosition, Color.White);
         }
     }
 }

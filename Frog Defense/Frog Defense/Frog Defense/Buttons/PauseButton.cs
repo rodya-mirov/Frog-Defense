@@ -10,14 +10,10 @@ namespace Frog_Defense.Buttons
     class PauseButton : Button
     {
         protected const String unpausedText = "Pause";
-        protected Vector2 unpausedSize;
-        protected Vector2 unpausedOffset;
+        protected Point unpausedOffset;
 
         protected const String pausedText = "Unpause";
-        protected Vector2 pausedSize;
-        protected Vector2 pausedOffset;
-
-        protected bool paused;
+        protected Point pausedOffset;
         protected GameUpdater env;
 
         public override string Text
@@ -31,39 +27,38 @@ namespace Frog_Defense.Buttons
             }
         }
 
+        public override int TextOffsetX
+        {
+            get
+            {
+                if (env.Paused)
+                    return pausedOffset.X;
+                else
+                    return unpausedOffset.X;
+            }
+        }
+
+        public override int TextOffsetY
+        {
+            get
+            {
+                if (env.Paused)
+                    return pausedOffset.Y;
+                else
+                    return unpausedOffset.Y;
+            }
+        }
+
         public PauseButton(GameUpdater env, SpriteFont font, int width, int height)
             : base(width, height, font)
         {
             this.env = env;
 
-            unpausedSize = font.MeasureString(unpausedText);
-            pausedSize = font.MeasureString(pausedText);
+            Vector2 unpausedSize = font.MeasureString(unpausedText);
+            Vector2 pausedSize = font.MeasureString(pausedText);
 
-            unpausedOffset = new Vector2((int)((width - unpausedSize.X) / 2), (int)((height - unpausedSize.Y) / 2));
-            pausedOffset = new Vector2((int)((width - pausedSize.X) / 2), (int)((height - pausedSize.Y) / 2));
-        }
-
-        public override void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
-        {
-            base.Draw(gameTime, batch, xOffset, yOffset, paused);
-
-            this.paused = paused;
-
-            Vector2 drawPosition;
-            String toDraw;
-
-            if (paused)
-            {
-                toDraw = pausedText;
-                drawPosition = new Vector2(xOffset + pausedOffset.X, yOffset + pausedOffset.Y);
-            }
-            else
-            {
-                toDraw = unpausedText;
-                drawPosition = new Vector2(xOffset + unpausedOffset.X, yOffset + unpausedOffset.Y);
-            }
-
-            batch.DrawString(font, toDraw, drawPosition, Color.White);
+            unpausedOffset = new Point((int)((width - unpausedSize.X) / 2), (int)((height - unpausedSize.Y) / 2));
+            pausedOffset = new Point((int)((width - pausedSize.X) / 2), (int)((height - pausedSize.Y) / 2));
         }
 
         public override void GetClicked()

@@ -845,7 +845,7 @@ namespace Frog_Defense
                 //first, if the mouse is off-arena, clear out the selected trap (if on-screen) and be done with it
                 if (highlightedSquare.X < 0 || highlightedSquare.X >= width || highlightedSquare.Y < 0 || highlightedSquare.Y >= height)
                 {
-                    manager.Player.PreviewType = SelectedPreviewType.None;
+                    manager.Player.DetailViewType = DetailViewType.None;
                     return;
                 }
 
@@ -862,13 +862,13 @@ namespace Frog_Defense
         {
             if (selectedTrap == null)
             {
-                manager.Player.PreviewType = SelectedPreviewType.None;
+                manager.Player.DetailViewType = DetailViewType.None;
                 return;
             }
 
             if (manager.Player.Money < selectedTrap.Cost)
             {
-                manager.Player.PreviewType = SelectedPreviewType.None;
+                manager.Player.DetailViewType = DetailViewType.None;
                 return;
             }
 
@@ -902,7 +902,7 @@ namespace Frog_Defense
                     if (manager.CanBuildWall(highlightedSquare.X, highlightedSquare.Y))
                         buildBlockingTile();
                     else
-                        manager.Player.PreviewType = SelectedPreviewType.None;
+                        manager.Player.DetailViewType = DetailViewType.None;
 
                     return;
 
@@ -914,7 +914,7 @@ namespace Frog_Defense
                             if (manager.CanBuildWall(highlightedSquare.X, highlightedSquare.Y))
                                 buildBlockingTile();
                             else
-                                manager.Player.PreviewType = SelectedPreviewType.None;
+                                manager.Player.DetailViewType = DetailViewType.None;
 
                             break;
 
@@ -974,7 +974,7 @@ namespace Frog_Defense
                 manager.Player.AddMoney(selectedTrap.Cost);
                 
                 //clear trap preference
-                manager.Player.PreviewType = SelectedPreviewType.None;
+                manager.Player.DetailViewType = DetailViewType.None;
 
                 //fix pathing and back to normal
                 autoassignVoid();
