@@ -10,6 +10,8 @@ namespace Frog_Defense.Traps
 {
     class MineWall : Trap
     {
+        public override TrapLocationType LocationType { get { throw new NotImplementedException(); } }
+
         private int xCenter, yCenter;
 
         public override string Name

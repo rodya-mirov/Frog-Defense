@@ -10,6 +10,32 @@ namespace Frog_Defense.Traps
 {
     abstract class WallProjectileTrap : WallTrap
     {
+        //string stuff
+        public override string SelfString()
+        {
+            string output = base.SelfString();
+            output += "\n\nDamage: " + ProjectileDamage;
+            output += "\nReload: " + ReloadTimeText + " s";
+            output += "\nDamage/sec: " + (int)(ProjectileDamage * 60 / ReloadFrames);
+
+            return output;
+        }
+
+        public override string BuyString()
+        {
+            string output = base.SelfString();
+            output += "\n\nDamage: " + ProjectileDamage;
+            output += "\nReload: " + ReloadTimeText + " s";
+            output += "\nDamage/sec: " + (int)(ProjectileDamage * 60 / ReloadFrames);
+
+            return output;
+        }
+
+        protected string ReloadTimeText
+        {
+            get { return String.Format("{0:0.##}", (float)(ReloadFrames / 60f)); }
+        }
+
         //location parameters
         protected Point position;
         protected Point visualPosition;

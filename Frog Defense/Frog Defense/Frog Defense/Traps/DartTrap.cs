@@ -9,6 +9,28 @@ namespace Frog_Defense.Traps
 {
     class DartTrap : WallProjectileTrap
     {
+        //string stuff
+        public override string SelfString()
+        {
+            string output = base.SelfString();
+
+            output += "\n\nPoison Duration: " + (PoisonDuration / 60) + " s";
+            output += "\nTotal Poison Damage: " + (int)(PoisonDamage * PoisonDuration);
+
+            return output;
+        }
+
+        public override string BuyString()
+        {
+            string output = base.SelfString();
+
+            output += "\n\nPoison Duration: " + (PoisonDuration / 60) + " s";
+            output += "\nTotal Poison Damage: " + (int)(PoisonDamage * PoisonDuration);
+
+            return output;
+        }
+
+        //basic properties
         public override TrapType trapType
         {
             get { return TrapType.DartTrap; }

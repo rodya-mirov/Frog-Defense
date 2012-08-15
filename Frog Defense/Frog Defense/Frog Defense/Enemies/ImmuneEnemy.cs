@@ -11,7 +11,7 @@ namespace Frog_Defense.Enemies
         protected override string EnemyType { get { return "Immune Enemy"; } }
         protected override string Description { get { return "Cannot be poisoned."; } }
 
-        public override int CashValue
+        protected override float BaseCashValue
         {
             get { return 15; }
         }

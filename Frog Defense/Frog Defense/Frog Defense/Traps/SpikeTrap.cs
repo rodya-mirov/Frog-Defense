@@ -22,6 +22,18 @@ namespace Frog_Defense.Traps
         public override float VisualXCenter { get { return xCenter; } }
         public override float VisualYCenter { get { return yCenter; } }
 
+        public override string BuyString()
+        {
+            return base.BuyString() + "\n\nDamage/sec: " + (int)(damagePerTick * 60);
+        }
+
+        public override string SelfString()
+        {
+            return base.SelfString() + "\n\nDamage/sec: " + (int)(damagePerTick * 60);
+        }
+
+        public override TrapLocationType LocationType { get { return TrapLocationType.Floor; } }
+
         //the damage this trap inflicts on every critter that touches it
         //creatures are hit for roughly mainImageWidth ticks, so, for balancing ...
         private const float damagePerTick = .5f;

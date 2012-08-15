@@ -1593,6 +1593,27 @@ namespace Frog_Defense
         {
             this.mouseRightIsDown = mouseRightIsDown;
         }
+
+        /// <summary>
+        /// Marks a space as unoccupied, given a trap T
+        /// </summary>
+        /// <param name="t"></param>
+        public void ClearTrap(Trap t)
+        {
+            switch (t.LocationType)
+            {
+                case TrapLocationType.Floor:
+                    hasFloorTrap[t.FloorSquareX, t.FloorSquareY] = false;
+                    break;
+
+                case TrapLocationType.Wall:
+                    hasWallTrap[((WallTrap)t).Facing][t.FloorSquareX, t.FloorSquareY] = false;
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
     }
 
 

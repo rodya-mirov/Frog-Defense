@@ -15,6 +15,8 @@ namespace Frog_Defense.Traps
 
         protected int wallSquareX, wallSquareY;
 
+        public override TrapLocationType LocationType { get { return TrapLocationType.Wall; } }
+
         /// <summary>
         /// Constructs a new WallTrap.  The square coordinates should be
         /// the square the WallTrap will actually occupy, not the wall it is

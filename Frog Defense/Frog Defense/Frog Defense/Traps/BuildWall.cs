@@ -10,10 +10,10 @@ namespace Frog_Defense.Traps
 {
     class Build : Trap
     {
-        public override TrapType trapType
-        {
-            get { return TrapType.Wall; }
-        }
+        public override TrapLocationType LocationType { get { return TrapLocationType.Floor; } }
+
+        public override TrapType trapType { get { return TrapType.Wall; } }
+
         public override int Cost { get { return 100; } }
         public override string Name
         {

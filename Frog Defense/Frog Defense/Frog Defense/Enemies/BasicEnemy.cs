@@ -12,7 +12,10 @@ namespace Frog_Defense.Enemies
         //string info
         public override string ToString()
         {
-            string output = EnemyType + "\nHealth: " + (int)health + "\nMax Health: " + MAX_HEALTH + "\n" + Description;
+            string output = EnemyType +
+                "\nHealth: " + (int)health + "\nMax Health: " + MAX_HEALTH +
+                "\nCash Value: $" + CashValue +
+                "\n\n" + Description;
 
             if (isPoisoned)
             {
@@ -42,7 +45,7 @@ namespace Frog_Defense.Enemies
         /// <summary>
         /// The cash value dropped by a dead enemy
         /// </summary>
-        public override int CashValue { get { return 10; } }
+        protected override float BaseCashValue { get { return 10; } }
         public override int TicksAfterSpawn { get { return 45; } }
 
         private bool hasReachedGoal;

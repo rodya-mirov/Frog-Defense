@@ -9,13 +9,19 @@ using Frog_Defense.Enemies;
 namespace Frog_Defense.Traps
 {
     enum TrapType { NoType, SpikeTrap, GunTrap, DartTrap, MineWall, Wall, CannonTrap, DigPit };
+    enum TrapLocationType { Floor, Wall };
 
     abstract class Trap
     {
         public bool Highlighted;
 
+        public abstract TrapLocationType LocationType { get; }
+
         protected ArenaManager env;
         protected int floorSquareX, floorSquareY;
+
+        public int FloorSquareX { get { return floorSquareX; } }
+        public int FloorSquareY { get { return floorSquareY; } }
 
         protected Trap(ArenaManager env, int floorSquareX, int floorSquareY)
         {
@@ -39,12 +45,12 @@ namespace Frog_Defense.Traps
             Build.LoadContent();
         }
 
-        public string BuyString()
+        public virtual string BuyString()
         {
             return Name + "\nCost: $" + Cost + "\n" + Description;
         }
 
-        public string SelfString()
+        public virtual string SelfString()
         {
             return Name + "\nSell Price: $" + SellPrice + "\n" + Description;
         }

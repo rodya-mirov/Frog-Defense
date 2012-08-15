@@ -16,7 +16,7 @@ namespace Frog_Defense.Enemies
         /// </summary>
         private const float toughnessFactor = .5f;
 
-        public override int CashValue { get { return 15; } }
+        protected override float BaseCashValue { get { return 15; } }
         protected override float Speed { get { return 1.2f; } }
         public override int TicksAfterSpawn { get { return 65; } }
 

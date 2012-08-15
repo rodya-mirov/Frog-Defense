@@ -10,6 +10,8 @@ namespace Frog_Defense.Traps
 {
     class DigPit : Trap
     {
+        public override TrapLocationType LocationType { get { return TrapLocationType.Floor; } }
+
         private int xCenter, yCenter;
 
         public override string Name

@@ -11,7 +11,7 @@ namespace Frog_Defense.Enemies
         protected override string EnemyType { get { return "Quick Enemy"; } }
         protected override string Description { get { return "Faster than normal."; } }
 
-        public override int CashValue
+        protected override float BaseCashValue
         {
             get { return 15; }
         }

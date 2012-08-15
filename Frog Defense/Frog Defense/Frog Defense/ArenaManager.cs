@@ -469,7 +469,13 @@ namespace Frog_Defense
                 {
                     Trap t = traps.Dequeue();
                     if (t != DetailTrap)
+                    {
                         traps.Enqueue(t);
+                    }
+                    else
+                    {
+                        arenaMap.ClearTrap(t);
+                    }
                 }
 
                 Player.AddMoney(DetailTrap.SellPrice);

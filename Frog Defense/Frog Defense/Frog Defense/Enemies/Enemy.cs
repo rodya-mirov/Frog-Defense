@@ -23,9 +23,14 @@ namespace Frog_Defense.Enemies
         public abstract bool HasReachedGoal { get; }
 
         /// <summary>
-        /// The cash value the player gets for killing this critter
+        /// The cash value the player gets for killing a level 0 critter
         /// </summary>
-        public abstract int CashValue { get; }
+        protected abstract float BaseCashValue { get; }
+
+        public int CashValue
+        {
+            get { return (int)(BaseCashValue * Math.Log(scalingFactor + 1, 2)); }
+        }
 
         /// <summary>
         /// Whether or not this Enemy is alive enough to keep on Updating
