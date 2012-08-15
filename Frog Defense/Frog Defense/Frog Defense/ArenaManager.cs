@@ -45,20 +45,37 @@ namespace Frog_Defense
             set { selectedTrapType = value; }
         }
 
+        private int pixelWidth, pixelHeight;
+
         public ArenaManager(GameUpdater env, int pixelWidth, int pixelHeight)
         {
             this.env = env;
             this.selectedTrapType = TrapType.NoType;
+
+            this.pixelWidth = pixelWidth;
+            this.pixelHeight = pixelHeight;
 
             this.arenaTranslation = new Point(0, 0);
 
             this.scrollPanel = new ScrollPanel(this, scrollPanelWidth, pixelWidth, pixelHeight);
         }
 
+        /// <summary>
+        /// Won't allow the map to be dragged more than this many pixels away
+        /// from the appropriate area
+        /// </summary>
+        private const int maxArenaScreenBuffer = 40;
+
         public void scrollMap(int xChange, int yChange)
         {
             arenaTranslation.X += xChange;
             arenaTranslation.Y += yChange;
+
+            arenaTranslation.X = Math.Max(arenaTranslation.X, pixelWidth - arenaMap.PixelWidth - maxArenaScreenBuffer);
+            arenaTranslation.X = Math.Min(arenaTranslation.X, maxArenaScreenBuffer);
+
+            arenaTranslation.Y = Math.Max(arenaTranslation.Y, pixelHeight - arenaMap.PixelHeight - maxArenaScreenBuffer);
+            arenaTranslation.Y = Math.Min(arenaTranslation.Y, maxArenaScreenBuffer);
         }
 
         public static void LoadContent()
@@ -83,6 +100,7 @@ namespace Frog_Defense
 
             framesOfWin = 0;
             arenaTranslation = new Point(0, 0);
+            scrollMap(0, 0);
         }
 
         public void GetClicked()
