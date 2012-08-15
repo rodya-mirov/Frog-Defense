@@ -222,9 +222,6 @@ namespace Frog_Defense.Enemies
             get { return health > 0; }
         }
 
-        private const int hitFlashFrames = 3;
-        private int framesSinceHit = 3;
-
         public override bool ContainsPoint(Point p)
         {
             return xCenter - imageWidth / 2 <= p.X && p.X <= xCenter + imageWidth / 2
@@ -264,7 +261,6 @@ namespace Frog_Defense.Enemies
         public override void TakeHit(float damage)
         {
             health -= damage;
-            framesSinceHit = 0;
         }
 
         /// <summary>
@@ -380,25 +376,13 @@ namespace Frog_Defense.Enemies
 
         public override void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
         {
-            Color tint;
-
-            if (framesSinceHit < hitFlashFrames)
-            {
-                framesSinceHit += 1;
-                tint = Color.Red;
-            }
-            else
-            {
-                tint = Color.White;
-            }
-
             batch.Draw(
                 ImageTexture,
                 new Vector2(
                     xCenter + xOffset - imageWidth / 2,
                     yCenter + yOffset - imageHeight / 2
                     ),
-                tint
+                Color.White
                 );
 
             if (isPoisoned)
