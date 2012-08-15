@@ -91,6 +91,8 @@ namespace Frog_Defense
         private static Texture2D pitSquareTexture;
         private const String impassableSquarePath = "Images/Squares/ImpassableSquareMedium";
         private static Texture2D impassableSquareTexture;
+        private const String impassableSquarePath2 = "Images/Squares/ImpassableSquareMedium2";
+        private static Texture2D impassableSquareTexture2;
         private const String startSquarePath = "Images/Squares/StartSquareMedium";
         private static Texture2D startSquareTexture;
         private const String goalSquarePath = "Images/Squares/GoalSquareMedium";
@@ -115,6 +117,9 @@ namespace Frog_Defense
         {
             if (impassableSquareTexture == null)
                 impassableSquareTexture = TDGame.MainGame.Content.Load<Texture2D>(impassableSquarePath);
+
+            if (impassableSquareTexture2 == null)
+                impassableSquareTexture2 = TDGame.MainGame.Content.Load<Texture2D>(impassableSquarePath2);
 
             if (passableSquareTexture == null)
                 passableSquareTexture = TDGame.MainGame.Content.Load<Texture2D>(passableSquarePath);
@@ -654,7 +659,13 @@ namespace Frog_Defense
                     else if (floorType[x, y] == SquareType.PIT)
                         toDraw = pitSquareTexture;
                     else //it must be the wall
-                        toDraw = impassableSquareTexture;
+                    {
+                        //alternating tiles makes it line up better
+                        if (y % 2 == 0)
+                            toDraw = impassableSquareTexture;
+                        else
+                            toDraw = impassableSquareTexture2;
+                    }
 
                     batch.Draw( //draw the texture
                         toDraw, //texture to be drawn
