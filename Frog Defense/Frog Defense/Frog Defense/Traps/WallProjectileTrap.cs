@@ -29,11 +29,17 @@ namespace Frog_Defense.Traps
 
         //texture stuff
         protected Texture2D mainTexture;
+        protected Texture2D mainHightlightTexture;
 
         protected abstract Texture2D UpTexture { get; }
         protected abstract Texture2D DownTexture { get; }
         protected abstract Texture2D LeftTexture { get; }
         protected abstract Texture2D RightTexture { get; }
+
+        protected abstract Texture2D UpHighlightTexture { get; }
+        protected abstract Texture2D DownHighlightTexture { get; }
+        protected abstract Texture2D LeftHighlightTexture { get; }
+        protected abstract Texture2D RightHighlightTexture { get; }
 
         protected abstract int imageWidth { get; }
         protected abstract int imageHeight { get; }
@@ -53,21 +59,25 @@ namespace Frog_Defense.Traps
                 case Direction.UP:
                     visualPosition.Y -= imageHeight / 4;
                     mainTexture = UpTexture;
+                    mainHightlightTexture = UpHighlightTexture;
                     break;
 
                 case Direction.DOWN:
                     visualPosition.Y += imageHeight / 4;
                     mainTexture = DownTexture;
+                    mainHightlightTexture = DownHighlightTexture;
                     break;
 
                 case Direction.LEFT:
                     visualPosition.X -= imageWidth / 4;
                     mainTexture = LeftTexture;
+                    mainHightlightTexture = LeftHighlightTexture;
                     break;
 
                 case Direction.RIGHT:
                     visualPosition.X += imageWidth / 4;
                     mainTexture = RightTexture;
+                    mainHightlightTexture = RightHighlightTexture;
                     break;
 
                 default:
@@ -216,7 +226,7 @@ namespace Frog_Defense.Traps
 
             //then the gun itself
             batch.Draw(
-                mainTexture,
+                Highlighted ? mainHightlightTexture : mainTexture,
                 new Vector2(
                     position.X + xOffset - imageWidth / 2,
                     position.Y + yOffset - imageHeight / 2
@@ -232,6 +242,9 @@ namespace Frog_Defense.Traps
 
             position.X += xChange;
             position.Y += yChange;
+
+            visualPosition.X += xChange;
+            visualPosition.Y += yChange;
 
             for (int i = 0; i < projectilePositions.Count; i++)
             {

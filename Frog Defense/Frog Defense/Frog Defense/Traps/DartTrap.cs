@@ -35,40 +35,41 @@ namespace Frog_Defense.Traps
         protected override int imageWidth { get { return 30; } }
         protected override int imageHeight { get { return 30; } }
 
-        private const String upGunPath = "Images/Traps/DartTrap/DartTrapUp";
-        private static Texture2D upGunTexture;
-        protected override Texture2D UpTexture
-        {
-            get { return upGunTexture; }
-        }
+        private const String upPath = "Images/Traps/DartTrap/DartTrapUp";
+        private static Texture2D upTexture;
+        protected override Texture2D UpTexture { get { return upTexture; } }
 
-        private const String downGunPath = "Images/Traps/DartTrap/DartTrapDown";
-        private static Texture2D downGunTexture;
-        protected override Texture2D DownTexture
-        {
-            get { return downGunTexture; }
-        }
+        private const String downPath = "Images/Traps/DartTrap/DartTrapDown";
+        private static Texture2D downTexture;
+        protected override Texture2D DownTexture { get { return downTexture; } }
 
-        private const String rightGunPath = "Images/Traps/DartTrap/DartTrapRight";
-        private static Texture2D rightGunTexture;
-        protected override Texture2D RightTexture
-        {
-            get { return rightGunTexture; }
-        }
+        private const String rightPath = "Images/Traps/DartTrap/DartTrapRight";
+        private static Texture2D rightTexture;
+        protected override Texture2D RightTexture { get { return rightTexture; } }
 
-        private const String leftGunPath = "Images/Traps/DartTrap/DartTrapLeft";
-        private static Texture2D leftGunTexture;
-        protected override Texture2D LeftTexture
-        {
-            get { return leftGunTexture; }
-        }
+        private const String leftPath = "Images/Traps/DartTrap/DartTrapLeft";
+        private static Texture2D leftTexture;
+        protected override Texture2D LeftTexture { get { return leftTexture; } }
 
-        private const String previewGunPath = "Images/TrapPreviews/DartTrapPreview";
+        private const String upHighlightPath = "Images/Traps/DartTrap/HighlightUp";
+        private static Texture2D upHighlightTexture;
+        protected override Texture2D UpHighlightTexture { get { return upHighlightTexture; } }
+
+        private const String downHighlightPath = "Images/Traps/DartTrap/HighlightDown";
+        private static Texture2D downHighlightTexture;
+        protected override Texture2D DownHighlightTexture { get { return downHighlightTexture; } }
+
+        private const String rightHighlightPath = "Images/Traps/DartTrap/HighlightRight";
+        private static Texture2D rightHighlightTexture;
+        protected override Texture2D RightHighlightTexture { get { return rightHighlightTexture; } }
+
+        private const String leftHighlightPath = "Images/Traps/DartTrap/HighlightLeft";
+        private static Texture2D leftHighlightTexture;
+        protected override Texture2D LeftHighlightTexture { get { return leftHighlightTexture; } }
+
+        private const String previewPath = "Images/TrapPreviews/DartTrapPreview";
         private static Texture2D previewTexture;
-        public override Texture2D PreviewTexture
-        {
-            get { return previewTexture; }
-        }
+        public override Texture2D PreviewTexture { get { return previewTexture; } }
 
         //standard image stuff: Bullet
         protected override int BulletImageWidth { get { return 2; } }
@@ -120,23 +121,38 @@ namespace Frog_Defense.Traps
         /// </summary>
         public static new void LoadContent()
         {
-            if (upGunTexture == null)
-                upGunTexture = TDGame.MainGame.Content.Load<Texture2D>(upGunPath);
+            //regular textures
+            if (upTexture == null)
+                upTexture = TDGame.MainGame.Content.Load<Texture2D>(upPath);
 
-            if (downGunTexture == null)
-                downGunTexture = TDGame.MainGame.Content.Load<Texture2D>(downGunPath);
+            if (downTexture == null)
+                downTexture = TDGame.MainGame.Content.Load<Texture2D>(downPath);
 
-            if (leftGunTexture == null)
-                leftGunTexture = TDGame.MainGame.Content.Load<Texture2D>(leftGunPath);
+            if (leftTexture == null)
+                leftTexture = TDGame.MainGame.Content.Load<Texture2D>(leftPath);
 
-            if (rightGunTexture == null)
-                rightGunTexture = TDGame.MainGame.Content.Load<Texture2D>(rightGunPath);
+            if (rightTexture == null)
+                rightTexture = TDGame.MainGame.Content.Load<Texture2D>(rightPath);
 
+            //highlight textures
+            if (upHighlightTexture == null)
+                upHighlightTexture = TDGame.MainGame.Content.Load<Texture2D>(upHighlightPath);
+
+            if (downHighlightTexture == null)
+                downHighlightTexture = TDGame.MainGame.Content.Load<Texture2D>(downHighlightPath);
+
+            if (leftHighlightTexture == null)
+                leftHighlightTexture = TDGame.MainGame.Content.Load<Texture2D>(leftHighlightPath);
+
+            if (rightHighlightTexture == null)
+                rightHighlightTexture = TDGame.MainGame.Content.Load<Texture2D>(rightHighlightPath);
+
+            //others
             if (bulletTexture == null)
                 bulletTexture = TDGame.MainGame.Content.Load<Texture2D>(bulletPath);
 
             if (previewTexture == null)
-                previewTexture = TDGame.MainGame.Content.Load<Texture2D>(previewGunPath);
+                previewTexture = TDGame.MainGame.Content.Load<Texture2D>(previewPath);
         }
 
         protected override bool hitEnemy(Enemy e)

@@ -69,4 +69,16 @@ Content\Images\Enemies\ImmuneEnemy\Right.xnb
 Content\Images\Enemies\ImmuneEnemy\Up.xnb
 Content\Images\Traps\SpikeTrap\Spikes.xnb
 Content\Images\Traps\SpikeTrap\Highlight.xnb
+Content\Images\Traps\DartTrap\HighlightDown.xnb
+Content\Images\Traps\DartTrap\HighlightLeft.xnb
+Content\Images\Traps\DartTrap\HighlightRight.xnb
+Content\Images\Traps\DartTrap\HighlightUp.xnb
+Content\Images\Traps\GunTrap\HighlightDown.xnb
+Content\Images\Traps\GunTrap\HighlightLeft.xnb
+Content\Images\Traps\GunTrap\HighlightRight.xnb
+Content\Images\Traps\GunTrap\HighlightUp.xnb
+Content\Images\Traps\CannonTrap\HighlightUp.xnb
+Content\Images\Traps\CannonTrap\HighlightDown.xnb
+Content\Images\Traps\CannonTrap\HighlightLeft.xnb
+Content\Images\Traps\CannonTrap\HighlightRight.xnb
 Maps\DefaultMap.txt
