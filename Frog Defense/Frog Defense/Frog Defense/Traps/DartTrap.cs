@@ -14,8 +14,16 @@ namespace Frog_Defense.Traps
         {
             string output = base.SelfString();
 
-            output += "\n\nPoison Duration: " + (PoisonDuration / 60) + " s";
-            output += "\nTotal Poison Damage: " + (int)(PoisonDamage * PoisonDuration);
+            if (CanUpgrade)
+            {
+                output += "\n\nPoison Duration: " + (PoisonDuration / 60) + " s";
+                output += "\nTotal Poison Damage: " + (int)(poisonDamage * PoisonDuration) + " -> " + (int)(nextPoisonDamage * PoisonDuration);
+            }
+            else
+            {
+                output += "\n\nPoison Duration: " + (PoisonDuration / 60) + " s";
+                output += "\nTotal Poison: " + (int)(poisonDamage * PoisonDuration);
+            }
 
             return output;
         }
@@ -25,7 +33,7 @@ namespace Frog_Defense.Traps
             string output = base.SelfString();
 
             output += "\n\nPoison Duration: " + (PoisonDuration / 60) + " s";
-            output += "\nTotal Poison Damage: " + (int)(PoisonDamage * PoisonDuration);
+            output += "\nTotal Poison Damage: " + (int)(poisonDamage * PoisonDuration);
 
             return output;
         }
@@ -105,12 +113,24 @@ namespace Frog_Defense.Traps
         }
         #endregion
 
+
+        //scaling factors
+        protected override float projectileDamageScalingFactor { get { return 1; } }
+        protected float PoisonDamageScalingFactor { get { return 1.5f; } }
+
+        protected override void upgradeStats()
+        {
+            base.upgradeStats();
+
+            poisonDamage = nextPoisonDamage;
+            nextPoisonDamage *= PoisonDamageScalingFactor;
+        }
+
         #region POISON_STUFF
-        /// <summary>
-        /// The damage PER TICK of poison; this will happen roughly 60 times
-        /// per second.
-        /// </summary>
-        public float PoisonDamage
+
+        private float poisonDamage, nextPoisonDamage;
+
+        protected float BasePoisonDamage
         {
             get { return .1f; }
         }
@@ -136,6 +156,8 @@ namespace Frog_Defense.Traps
         public DartTrap(ArenaManager env, int centerX, int centerY, int xSquare, int ySquare, Direction facing)
             : base(env, centerX, centerY, xSquare, ySquare, facing)
         {
+            this.poisonDamage = BasePoisonDamage;
+            this.nextPoisonDamage = poisonDamage * PoisonDamageScalingFactor;
         }
 
         /// <summary>
@@ -180,7 +202,7 @@ namespace Frog_Defense.Traps
         protected override bool hitEnemy(Enemy e)
         {
             e.TakeHit(ProjectileDamage);
-            e.GetPoisoned(PoisonDamage, PoisonDuration);
+            e.GetPoisoned(poisonDamage, PoisonDuration);
 
             return true;
         }

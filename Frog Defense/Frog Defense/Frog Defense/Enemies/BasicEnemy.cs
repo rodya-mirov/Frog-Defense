@@ -13,7 +13,7 @@ namespace Frog_Defense.Enemies
         public override string ToString()
         {
             string output = EnemyType +
-                "\nHealth: " + (int)health + "\nMax Health: " + MAX_HEALTH +
+                "\nHealth: " + (int)health + "\nMax Health: " + (int)MAX_HEALTH +
                 "\nCash Value: $" + CashValue +
                 "\n\n" + Description;
 

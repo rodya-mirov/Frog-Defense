@@ -22,6 +22,10 @@ namespace Frog_Defense.Waves
 
     class WaveTracker
     {
+        /// <summary>
+        /// This is the list of enemies we're keeping track of;
+        /// if the enemy is null, that denotes the beginning of the next wave
+        /// </summary>
         private Queue<EnemyTracker> enemies;
         private Queue<Enemy> toBeSpawned;
 
@@ -47,55 +51,71 @@ namespace Frog_Defense.Waves
             loadDefaultEnemies();
         }
 
+        private int numWaves;
+
         private void loadDefaultEnemies()
         {
             Enemy e;
+
+            numWaves = 0;
 
             int waveInterval = 600;
 
             int lag = waveInterval;
 
-            for (float level = 1f; level < 7f; level += 1f)
+            float level = 1f;
+
+            while (numWaves < 60)
             {
-
-                for (int i = 0; i < 15; i++)
+                switch (numWaves % 4)
                 {
-                    e = new BasicEnemy(arena, env, -1, -1, level);
-                    enemies.Enqueue(new EnemyTracker(e, lag));
+                    case 0:
+                        for (int i = 0; i < 15; i++)
+                        {
+                            e = new BasicEnemy(arena, env, -1, -1, level);
+                            enemies.Enqueue(new EnemyTracker(e, lag));
 
-                    lag += e.TicksAfterSpawn;
+                            lag += e.TicksAfterSpawn;
+                        }
+                        break;
+
+                    case 1:
+                        for (int i = 0; i < 18; i++)
+                        {
+                            e = new QuickEnemy(arena, env, -1, -1, level);
+                            enemies.Enqueue(new EnemyTracker(e, lag));
+
+                            lag += e.TicksAfterSpawn;
+                        }
+                        break;
+
+                    case 2:
+                        for (int i = 0; i < 8; i++)
+                        {
+                            e = new ToughEnemy(arena, env, -1, -1, level);
+                            enemies.Enqueue(new EnemyTracker(e, lag));
+
+                            lag += e.TicksAfterSpawn;
+                        }
+                        break;
+
+                    case 3:
+                        for (int i = 0; i < 15; i++)
+                        {
+                            e = new ImmuneEnemy(arena, env, -1, -1, level);
+                            enemies.Enqueue(new EnemyTracker(e, lag));
+
+                            lag += e.TicksAfterSpawn;
+                        }
+                        break;
+
+                    default:
+                        throw new NotImplementedException();
                 }
 
-                lag += waveInterval;
-
-                for (int i = 0; i < 18; i++)
-                {
-                    e = new QuickEnemy(arena, env, -1, -1, level);
-                    enemies.Enqueue(new EnemyTracker(e, lag));
-
-                    lag += e.TicksAfterSpawn;
-                }
-
-                lag += waveInterval;
-
-                for (int i = 0; i < 8; i++)
-                {
-                    e = new ToughEnemy(arena, env, -1, -1, level);
-                    enemies.Enqueue(new EnemyTracker(e, lag));
-
-                    lag += e.TicksAfterSpawn;
-                }
-
-                lag += waveInterval;
-
-                for (int i = 0; i < 15; i++)
-                {
-                    e = new ImmuneEnemy(arena, env, -1, -1, level);
-                    enemies.Enqueue(new EnemyTracker(e, lag));
-
-                    lag += e.TicksAfterSpawn;
-                }
-
+                numWaves++;
+                enemies.Enqueue(new EnemyTracker(null, lag));
+                level *= 1.15f;
                 lag += waveInterval;
             }
         }
@@ -121,7 +141,15 @@ namespace Frog_Defense.Waves
             if (toBeSpawned.Count > 0)
             {
                 Enemy e = toBeSpawned.Dequeue();
-                env.spawnEnemy(e);
+
+                if (e == null)
+                {
+                    numWaves--;
+                }
+                else
+                {
+                    env.spawnEnemy(e);
+                }
             }
         }
 
@@ -199,8 +227,11 @@ namespace Frog_Defense.Waves
             //now draw each enemy's preview
             foreach (EnemyTracker e in enemies)
             {
-                Vector2 drawPosition = new Vector2(xOffset + 1 + e.ticksRemaining/2 - Enemy.PreviewImageWidth / 2, yOffset + 2);
-                batch.Draw(e.enemy.PreviewTexture, drawPosition, Color.White);
+                if (e.enemy != null)
+                {
+                    Vector2 drawPosition = new Vector2(xOffset + 1 + e.ticksRemaining / 2 - Enemy.PreviewImageWidth / 2, yOffset + 2);
+                    batch.Draw(e.enemy.PreviewTexture, drawPosition, Color.White);
+                }
             }
         }
 
@@ -212,6 +243,30 @@ namespace Frog_Defense.Waves
         public bool isClear()
         {
             return enemies.Count == 0 && toBeSpawned.Count == 0;
+        }
+
+        public void NextWave()
+        {
+            int n = enemies.Count;
+
+            if (n == 0)
+                return;
+
+            int desiredThreshold = 10;
+
+            int reduction = enemies.Peek().ticksRemaining - desiredThreshold;
+
+            for (int i = 0; i < n; i++)
+            {
+                EnemyTracker et = enemies.Dequeue();
+                et.ticksRemaining -= reduction;
+                enemies.Enqueue(et);
+            }
+        }
+
+        public int WavesRemaining
+        {
+            get { return numWaves; }
         }
     }
 }

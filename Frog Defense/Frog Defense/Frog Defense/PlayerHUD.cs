@@ -134,7 +134,7 @@ namespace Frog_Defense
             DetailViewType = DetailViewType.TrapPreview;
 
             previewX = 0;
-            previewY = TDGame.MediumFont.MeasureString("A\nA").Y + mainYBuffer; //the height of a 2-line string and a buffer
+            previewY = TDGame.MediumFont.MeasureString("A\nA\nA").Y + mainYBuffer; //the height of a 3-line string and a buffer
 
             setupFixedTraps();
         }
@@ -276,11 +276,11 @@ namespace Frog_Defense
         public void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset)
         {
             //Construct the text to draw ...
-            String toDraw = "Cash: $" + Money + "\nHealth: " + Health;
+            String toDraw = "Cash: $" + Money + "\nHealth: " + Health + "\nRemaining: " + env.ArenaManager.WaveTracker.WavesRemaining;
 
             //Draw that text
             batch.DrawString(
-                TDGame.MediumFont,
+                TDGame.SmallFont,
                 toDraw,
                 new Vector2(0 + xOffset, 0 + yOffset),
                 Color.White

@@ -9,6 +9,11 @@ namespace Frog_Defense.Buttons
 {
     class SellButton : Button
     {
+        public override bool Visible
+        {
+            get { return (env.Player.DetailViewType == DetailViewType.TrapExisting); }
+        }
+
         public override string Text
         {
             get

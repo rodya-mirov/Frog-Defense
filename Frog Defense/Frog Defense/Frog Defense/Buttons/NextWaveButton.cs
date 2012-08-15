@@ -7,18 +7,13 @@ using Microsoft.Xna.Framework;
 
 namespace Frog_Defense.Buttons
 {
-    class UpgradeButton : Button
+    class NextWaveButton : Button
     {
-        public override bool Visible
-        {
-            get { return (env.Player.DetailViewType == DetailViewType.TrapExisting && env.ArenaManager.DetailTrap.CanUpgrade); }
-        }
-
         public override string Text
         {
             get
             {
-                return "Upgrade Tower";
+                return "Next Wave";
             }
         }
 
@@ -29,7 +24,7 @@ namespace Frog_Defense.Buttons
         public override int TextOffsetX { get { return textOffsetX; } }
         public override int TextOffsetY { get { return textOffsetY; } }
 
-        public UpgradeButton(GameUpdater env, int width, int height, SpriteFont font)
+        public NextWaveButton(GameUpdater env, int width, int height, SpriteFont font)
             : base(width, height, font)
         {
             this.env = env;
@@ -45,14 +40,7 @@ namespace Frog_Defense.Buttons
         /// </summary>
         public override void GetClicked()
         {
-            if (env.Player.DetailViewType == DetailViewType.TrapExisting)
-            {
-                env.ArenaManager.UpgradeTrap();
-            }
-            else
-            {
-                //do nothing!
-            }
+            env.ArenaManager.WaveTracker.NextWave();
         }
     }
 }

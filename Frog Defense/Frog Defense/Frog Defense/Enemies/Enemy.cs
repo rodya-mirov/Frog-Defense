@@ -183,7 +183,9 @@ namespace Frog_Defense.Enemies
         /// <summary>
         /// Adds a PoisonCounter with the associated information.
         /// If the ID is already in use, this will replace the poison
-        /// with that ID, effectively resetting the timer.
+        /// with that ID, effectively resetting the timer.  It also
+        /// cures the previous poison, so don't put a shitty poison
+        /// tower right in front of a highly upgraded one!
         /// </summary>
         /// <param name="damage"></param>
         /// <param name="duration"></param>

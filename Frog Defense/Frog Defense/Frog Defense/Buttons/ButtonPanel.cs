@@ -35,6 +35,7 @@ namespace Frog_Defense.Buttons
 
             output.buttons.Add(new PauseButton(env, font, buttonWidth, buttonHeight));
             output.buttons.Add(new MenuButton(buttonWidth, buttonHeight, font));
+            output.buttons.Add(new NextWaveButton(env, buttonWidth, buttonHeight, font));
             output.buttons.Add(new SellButton(env, buttonWidth, buttonHeight, font));
             output.buttons.Add(new UpgradeButton(env, buttonWidth, buttonHeight, font));
 
@@ -50,11 +51,15 @@ namespace Frog_Defense.Buttons
         {
             foreach (Button b in buttons)
             {
-                if (b.ContainsPoint(mouseX, mouseY))
-                    b.GetClicked();
+                //if it's not visible, we can just skip it
+                if (b.Visible)
+                {
+                    if (b.ContainsPoint(mouseX, mouseY))
+                        b.GetClicked();
 
-                //we can re-relativize to the next step down by REDUCING the y-coordinate
-                mouseY -= buttonHeight;
+                    //we can re-relativize to the next step down by REDUCING the y-coordinate
+                    mouseY -= buttonHeight;
+                }
             }
         }
 
@@ -62,8 +67,11 @@ namespace Frog_Defense.Buttons
         {
             foreach (Button b in buttons)
             {
-                b.Draw(gameTime, batch, xOffset, yOffset, paused);
-                yOffset += buttonHeight;
+                if (b.Visible)
+                {
+                    b.Draw(gameTime, batch, xOffset, yOffset, paused);
+                    yOffset += buttonHeight;
+                }
             }
         }
     }

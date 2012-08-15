@@ -12,6 +12,11 @@ namespace Frog_Defense.Buttons
         protected int width;
         protected int height;
 
+        public virtual bool Visible
+        {
+            get { return true; }
+        }
+
         protected SpriteFont font;
 
         public int PixelWidth { get { return width; } }
