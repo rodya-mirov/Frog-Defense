@@ -956,7 +956,7 @@ namespace Frog_Defense
                 throw new IndexOutOfRangeException();
             }
 
-            manager.ClearTraps(highlightedSquare.X, highlightedSquare.Y);
+            manager.ClearFloorTraps(highlightedSquare.X, highlightedSquare.Y);
 
             switch (selectedTrap.trapType)
             {

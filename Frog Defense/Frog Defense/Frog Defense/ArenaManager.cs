@@ -26,7 +26,7 @@ namespace Frog_Defense
         private Queue<Enemy> enemies;
         private Queue<Enemy> enemiesToBeAdded;
 
-        private Queue<Trap> traps;
+        private Queue<Trap> floorTraps, wallTraps;
         private Queue<Trap> trapsToBeAdded;
 
         private GameUpdater env;
@@ -95,7 +95,8 @@ namespace Frog_Defense
             enemies = new Queue<Enemy>();
             enemiesToBeAdded = new Queue<Enemy>();
 
-            traps = new Queue<Trap>();
+            floorTraps = new Queue<Trap>();
+            wallTraps = new Queue<Trap>();
             trapsToBeAdded = new Queue<Trap>();
 
             framesOfWin = 0;
@@ -139,7 +140,12 @@ namespace Frog_Defense
 
             //next, add in all the queued up new friends :)
             foreach (Trap t in trapsToBeAdded)
-                traps.Enqueue(t);
+            {
+                if (t.LocationType == TrapLocationType.Floor)
+                    floorTraps.Enqueue(t);
+                else
+                    wallTraps.Enqueue(t);
+            }
 
             trapsToBeAdded.Clear();
 
@@ -212,13 +218,11 @@ namespace Frog_Defense
         /// </summary>
         private void updateTraps()
         {
-            int numTraps = traps.Count;
-            for (int i = 0; i < numTraps; i++)
-            {
-                Trap trap = traps.Dequeue();
-                trap.Update(enemies);
-                traps.Enqueue(trap);
-            }
+            foreach (Trap t in floorTraps)
+                t.Update(enemies);
+
+            foreach (Trap t in wallTraps)
+                t.Update(enemies);
         }
 
         public void DrawArena(GameTime gameTime, SpriteBatch batch, int arenaOffsetX, int arenaOffsetY, bool paused)
@@ -229,8 +233,20 @@ namespace Frog_Defense
                 arenaOffsetY + arenaTranslation.Y + scrollPanelWidth,
                 paused);
 
-            //...draw the traps...
-            foreach (Trap t in traps)
+            //...draw the floor traps...
+            foreach (Trap t in floorTraps)
+            {
+                t.Draw(
+                    gameTime,
+                    batch,
+                    arenaOffsetX + arenaTranslation.X + scrollPanelWidth,
+                    arenaOffsetY + arenaTranslation.Y + scrollPanelWidth,
+                    paused
+                    );
+            }
+
+            //...draw the wall traps...
+            foreach (Trap t in wallTraps)
             {
                 t.Draw(
                     gameTime,
@@ -286,7 +302,10 @@ namespace Frog_Defense
             foreach(Trap t in trapsToBeAdded)
                 t.shift(xChange, yChange, xSquareChange, ySquareChange);
 
-            foreach(Trap t in traps)
+            foreach (Trap t in floorTraps)
+                t.shift(xChange, yChange, xSquareChange, ySquareChange);
+
+            foreach (Trap t in wallTraps)
                 t.shift(xChange, yChange, xSquareChange, ySquareChange);
         }
 
@@ -308,13 +327,13 @@ namespace Frog_Defense
                     trapsToBeAdded.Enqueue(t);
             }
 
-            n = traps.Count;
+            n = wallTraps.Count;
 
             for (int i = 0; i < n; i++)
             {
-                Trap t = traps.Dequeue();
+                Trap t = wallTraps.Dequeue();
                 if (!t.touchesWall(x, y))
-                    traps.Enqueue(t);
+                    wallTraps.Enqueue(t);
             }
         }
 
@@ -361,11 +380,11 @@ namespace Frog_Defense
         }
 
         /// <summary>
-        /// Destroys any traps occupying the space!
+        /// Destroys any traps on the floor of the space
         /// </summary>
-        /// <param name="p"></param>
-        /// <param name="p_2"></param>
-        public void ClearTraps(int x, int y)
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public void ClearFloorTraps(int x, int y)
         {
             int n;
             Trap t;
@@ -379,13 +398,13 @@ namespace Frog_Defense
                     trapsToBeAdded.Enqueue(t);
             }
 
-            n = traps.Count;
+            n = floorTraps.Count;
 
             for (int i = 0; i < n; i++)
             {
-                t = traps.Dequeue();
+                t = floorTraps.Dequeue();
                 if (!t.isOnSquare(x, y))
-                    traps.Enqueue(t);
+                    floorTraps.Enqueue(t);
             }
         }
 
@@ -428,7 +447,18 @@ namespace Frog_Defense
             mousedTrap = null;
             mousedEnemy = null;
 
-            foreach (Trap t in traps)
+            foreach (Trap t in floorTraps)
+            {
+                possibleSquareDistance = (mx - t.VisualXCenter) * (mx - t.VisualXCenter) + (my - t.VisualYCenter) * (my - t.VisualYCenter);
+                if (possibleSquareDistance < bestSquareDistance)
+                {
+                    mousedTrap = t;
+                    mousedEnemy = null;
+                    bestSquareDistance = possibleSquareDistance;
+                }
+            }
+
+            foreach (Trap t in wallTraps)
             {
                 possibleSquareDistance = (mx - t.VisualXCenter) * (mx - t.VisualXCenter) + (my - t.VisualYCenter) * (my - t.VisualYCenter);
                 if (possibleSquareDistance < bestSquareDistance)
@@ -464,13 +494,29 @@ namespace Frog_Defense
         {
             if (DetailTrap != null)
             {
-                int n = traps.Count;
+                int n;
+
+                n = floorTraps.Count;
                 for (int i = 0; i < n; i++)
                 {
-                    Trap t = traps.Dequeue();
+                    Trap t = floorTraps.Dequeue();
                     if (t != DetailTrap)
                     {
-                        traps.Enqueue(t);
+                        floorTraps.Enqueue(t);
+                    }
+                    else
+                    {
+                        arenaMap.ClearTrap(t);
+                    }
+                }
+
+                n = wallTraps.Count;
+                for (int i = 0; i < n; i++)
+                {
+                    Trap t = wallTraps.Dequeue();
+                    if (t != DetailTrap)
+                    {
+                        wallTraps.Enqueue(t);
                     }
                     else
                     {
@@ -479,9 +525,6 @@ namespace Frog_Defense
                 }
 
                 Player.AddMoney(DetailTrap.SellPrice);
-
-                if (traps.Count != n - 1)
-                    throw new Exception("I'm just so confused");
 
                 selectedTrapToShow = null;
             }
