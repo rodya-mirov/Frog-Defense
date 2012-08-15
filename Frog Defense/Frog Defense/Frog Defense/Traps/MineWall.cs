@@ -12,6 +12,11 @@ namespace Frog_Defense.Traps
     {
         public override TrapLocationType LocationType { get { throw new NotImplementedException(); } }
 
+        protected override void upgradeStats()
+        {
+            throw new NotImplementedException();
+        }
+
         private int xCenter, yCenter;
 
         public override string Name

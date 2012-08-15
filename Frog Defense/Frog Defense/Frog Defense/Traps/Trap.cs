@@ -13,6 +13,28 @@ namespace Frog_Defense.Traps
 
     abstract class Trap
     {
+        protected int upgradeLevel;
+        protected virtual int maxUpgradeLevel { get { return 5; } }
+        public bool CanUpgrade { get { return upgradeLevel < maxUpgradeLevel; } }
+
+        protected int upgradeCost;
+        public int UpgradeCost { get { return upgradeCost; } }
+        protected virtual int BaseUpgradeCost { get { return Cost / 2; } }
+        protected virtual float UpgradeCostScalingFactor { get { return 2; } }
+
+        public void Upgrade()
+        {
+            if (CanUpgrade)
+            {
+                upgradeLevel++;
+                upgradeCost = (int)(upgradeCost * UpgradeCostScalingFactor);
+
+                upgradeStats();
+            }
+        }
+
+        protected abstract void upgradeStats();
+
         public bool Highlighted;
 
         public abstract TrapLocationType LocationType { get; }
@@ -30,6 +52,9 @@ namespace Frog_Defense.Traps
 
             this.floorSquareX = floorSquareX;
             this.floorSquareY = floorSquareY;
+
+            this.upgradeLevel = 1;
+            this.upgradeCost = BaseUpgradeCost;
         }
 
         public static void LoadContent()
@@ -47,12 +72,19 @@ namespace Frog_Defense.Traps
 
         public virtual string BuyString()
         {
-            return Name + "\nCost: $" + Cost + "\n" + Description;
+            return Name + "\nCost: $" + Cost + "\n\n" + Description;
         }
 
         public virtual string SelfString()
         {
-            return Name + "\nSell Price: $" + SellPrice + "\n" + Description;
+            string output = Name + "\nSell Price: $" + SellPrice;
+
+            if (CanUpgrade)
+                output += "\nUpgrade Price: $" + UpgradeCost;
+
+            output += "\n\n" + Description;
+
+            return output;
         }
 
         public abstract TrapType trapType { get; }

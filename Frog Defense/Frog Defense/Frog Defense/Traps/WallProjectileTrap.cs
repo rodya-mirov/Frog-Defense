@@ -14,9 +14,19 @@ namespace Frog_Defense.Traps
         public override string SelfString()
         {
             string output = base.SelfString();
-            output += "\n\nDamage: " + ProjectileDamage;
-            output += "\nReload: " + ReloadTimeText + " s";
-            output += "\nDamage/sec: " + (int)(ProjectileDamage * 60 / ReloadFrames);
+
+            if (CanUpgrade)
+            {
+                output += "\n\nDamage: " + (int)ProjectileDamage + " -> " + (int)NextProjectileDamage;
+                output += "\nReload: " + ReloadTimeText + " s";
+                output += "\nDamage/sec: " + (int)(ProjectileDamage * 60 / ReloadFrames) + " -> " + (int)(NextProjectileDamage * 60 / ReloadFrames);
+            }
+            else
+            {
+                output += "\n\nDamage: " + (int)ProjectileDamage;
+                output += "\nReload: " + ReloadTimeText + " s";
+                output += "\nDamage/sec: " + (int)(ProjectileDamage * 60 / ReloadFrames);
+            }
 
             return output;
         }
@@ -24,6 +34,7 @@ namespace Frog_Defense.Traps
         public override string BuyString()
         {
             string output = base.SelfString();
+
             output += "\n\nDamage: " + ProjectileDamage;
             output += "\nReload: " + ReloadTimeText + " s";
             output += "\nDamage/sec: " + (int)(ProjectileDamage * 60 / ReloadFrames);
@@ -48,10 +59,22 @@ namespace Frog_Defense.Traps
         //various parameters for the gun
         protected virtual int bulletSpeed { get { return 2; } }
 
-        protected abstract float ProjectileDamage { get; }
+        protected abstract float BaseProjectileDamage { get; }
         protected virtual int ReloadFrames { get { return 15; } }
 
         protected int framesSinceFiring = 0;
+
+        protected float projectileDamage, nextProjectileDamage;
+        protected virtual float projectileDamageScalingFactor { get { return 1.5f; } }
+
+        protected float ProjectileDamage { get { return projectileDamage; } }
+        protected float NextProjectileDamage { get { return nextProjectileDamage; } }
+
+        protected override void upgradeStats()
+        {
+            projectileDamage = nextProjectileDamage;
+            nextProjectileDamage *= projectileDamageScalingFactor;
+        }
 
         //texture stuff
         protected Texture2D mainTexture;
@@ -77,6 +100,9 @@ namespace Frog_Defense.Traps
         protected WallProjectileTrap(ArenaManager env, int centerX, int centerY, int xSquare, int ySquare, Direction facing)
             : base(env, facing, xSquare, ySquare)
         {
+            this.projectileDamage = BaseProjectileDamage;
+            this.nextProjectileDamage = BaseProjectileDamage * projectileDamageScalingFactor;
+
             position = new Point(centerX, centerY);
             visualPosition = new Point(centerX, centerY);
 

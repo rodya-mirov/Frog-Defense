@@ -50,7 +50,7 @@ namespace Frog_Defense.Traps
         }
 
         public override int Cost { get { return 150; } }
-        protected override float ProjectileDamage { get { return 4; } }
+        protected override float BaseProjectileDamage { get { return 4; } }
 
         #region IMAGE_STUFF
         //standard image stuff: Gun

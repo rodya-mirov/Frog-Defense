@@ -12,6 +12,11 @@ namespace Frog_Defense.Traps
     {
         public override TrapLocationType LocationType { get { return TrapLocationType.Floor; } }
 
+        protected override void upgradeStats()
+        {
+            throw new NotImplementedException();
+        }
+
         public override TrapType trapType { get { return TrapType.Wall; } }
 
         public override int Cost { get { return 100; } }

@@ -486,5 +486,14 @@ namespace Frog_Defense
                 selectedTrapToShow = null;
             }
         }
+
+        public void UpgradeTrap()
+        {
+            if (DetailTrap != null && DetailTrap.CanUpgrade && env.Player.Money >= DetailTrap.UpgradeCost)
+            {
+                env.Player.Spend(DetailTrap.UpgradeCost);
+                DetailTrap.Upgrade();
+            }
+        }
     }
 }

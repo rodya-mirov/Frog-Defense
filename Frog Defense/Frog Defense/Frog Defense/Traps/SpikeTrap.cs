@@ -24,19 +24,42 @@ namespace Frog_Defense.Traps
 
         public override string BuyString()
         {
-            return base.BuyString() + "\n\nDamage/sec: " + (int)(damagePerTick * 60);
+            string output = base.BuyString();
+
+            output += "\n\nDamage/sec: " + (int)(damagePerTick * 60);
+
+            return output;
         }
 
         public override string SelfString()
         {
-            return base.SelfString() + "\n\nDamage/sec: " + (int)(damagePerTick * 60);
+            string output = base.SelfString();
+
+            if (CanUpgrade)
+            {
+                output += "\n\nDamage/sec: " + (int)(damagePerTick * 60) + " -> " + (int)(nextDamagePerTick * 60);
+            }
+            else
+            {
+                output += "\n\nDamage/sec: " + (int)(damagePerTick * 60);
+            }
+
+            return output;
+        }
+
+        protected override void upgradeStats()
+        {
+            damagePerTick = nextDamagePerTick;
+            nextDamagePerTick *= upgradeDamageFactor;
         }
 
         public override TrapLocationType LocationType { get { return TrapLocationType.Floor; } }
 
         //the damage this trap inflicts on every critter that touches it
         //creatures are hit for roughly mainImageWidth ticks, so, for balancing ...
-        private const float damagePerTick = .5f;
+        private const float baseDamagePerTick = .5f;
+        private const float upgradeDamageFactor = 1.5f;
+        private float damagePerTick, nextDamagePerTick;
 
         //Typical graphics stuff
         private const int mainImageWidth = 30;
@@ -93,6 +116,9 @@ namespace Frog_Defense.Traps
         public SpikeTrap(ArenaManager env, int xCenter, int yCenter, int floorSquareX, int floorSquareY)
             : base(env, floorSquareX, floorSquareY)
         {
+            this.damagePerTick = baseDamagePerTick;
+            this.nextDamagePerTick = damagePerTick * upgradeDamageFactor;
+
             this.xCenter = xCenter;
             this.yCenter = yCenter;
         }

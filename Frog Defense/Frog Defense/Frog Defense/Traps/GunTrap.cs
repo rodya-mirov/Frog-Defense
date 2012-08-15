@@ -28,7 +28,7 @@ namespace Frog_Defense.Traps
         }
 
         public override int Cost { get { return 100; } }
-        protected override float ProjectileDamage { get { return 10; } }
+        protected override float BaseProjectileDamage { get { return 10; } }
 
         //standard image stuff: Gun
         protected override int imageWidth { get { return 30; } }
