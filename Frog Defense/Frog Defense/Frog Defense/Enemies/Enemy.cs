@@ -10,6 +10,8 @@ namespace Frog_Defense.Enemies
 {
     abstract class Enemy
     {
+        public bool Highlighted;
+
         /// <summary>
         /// The default number of ticks after this enemy and before the next one.
         /// </summary>
@@ -88,6 +90,8 @@ namespace Frog_Defense.Enemies
 
         protected Enemy(ArenaManager env, ArenaMap arena, float scalingLevel)
         {
+            this.Highlighted = false;
+
             this.env = env;
             this.arena = arena;
 

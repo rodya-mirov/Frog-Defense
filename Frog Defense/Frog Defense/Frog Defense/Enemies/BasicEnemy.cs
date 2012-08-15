@@ -12,8 +12,17 @@ namespace Frog_Defense.Enemies
         //string info
         public override string ToString()
         {
-            return EnemyType + "\nHealth: " + (int)health + "\nMax Health: " + MAX_HEALTH + "\n" + Description;
+            string output = EnemyType + "\nHealth: " + (int)health + "\nMax Health: " + MAX_HEALTH + "\n" + Description;
+
+            if (isPoisoned)
+            {
+                output += "\n\nPoisoned for " + (poisonCounter.ticksRemaining / 60) + "s";
+                output += "\n   " + (int)(poisonCounter.damagePerTick * poisonCounter.ticksRemaining) + " damage remaining";
+            }
+
+            return output;
         }
+
         protected virtual string EnemyType { get { return "Basic Enemy"; } }
         protected virtual string Description { get { return "No special properties."; } }
 

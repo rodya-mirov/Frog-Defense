@@ -2,7 +2,6 @@ Content\Images\Arrows\ArrowDown.xnb
 Content\Images\Arrows\ArrowLeft.xnb
 Content\Images\Arrows\ArrowRight.xnb
 Content\Images\Arrows\ArrowUp.xnb
-Content\Images\Traps\Spikes.xnb
 Content\Images\Healthbars\EmptyBar.xnb
 Content\Images\Healthbars\FullBar.xnb
 Content\Images\TrapPreviews\HighlightedBorder.xnb
@@ -68,4 +67,6 @@ Content\Images\Enemies\ImmuneEnemy\Left.xnb
 Content\Images\Enemies\ImmuneEnemy\Preview.xnb
 Content\Images\Enemies\ImmuneEnemy\Right.xnb
 Content\Images\Enemies\ImmuneEnemy\Up.xnb
+Content\Images\Traps\SpikeTrap\Spikes.xnb
+Content\Images\Traps\SpikeTrap\Highlight.xnb
 Maps\DefaultMap.txt

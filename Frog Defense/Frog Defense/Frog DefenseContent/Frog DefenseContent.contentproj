@@ -64,7 +64,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\Traps\Spikes.png">
+    <Compile Include="Images\Traps\SpikeTrap\Spikes.png">
       <Name>Spikes</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -456,6 +456,13 @@
     </Compile>
     <Compile Include="Images\Enemies\ImmuneEnemy\Up.png">
       <Name>Up</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\Traps\SpikeTrap\Highlight.png">
+      <Name>Highlight</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

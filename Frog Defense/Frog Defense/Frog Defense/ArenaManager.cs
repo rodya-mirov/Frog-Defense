@@ -391,8 +391,8 @@ namespace Frog_Defense
         private Trap mousedTrap, selectedTrapToShow;
         private const float mouseSquareThreshold = 100f;
 
-        public Enemy SelectedEnemyToShow { get { return selectedEnemyToShow; } }
-        public Trap SelectedTrapToShow { get { return selectedTrapToShow; } }
+        public Enemy DetailEnemy { get { return selectedEnemyToShow; } }
+        public Trap DetailTrap { get { return selectedTrapToShow; } }
 
         /// <summary>
         /// Determines the closest enemy/trap, if there is one close
@@ -444,17 +444,17 @@ namespace Frog_Defense
         /// </summary>
         public void SellTrap()
         {
-            if (SelectedTrapToShow != null)
+            if (DetailTrap != null)
             {
                 int n = traps.Count;
                 for (int i = 0; i < n; i++)
                 {
                     Trap t = traps.Dequeue();
-                    if (t != SelectedTrapToShow)
+                    if (t != DetailTrap)
                         traps.Enqueue(t);
                 }
 
-                Player.AddMoney(SelectedTrapToShow.SellPrice);
+                Player.AddMoney(DetailTrap.SellPrice);
 
                 if (traps.Count != n - 1)
                     throw new Exception("I'm just so confused");

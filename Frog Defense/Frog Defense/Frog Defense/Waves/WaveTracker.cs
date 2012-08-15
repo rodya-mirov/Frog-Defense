@@ -128,7 +128,7 @@ namespace Frog_Defense.Waves
         private int mouseX, mouseY;
         private bool mouseOnScreen;
         private Enemy mousedOverEnemy, selectedEnemy;
-        public Enemy SelectedEnemy
+        public Enemy DetailEnemy
         {
             get { return selectedEnemy; }
         }

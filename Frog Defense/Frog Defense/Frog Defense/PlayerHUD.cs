@@ -20,15 +20,83 @@ namespace Frog_Defense
     /// </summary>
     class PlayerHUD
     {
-        private DetailViewType previewType;
-        public DetailViewType DetailViewType
+        private Enemy selectedEnemy;
+        private Trap selectedTrap;
+
+        private Enemy DetailEnemy
         {
-            get { return previewType; }
+            get { return selectedEnemy; }
             set
             {
-                previewType = value;
-                if (previewType != DetailViewType.TrapPreview)
-                    setSelectedTrap(-1);
+                if (selectedEnemy != null)
+                    selectedEnemy.Highlighted = false;
+
+                if (value != null)
+                    value.Highlighted = true;
+
+                selectedEnemy = value;
+            }
+        }
+        private Trap DetailTrap
+        {
+            get { return selectedTrap; }
+            set
+            {
+                if (selectedTrap != null)
+                    selectedTrap.Highlighted = false;
+
+                if (value != null)
+                    value.Highlighted = true;
+
+                selectedTrap = value;
+            }
+        }
+
+        private DetailViewType detailViewType;
+        public DetailViewType DetailViewType
+        {
+            get { return detailViewType; }
+            set
+            {
+                if (detailViewType == value)
+                    return;
+
+                detailViewType = value;
+
+                switch (value)
+                {
+                    case DetailViewType.EnemyExisting:
+                        DetailEnemy = env.ArenaManager.DetailEnemy;
+                        DetailTrap = null;
+                        setSelectedTrap(-1);
+                        break;
+
+                    case DetailViewType.EnemyPreview:
+                        DetailEnemy = env.ArenaManager.WaveTracker.DetailEnemy;
+                        DetailTrap = null;
+                        setSelectedTrap(-1);
+                        break;
+
+                    case DetailViewType.TrapExisting:
+                        DetailEnemy = null;
+                        DetailTrap = env.ArenaManager.DetailTrap;
+                        setSelectedTrap(-1);
+                        break;
+
+                    case DetailViewType.TrapPreview:
+                        DetailEnemy = null;
+                        DetailTrap = null;
+                        break;
+
+                    case DetailViewType.None:
+                        DetailEnemy = null;
+                        DetailTrap = null;
+                        setSelectedTrap(-1);
+                        break;
+
+                    default:
+                        throw new NotImplementedException();
+                }
             }
         }
 
@@ -294,7 +362,7 @@ namespace Frog_Defense
                     break;
 
                 case DetailViewType.EnemyPreview:
-                    e = env.ArenaManager.WaveTracker.SelectedEnemy;
+                    e = env.ArenaManager.WaveTracker.DetailEnemy;
                     if (e != null && e.IsAlive)
                     {
                         batch.DrawString(TDGame.SmallFont,
@@ -310,7 +378,7 @@ namespace Frog_Defense
                     break;
 
                 case DetailViewType.TrapExisting:
-                    t = env.ArenaManager.SelectedTrapToShow;
+                    t = env.ArenaManager.DetailTrap;
 
                     if (t != null)
                     {
@@ -327,7 +395,7 @@ namespace Frog_Defense
                     break;
 
                 case DetailViewType.EnemyExisting:
-                    e = env.ArenaManager.SelectedEnemyToShow;
+                    e = env.ArenaManager.DetailEnemy;
                     if (e != null && e.IsAlive)
                     {
                         batch.DrawString(TDGame.SmallFont,

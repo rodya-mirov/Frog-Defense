@@ -30,8 +30,22 @@ namespace Frog_Defense.Traps
         private const int mainImageWidth = 30;
         private const int mainImageHeight = 30;
 
-        private const String imagePath = "Images/Traps/Spikes";
+        protected Texture2D DrawTexture
+        {
+            get
+            {
+                if (Highlighted)
+                    return highlightTexture;
+                else
+                    return imageTexture;
+            }
+        }
+
+        private const String imagePath = "Images/Traps/SpikeTrap/Spikes";
         private static Texture2D imageTexture;
+
+        private const String highlightPath = "Images/Traps/SpikeTrap/Highlight";
+        private static Texture2D highlightTexture;
 
         private const String previewImagePath = "Images/TrapPreviews/SpikesPreview";
         private static Texture2D previewTexture;
@@ -76,6 +90,9 @@ namespace Frog_Defense.Traps
             if (imageTexture == null)
                 imageTexture = TDGame.MainGame.Content.Load<Texture2D>(imagePath);
 
+            if (highlightTexture == null)
+                highlightTexture = TDGame.MainGame.Content.Load<Texture2D>(highlightPath);
+
             if (previewTexture == null)
                 previewTexture = TDGame.MainGame.Content.Load<Texture2D>(previewImagePath);
         }
@@ -111,7 +128,7 @@ namespace Frog_Defense.Traps
         public override void Draw(GameTime gameTime, SpriteBatch batch, int xOffset, int yOffset, bool paused)
         {
             batch.Draw(
-                imageTexture,
+                DrawTexture,
                 new Vector2(
                     xCenter + xOffset - mainImageWidth / 2,
                     yCenter + yOffset - mainImageHeight / 2

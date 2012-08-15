@@ -12,11 +12,14 @@ namespace Frog_Defense.Traps
 
     abstract class Trap
     {
+        public bool Highlighted;
+
         protected ArenaManager env;
         protected int floorSquareX, floorSquareY;
 
         protected Trap(ArenaManager env, int floorSquareX, int floorSquareY)
         {
+            this.Highlighted = false;
             this.env = env;
 
             this.floorSquareX = floorSquareX;

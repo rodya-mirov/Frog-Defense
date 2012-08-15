@@ -12,8 +12,9 @@ namespace Frog_Defense.Traps
     {
         //location parameters
         protected Point position;
-        public override float VisualXCenter { get { return position.X; } }
-        public override float VisualYCenter { get { return position.Y; } }
+        protected Point visualPosition;
+        public override float VisualXCenter { get { return visualPosition.X; } }
+        public override float VisualYCenter { get { return visualPosition.Y; } }
 
         //contains subobjects which are bullets
         protected Queue<Point> projectilePositions;
@@ -45,22 +46,27 @@ namespace Frog_Defense.Traps
             : base(env, facing, xSquare, ySquare)
         {
             position = new Point(centerX, centerY);
+            visualPosition = new Point(centerX, centerY);
 
             switch (facing)
             {
                 case Direction.UP:
+                    visualPosition.Y -= imageHeight / 4;
                     mainTexture = UpTexture;
                     break;
 
                 case Direction.DOWN:
+                    visualPosition.Y += imageHeight / 4;
                     mainTexture = DownTexture;
                     break;
 
                 case Direction.LEFT:
+                    visualPosition.X -= imageWidth / 4;
                     mainTexture = LeftTexture;
                     break;
 
                 case Direction.RIGHT:
+                    visualPosition.X += imageWidth / 4;
                     mainTexture = RightTexture;
                     break;
 
