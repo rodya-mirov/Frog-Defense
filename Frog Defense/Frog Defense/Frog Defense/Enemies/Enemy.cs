@@ -95,6 +95,7 @@ namespace Frog_Defense.Enemies
 
         protected Enemy(ArenaManager env, ArenaMap arena, float scalingLevel)
         {
+            this.slowFactor = 1f;
             this.Highlighted = false;
 
             this.env = env;
@@ -283,6 +284,17 @@ namespace Frog_Defense.Enemies
         /// <param name="xSquaresChange"></param>
         /// <param name="ySquaresChange"></param>
         public abstract void shift(int xChange, int yChange, int xSquaresChange, int ySquaresChange);
+
+        protected float slowFactor;
+
+        /// <summary>
+        /// Slows the next frame of movement by the specified factor
+        /// </summary>
+        /// <param name="slowFactor"></param>
+        public virtual void Slow(float slowFactor)
+        {
+            this.slowFactor = slowFactor;
+        }
     }
 
     struct PoisonCounter

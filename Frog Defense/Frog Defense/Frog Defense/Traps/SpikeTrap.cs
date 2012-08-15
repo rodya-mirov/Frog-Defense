@@ -38,10 +38,12 @@ namespace Frog_Defense.Traps
             if (CanUpgrade)
             {
                 output += "\n\nDamage/sec: " + (int)(damagePerTick * 60) + " -> " + (int)(nextDamagePerTick * 60);
+                output += "\nSlowing: " + String.Format("{0:0.00}", slowFactor) + " -> " + String.Format("{0:0.00}", nextSlowFactor);
             }
             else
             {
                 output += "\n\nDamage/sec: " + (int)(damagePerTick * 60);
+                output += "\nSlowing: " + String.Format("{0:0.00}", slowFactor);
             }
 
             return output;
@@ -51,6 +53,9 @@ namespace Frog_Defense.Traps
         {
             damagePerTick = nextDamagePerTick;
             nextDamagePerTick *= upgradeDamageFactor;
+
+            slowFactor = nextSlowFactor;
+            nextSlowFactor *= slowUpgradeFactor;
         }
 
         public override TrapLocationType LocationType { get { return TrapLocationType.Floor; } }
@@ -58,8 +63,12 @@ namespace Frog_Defense.Traps
         //the damage this trap inflicts on every critter that touches it
         //creatures are hit for roughly mainImageWidth ticks, so, for balancing ...
         private const float baseDamagePerTick = .5f;
-        private const float upgradeDamageFactor = 1.5f;
+        private const float upgradeDamageFactor = 1.2f;
         private float damagePerTick, nextDamagePerTick;
+
+        private float slowFactor, nextSlowFactor;
+        private const float slowUpgradeFactor = .85f;
+        private const float baseSlowFactor = .7f;
 
         //Typical graphics stuff
         private const int mainImageWidth = 30;
@@ -102,7 +111,7 @@ namespace Frog_Defense.Traps
 
         public override string Description
         {
-            get { return "Deals continuous damage to\nall enemies standing on it."; }
+            get { return "Deals continuous damage to\nall enemies standing on it.\nAlso slows enemies while\nthey are on it."; }
         }
 
         /// <summary>
@@ -118,6 +127,9 @@ namespace Frog_Defense.Traps
         {
             this.damagePerTick = baseDamagePerTick;
             this.nextDamagePerTick = damagePerTick * upgradeDamageFactor;
+
+            this.slowFactor = baseSlowFactor;
+            this.nextSlowFactor = this.slowFactor * slowUpgradeFactor;
 
             this.xCenter = xCenter;
             this.yCenter = yCenter;
@@ -151,7 +163,10 @@ namespace Frog_Defense.Traps
             foreach (Enemy e in enemies)
             {
                 if (e.VisualXCenter >= minX && e.VisualXCenter <= maxX && e.VisualYCenter >= minY && e.VisualYCenter <= maxY)
+                {
                     e.TakeHit(damagePerTick);
+                    e.Slow(slowFactor);
+                }
             }
         }
 

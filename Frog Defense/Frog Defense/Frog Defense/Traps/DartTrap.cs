@@ -17,7 +17,7 @@ namespace Frog_Defense.Traps
             if (CanUpgrade)
             {
                 output += "\n\nPoison Duration: " + (PoisonDuration / 60) + " s";
-                output += "\nTotal Poison Damage: " + (int)(poisonDamage * PoisonDuration) + " -> " + (int)(nextPoisonDamage * PoisonDuration);
+                output += "\nTotal Poison: " + (int)(poisonDamage * PoisonDuration) + " -> " + (int)(nextPoisonDamage * PoisonDuration);
             }
             else
             {

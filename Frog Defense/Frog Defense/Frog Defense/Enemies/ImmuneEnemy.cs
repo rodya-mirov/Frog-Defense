@@ -16,7 +16,7 @@ namespace Frog_Defense.Enemies
             get { return 15; }
         }
 
-        public override int TicksAfterSpawn { get { return 45; } }
+        public override int TicksAfterSpawn { get { return 60; } }
 
         private const String previewPath = "Images/Enemies/ImmuneEnemy/Preview";
         private static Texture2D previewTexture;

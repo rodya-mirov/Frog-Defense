@@ -1095,6 +1095,8 @@ namespace Frog_Defense
 
             autoassignVoid();
             updatePathing();
+
+            manager.scrollMap(-squareWidth, 0);
         }
 
         private void addLeftWall()
@@ -1216,6 +1218,8 @@ namespace Frog_Defense
 
             autoassignVoid();
             updatePathing();
+
+            manager.scrollMap(-squareWidth, 0);
         }
 
         private void addTopWall()

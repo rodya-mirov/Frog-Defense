@@ -9,7 +9,7 @@ namespace Frog_Defense.Enemies
     class ToughEnemy : BasicEnemy
     {
         protected override string EnemyType { get { return "Tough Enemy"; } }
-        protected override string Description { get { return "Takes less damage from\nguns and spikes."; } }
+        protected override string Description { get { return "Takes less damage from\nguns and spikes,\nand is immune to slowing\nfrom spike traps."; } }
 
         /// <summary>
         /// This is the percentage damage that ToughEnemy actually takes
@@ -17,7 +17,7 @@ namespace Frog_Defense.Enemies
         private const float toughnessFactor = .5f;
 
         protected override float BaseCashValue { get { return 15; } }
-        protected override float Speed { get { return 1.2f; } }
+        protected override float Speed { get { return 0.6f; } }
         public override int TicksAfterSpawn { get { return 65; } }
 
         private const String previewPath = "Images/Enemies/ToughEnemy/Preview";
@@ -45,6 +45,11 @@ namespace Frog_Defense.Enemies
         public ToughEnemy(ArenaMap arena, ArenaManager env, int startX, int startY, float scale)
             : base(arena, env, startX, startY, scale)
         {
+        }
+
+        public override void Slow(float slowFactor)
+        {
+            //does nothing :)
         }
 
         public static new void LoadContent()

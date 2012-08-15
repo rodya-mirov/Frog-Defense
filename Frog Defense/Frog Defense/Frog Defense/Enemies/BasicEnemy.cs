@@ -63,7 +63,7 @@ namespace Frog_Defense.Enemies
         /// </summary>
         protected virtual float Speed
         {
-            get { return 1.7f; }
+            get { return 0.85f; }
         }
 
         private float xCenter, yCenter;
@@ -289,10 +289,6 @@ namespace Frog_Defense.Enemies
                 previewTexture = TDGame.MainGame.Content.Load<Texture2D>(previewPath);
         }
 
-        //some parameters to slow the movement down
-        private int framesBetweenMoves = 1;
-        private int framesSinceMove = 0;
-
         /// <summary>
         /// Moves!
         /// </summary>
@@ -356,30 +352,26 @@ namespace Frog_Defense.Enemies
         /// </summary>
         private void MoveTowardGoal()
         {
-            if (framesSinceMove < framesBetweenMoves)
-            {
-                framesSinceMove++;
-                return;
-            }
-
-            framesSinceMove = 0;
+            //slow this frame, but only this frame; reset the slow factor after
+            float moveSpeed = Speed * slowFactor;
+            slowFactor = 1;
 
             if (goalX < xCenter)
             {
-                xCenter = Math.Max(goalX, xCenter - Speed);
+                xCenter = Math.Max(goalX, xCenter - moveSpeed);
             }
             else if (goalX > xCenter)
             {
-                xCenter = Math.Min(goalX, xCenter + Speed);
+                xCenter = Math.Min(goalX, xCenter + moveSpeed);
             }
 
             if (goalY < yCenter)
             {
-                yCenter = Math.Max(goalY, yCenter - Speed);
+                yCenter = Math.Max(goalY, yCenter - moveSpeed);
             }
             else if (goalY > yCenter)
             {
-                yCenter = Math.Min(goalY, yCenter + Speed);
+                yCenter = Math.Min(goalY, yCenter + moveSpeed);
             }
 
             if (xCenter == goalX && yCenter == goalY)

@@ -33,7 +33,7 @@ namespace Frog_Defense.Traps
 
         public override string BuyString()
         {
-            string output = base.SelfString();
+            string output = base.BuyString();
 
             output += "\n\nDamage: " + ProjectileDamage;
             output += "\nReload: " + ReloadTimeText + " s";

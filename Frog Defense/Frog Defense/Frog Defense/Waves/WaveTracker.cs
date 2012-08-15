@@ -115,7 +115,10 @@ namespace Frog_Defense.Waves
 
                 numWaves++;
                 enemies.Enqueue(new EnemyTracker(null, lag));
-                level *= 1.15f;
+
+                //enemies scale linearly
+                level += 0.20f;
+
                 lag += waveInterval;
             }
         }

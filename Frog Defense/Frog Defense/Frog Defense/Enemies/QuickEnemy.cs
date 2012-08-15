@@ -18,7 +18,7 @@ namespace Frog_Defense.Enemies
 
         protected override float Speed
         {
-            get { return 2.5f; }
+            get { return 1.25f; }
         }
         public override int TicksAfterSpawn { get { return 45; } }
 
