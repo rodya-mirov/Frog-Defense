@@ -64,8 +64,9 @@ namespace Frog_Defense.Waves
             int lag = waveInterval;
 
             float level = 1f;
+            float increaseAmount = .35f;
 
-            while (numWaves < 60)
+            while (numWaves < 40)
             {
                 switch (numWaves % 4)
                 {
@@ -117,7 +118,9 @@ namespace Frog_Defense.Waves
                 enemies.Enqueue(new EnemyTracker(null, lag));
 
                 //enemies scale linearly
-                level += 0.20f;
+                level += increaseAmount;
+
+                increaseAmount += .01f;
 
                 lag += waveInterval;
             }
