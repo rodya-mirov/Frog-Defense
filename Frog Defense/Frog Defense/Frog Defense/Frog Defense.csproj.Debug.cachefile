@@ -2,11 +2,16 @@ Content\Images\Arrows\ArrowDown.xnb
 Content\Images\Arrows\ArrowLeft.xnb
 Content\Images\Arrows\ArrowRight.xnb
 Content\Images\Arrows\ArrowUp.xnb
+Content\Images\Traps\SpikeTrap\Spikes.xnb
 Content\Images\Healthbars\EmptyBar.xnb
 Content\Images\Healthbars\FullBar.xnb
 Content\Images\TrapPreviews\HighlightedBorder.xnb
 Content\Images\TrapPreviews\SpikesPreview.xnb
 Content\Images\TrapPreviews\GunTrapPreview.xnb
+Content\Images\Traps\DartTrap\DartTrapDown.xnb
+Content\Images\Traps\DartTrap\DartTrapLeft.xnb
+Content\Images\Traps\DartTrap\DartTrapRight.xnb
+Content\Images\Traps\DartTrap\DartTrapUp.xnb
 Content\Images\TrapPreviews\DartTrapPreview.xnb
 Content\Images\PureColors\Black.xnb
 Content\Images\PureColors\Red.xnb
@@ -15,7 +20,6 @@ Content\Images\EnemyEffects\PoisonDrop.xnb
 Content\Images\PureColors\Blue.xnb
 Content\Images\PureColors\Green.xnb
 Content\Images\PureColors\White.xnb
-Content\Images\Enemies\ToughEnemy\Preview.xnb
 Content\Images\Squares\GoalSquareMedium.xnb
 Content\Images\Squares\HighlightedSquareMedium.xnb
 Content\Images\Squares\ImpassableSquareMedium.xnb
@@ -24,10 +28,6 @@ Content\Images\Squares\StartSquareMedium.xnb
 Content\Images\TrapPreviews\ShovelPreview.xnb
 Content\Images\Traps\HighlightedBorder.xnb
 Content\Images\Traps\DigIndicator.xnb
-Content\Fonts\MediumFont.xnb
-Content\Fonts\BigFont.xnb
-Content\Fonts\SmallFont.xnb
-Content\Fonts\HugeFont.xnb
 Content\Images\Traps\WallIndicator.xnb
 Content\Images\TrapPreviews\WallPreview.xnb
 Content\Images\Enemies\BasicEnemy\Down.xnb
@@ -36,6 +36,7 @@ Content\Images\Enemies\BasicEnemy\Right.xnb
 Content\Images\Enemies\BasicEnemy\Up.xnb
 Content\Images\Enemies\ToughEnemy\Down.xnb
 Content\Images\Enemies\ToughEnemy\Left.xnb
+Content\Images\Enemies\ToughEnemy\Preview.xnb
 Content\Images\Enemies\ToughEnemy\Right.xnb
 Content\Images\Enemies\ToughEnemy\Up.xnb
 Content\Images\Enemies\QuickEnemy\Down.xnb
@@ -43,10 +44,6 @@ Content\Images\Enemies\QuickEnemy\Left.xnb
 Content\Images\Enemies\QuickEnemy\Preview.xnb
 Content\Images\Enemies\QuickEnemy\Right.xnb
 Content\Images\Enemies\QuickEnemy\Up.xnb
-Content\Images\Traps\DartTrap\DartTrapDown.xnb
-Content\Images\Traps\DartTrap\DartTrapLeft.xnb
-Content\Images\Traps\DartTrap\DartTrapRight.xnb
-Content\Images\Traps\DartTrap\DartTrapUp.xnb
 Content\Images\Traps\GunTrap\Bullet.xnb
 Content\Images\Traps\GunTrap\GunTrapDown.xnb
 Content\Images\Traps\GunTrap\GunTrapLeft.xnb
@@ -67,7 +64,6 @@ Content\Images\Enemies\ImmuneEnemy\Left.xnb
 Content\Images\Enemies\ImmuneEnemy\Preview.xnb
 Content\Images\Enemies\ImmuneEnemy\Right.xnb
 Content\Images\Enemies\ImmuneEnemy\Up.xnb
-Content\Images\Traps\SpikeTrap\Spikes.xnb
 Content\Images\Traps\SpikeTrap\Highlight.xnb
 Content\Images\Traps\DartTrap\HighlightDown.xnb
 Content\Images\Traps\DartTrap\HighlightLeft.xnb
@@ -82,5 +78,9 @@ Content\Images\Traps\CannonTrap\HighlightDown.xnb
 Content\Images\Traps\CannonTrap\HighlightLeft.xnb
 Content\Images\Traps\CannonTrap\HighlightRight.xnb
 Content\Images\Squares\ImpassableSquareMedium2.xnb
+Content\Fonts\MediumFont.xnb
+Content\Fonts\BigFont.xnb
+Content\Fonts\SmallFont.xnb
+Content\Fonts\HugeFont.xnb
 Maps\DefaultMap.txt
 PlayerData\ImportantData.txt

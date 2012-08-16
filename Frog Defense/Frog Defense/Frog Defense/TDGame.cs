@@ -169,6 +169,7 @@ namespace Frog_Defense
         public void Win()
         {
             env.Win();
+            env.AchievementTracker.ReportVictory();
             setActiveComponent(winScreen);
         }
 
