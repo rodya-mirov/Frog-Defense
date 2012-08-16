@@ -13,7 +13,7 @@ namespace Frog_Defense.PlayerData
         Victory=0, //win game
         TheseAreCheaper=1, //win without using cannons
         GenevaConvention=2, //win without using spikes or poison
-        CantTakeItWithYou=4, //die with $5000
+        Miser=3, //have $5000
         MissingThePoint=5, //die without using any terrain modification
         StayAWhile=6, //fully slow a fast enemy with 5 fully upgraded spike traps
         WhyWontYouDie=7, //hit the same immune enemy with 5 fully upgraded dart traps
@@ -106,6 +106,12 @@ namespace Frog_Defense.PlayerData
         public void ReportPlayerMoney(int money)
         {
             currentPlayerMoney = money;
+
+            if (money >= 5000)
+            {
+                achieved[Achievements.Miser] = true;
+                saveAchieved();
+            }
         }
 
 
@@ -135,11 +141,6 @@ namespace Frog_Defense.PlayerData
 
         public void ReportDeath()
         {
-            if (currentPlayerMoney >= 5000)
-            {
-                achieved[Achievements.CantTakeItWithYou] = true;
-                saveAchieved();
-            }
             if (!hasUsedTerrainModification)
             {
                 achieved[Achievements.MissingThePoint] = true;
@@ -291,8 +292,8 @@ namespace Frog_Defense.PlayerData
                 case Achievements.GenevaConvention:
                     return "Geneva Convention";
 
-                case Achievements.CantTakeItWithYou:
-                    return "Can't Take it With You";
+                case Achievements.Miser:
+                    return "Miser";
 
                 case Achievements.AttackItsWeakPoint:
                     return "Attack Its Weak Point";
@@ -309,8 +310,8 @@ namespace Frog_Defense.PlayerData
                 case Achievements.AttackItsWeakPoint:
                     return "Deal 250 poison damage to a single armored enemy.";
 
-                case Achievements.CantTakeItWithYou:
-                    return "Die holding $5000";
+                case Achievements.Miser:
+                    return "Save up $5000.";
 
                 case Achievements.GenevaConvention:
                     return "Win the game without using poison or spikes.";
