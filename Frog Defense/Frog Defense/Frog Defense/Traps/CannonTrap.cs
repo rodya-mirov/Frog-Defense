@@ -137,7 +137,7 @@ namespace Frog_Defense.Traps
         /// <returns></returns>
         protected override bool hitEnemy(Enemy e)
         {
-            e.TakeHit(ProjectileDamage);
+            e.TakeHit(ProjectileDamage, this);
             return true;
         }
     }

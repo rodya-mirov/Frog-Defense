@@ -7,6 +7,7 @@ using Frog_Defense.Enemies;
 using Frog_Defense.Traps;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Frog_Defense.PlayerData;
 
 namespace Frog_Defense
 {
@@ -30,6 +31,10 @@ namespace Frog_Defense
         private Queue<Trap> trapsToBeAdded;
 
         private GameUpdater env;
+        public AchievementTracker AchievementTracker
+        {
+            get { return env.AchievementTracker; }
+        }
 
         public PlayerHUD Player
         {

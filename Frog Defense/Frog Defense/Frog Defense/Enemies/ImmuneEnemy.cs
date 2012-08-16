@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
+using Frog_Defense.Traps;
 
 namespace Frog_Defense.Enemies
 {
@@ -68,9 +69,10 @@ namespace Frog_Defense.Enemies
         /// </summary>
         /// <param name="damage"></param>
         /// <param name="duration"></param>
-        public override void GetPoisoned(float damage, int duration)
+        public override void GetPoisoned(float damage, int duration, Trap poisonTrap)
         {
             //does nothing!
+            env.AchievementTracker.ReportPoisonImmune(this, poisonTrap);
         }
     }
 }

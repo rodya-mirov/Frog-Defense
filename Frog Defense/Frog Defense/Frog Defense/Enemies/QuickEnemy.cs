@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
+using Frog_Defense.Traps;
 
 namespace Frog_Defense.Enemies
 {
@@ -47,6 +48,14 @@ namespace Frog_Defense.Enemies
         public QuickEnemy(ArenaMap arena, ArenaManager env, int startX, int startY, float scale)
             : base(arena, env, startX, startY, scale)
         {
+        }
+
+        public override void TakeHit(float damage, Trap trap)
+        {
+            base.TakeHit(damage, trap);
+
+            if (trap is SpikeTrap)
+                env.AchievementTracker.ReportFastSpike(this, (SpikeTrap)trap);
         }
 
         public static new void LoadContent()

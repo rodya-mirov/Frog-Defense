@@ -179,7 +179,7 @@ namespace Frog_Defense.Enemies
         /// Deal with a new hit that does some intended damage ...
         /// </summary>
         /// <param name="damage"></param>
-        public abstract void TakeHit(float damage);
+        public abstract void TakeHit(float damage, Trap trap);
 
         /// <summary>
         /// Adds a PoisonCounter with the associated information.
@@ -191,7 +191,7 @@ namespace Frog_Defense.Enemies
         /// <param name="damage"></param>
         /// <param name="duration"></param>
         /// <param name="pid"></param>
-        public virtual void GetPoisoned(float damage, int duration)
+        public virtual void GetPoisoned(float damage, int duration, Trap poisonTrap)
         {
             poisonCounter = new PoisonCounter(damage, duration);
             isPoisoned = true;

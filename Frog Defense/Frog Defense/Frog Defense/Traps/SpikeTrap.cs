@@ -164,7 +164,7 @@ namespace Frog_Defense.Traps
             {
                 if (e.VisualXCenter >= minX && e.VisualXCenter <= maxX && e.VisualYCenter >= minY && e.VisualYCenter <= maxY)
                 {
-                    e.TakeHit(damagePerTick);
+                    e.TakeHit(damagePerTick, this);
                     e.Slow(slowFactor);
                 }
             }

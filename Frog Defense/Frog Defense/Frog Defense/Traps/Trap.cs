@@ -30,6 +30,8 @@ namespace Frog_Defense.Traps
                 upgradeCost = (int)(upgradeCost * UpgradeCostScalingFactor);
 
                 upgradeStats();
+
+                env.AchievementTracker.ReportUpgrade();
             }
         }
 

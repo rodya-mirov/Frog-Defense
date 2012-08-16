@@ -893,6 +893,7 @@ namespace Frog_Defense
                 case TrapType.SpikeTrap:
                     manager.addTrap(selectedTrap);
                     hasFloorTrap[highlightedSquare.X, highlightedSquare.Y] = true;
+                    manager.AchievementTracker.ReportTrap(selectedTrap);
 
                     return;
 
@@ -901,11 +902,13 @@ namespace Frog_Defense
                 case TrapType.CannonTrap:
                     manager.addTrap(selectedTrap);
                     hasWallTrap[favoredDirection][highlightedSquare.X, highlightedSquare.Y] = true;
+                    manager.AchievementTracker.ReportTrap(selectedTrap);
 
                     return;
 
                 case TrapType.MineWall:
                     makeFloor();
+                    manager.AchievementTracker.ReportTerrain();
 
                     return;
 
@@ -983,13 +986,17 @@ namespace Frog_Defense
 
                 //un-spend
                 manager.Player.AddMoney(selectedTrap.Cost);
-                
+
                 //clear trap preference
                 manager.Player.DetailViewType = DetailViewType.None;
 
                 //fix pathing and back to normal
                 autoassignVoid();
                 updatePathing();
+            }
+            else
+            {
+                manager.AchievementTracker.ReportTerrain();
             }
         }
 

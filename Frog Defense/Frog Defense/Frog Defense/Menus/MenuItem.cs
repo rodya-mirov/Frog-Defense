@@ -71,27 +71,31 @@ namespace Frog_Defense.Menus
             //does nothing, override me
         }
 
+        protected virtual Color TextColor
+        {
+            get
+            {
+                if (Active)
+                {
+                    if (mousedOver)
+                        return Color.Yellow;
+                    else
+                        return Color.White;
+                }
+                else
+                {
+                    return Color.Brown;
+                }
+            }
+        }
+
         public void Draw(GameTime gameTime, SpriteBatch batch)
         {
-            Color textColor;
-
-            if (Active)
-            {
-                if (mousedOver)
-                    textColor = Color.Yellow;
-                else
-                    textColor = Color.White;
-            }
-            else
-            {
-                textColor = Color.Brown;
-            }
-
             batch.DrawString(
                 font,
                 Text,
                 position,
-                textColor
+                TextColor
                 );
         }
     }

@@ -176,6 +176,8 @@ namespace Frog_Defense
         public void Spend(int cash)
         {
             money -= cash;
+
+            env.AchievementTracker.ReportPlayerMoney(money);
         }
 
         /// <summary>
@@ -187,6 +189,8 @@ namespace Frog_Defense
         public void AddMoney(int cash)
         {
             money += cash;
+
+            env.AchievementTracker.ReportPlayerMoney(money);
         }
 
         /// <summary>

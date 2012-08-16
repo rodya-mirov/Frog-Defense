@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using Frog_Defense.Enemies;
 using Frog_Defense.Waves;
 using Frog_Defense.Buttons;
+using Frog_Defense.PlayerData;
 
 namespace Frog_Defense
 {
@@ -33,6 +34,9 @@ namespace Frog_Defense
             get { return player; }
         }
         private ButtonPanel buttonPanel;
+
+        private AchievementTracker achievementTracker;
+        public AchievementTracker AchievementTracker { get { return achievementTracker; } }
 
         private ArenaManager arenaManager;
         public ArenaManager ArenaManager { get { return arenaManager; } }
@@ -133,6 +137,7 @@ namespace Frog_Defense
 
             arenaManager = new ArenaManager(this, ArenaPixelWidth, ArenaScissorRectangle.Height);
             buttonPanel = ButtonPanel.MakeDefaultPanel(this, TDGame.SmallFont);
+            achievementTracker = new AchievementTracker();
         }
 
         protected override void OnEnabledChanged(object sender, EventArgs args)
@@ -273,6 +278,8 @@ namespace Frog_Defense
         public void Die()
         {
             shouldResumeGame = false;
+
+            this.AchievementTracker.ReportDeath();
         }
 
         public void Win()

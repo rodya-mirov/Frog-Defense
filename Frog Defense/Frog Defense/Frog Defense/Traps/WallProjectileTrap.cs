@@ -197,7 +197,7 @@ namespace Frog_Defense.Traps
         /// <returns>Whether the bullet should stop</returns>
         protected virtual bool hitEnemy(Enemy e)
         {
-            e.TakeHit(ProjectileDamage);
+            e.TakeHit(ProjectileDamage, this);
             return true;
         }
 

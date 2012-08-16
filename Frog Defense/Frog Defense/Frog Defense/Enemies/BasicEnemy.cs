@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Frog_Defense.Traps;
 
 namespace Frog_Defense.Enemies
 {
@@ -258,7 +259,7 @@ namespace Frog_Defense.Enemies
         /// is no invincibility frame!
         /// </summary>
         /// <param name="damage"></param>
-        public override void TakeHit(float damage)
+        public override void TakeHit(float damage, Trap trap)
         {
             health -= damage;
         }

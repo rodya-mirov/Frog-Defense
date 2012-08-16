@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
+using Frog_Defense.Traps;
 
 namespace Frog_Defense.Enemies
 {
@@ -45,6 +46,20 @@ namespace Frog_Defense.Enemies
         public ToughEnemy(ArenaMap arena, ArenaManager env, int startX, int startY, float scale)
             : base(arena, env, startX, startY, scale)
         {
+            totalPoisonDamage = 0;
+        }
+
+        protected float totalPoisonDamage;
+
+        protected override void takePoisonDamage()
+        {
+            float previousHealth = Health;
+
+            base.takePoisonDamage();
+
+            totalPoisonDamage += (previousHealth - Health);
+
+            env.AchievementTracker.ReportTotalPoisonDamage(totalPoisonDamage);
         }
 
         public override void Slow(float slowFactor)
@@ -70,9 +85,9 @@ namespace Frog_Defense.Enemies
                 previewTexture = TDGame.MainGame.Content.Load<Texture2D>(previewPath);
         }
 
-        public override void TakeHit(float damage)
+        public override void TakeHit(float damage, Trap trap)
         {
-            base.TakeHit(damage * toughnessFactor);
+            base.TakeHit(damage * toughnessFactor, trap);
         }
     }
 }

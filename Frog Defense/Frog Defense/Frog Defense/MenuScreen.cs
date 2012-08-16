@@ -11,11 +11,12 @@ namespace Frog_Defense
 {
     class MenuScreen : DrawableGameComponent
     {
-        private enum MenuScreenType { Start, Death, Win };
+        private enum MenuScreenType { Start, Death, Win, Achievements };
 
         private SpriteBatch batch;
         private Menu menu;
         private MenuScreenType type;
+        private GameUpdater env; //not always used
 
         private MenuScreen(MenuScreenType type)
             : base(TDGame.MainGame)
@@ -38,6 +39,16 @@ namespace Frog_Defense
             return new MenuScreen(MenuScreenType.Win);
         }
 
+        public static MenuScreen makeAchievementsScreen(GameUpdater env)
+        {
+            MenuScreen output;
+            
+            output = new MenuScreen(MenuScreenType.Achievements);
+            output.env = env;
+
+            return output;
+        }
+
         public override void Initialize()
         {
             base.Initialize();
@@ -56,6 +67,10 @@ namespace Frog_Defense
 
                 case MenuScreenType.Win:
                     menu = Menu.MakeWinMenu();
+                    break;
+
+                case MenuScreenType.Achievements:
+                    menu = Menu.MakeAchievementMenu(env);
                     break;
 
                 default:

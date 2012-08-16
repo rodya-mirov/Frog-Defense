@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Frog_Defense.PlayerData;
 
 namespace Frog_Defense
 {
@@ -27,6 +28,7 @@ namespace Frog_Defense
         private MenuScreen startScreen;
         private MenuScreen deathScreen;
         private MenuScreen winScreen;
+        private MenuScreen achievementsViewer;
 
         //some pure colors so other things can draw basic shapes easily
         public static Texture2D PureRed
@@ -111,6 +113,9 @@ namespace Frog_Defense
             winScreen = MenuScreen.makeWinScreen();
             Components.Add(winScreen);
 
+            achievementsViewer = MenuScreen.makeAchievementsScreen(env);
+            Components.Add(achievementsViewer);
+
             setActiveComponent(startScreen);
         }
 
@@ -120,6 +125,14 @@ namespace Frog_Defense
         public void BackToMainMenu()
         {
             setActiveComponent(startScreen);
+        }
+
+        /// <summary>
+        /// Heads to the screen that displays achievements
+        /// </summary>
+        public void GoToAchievementsScreen()
+        {
+            setActiveComponent(achievementsViewer);
         }
 
         /// <summary>
@@ -281,6 +294,11 @@ namespace Frog_Defense
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+        }
+
+        AchievementTracker AchievementsTracker
+        {
+            get { return env.AchievementTracker; }
         }
     }
 }

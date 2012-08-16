@@ -201,8 +201,8 @@ namespace Frog_Defense.Traps
 
         protected override bool hitEnemy(Enemy e)
         {
-            e.TakeHit(ProjectileDamage);
-            e.GetPoisoned(poisonDamage, PoisonDuration);
+            e.TakeHit(ProjectileDamage, this);
+            e.GetPoisoned(poisonDamage, PoisonDuration, this);
 
             return true;
         }

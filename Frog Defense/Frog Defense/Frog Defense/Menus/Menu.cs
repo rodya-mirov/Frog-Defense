@@ -4,20 +4,26 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Frog_Defense.PlayerData;
 
 namespace Frog_Defense.Menus
 {
     class Menu
     {
-        private List<MenuItem> items;
+        protected List<MenuItem> items;
 
-        private String mainText;
+        protected string mainText;
+        protected virtual String MainText { get { return mainText; } }
+        protected virtual Color TextColor { get { return Color.White; } }
 
-        private static SpriteFont smallFont;
-        private static SpriteFont mediumFont;
-        private static SpriteFont bigFont;
+        protected static SpriteFont smallFont;
+        protected static SpriteFont mediumFont;
+        protected static SpriteFont bigFont;
 
-        private Vector2 drawPosition = new Vector2(100, 100);
+        protected virtual SpriteFont MainFont { get { return bigFont; } }
+
+        private Vector2 drawPosition;
+        private static Vector2 defaultDrawPosition = new Vector2(100, 100);
 
         //the number of pixels RIGHT to push menu items (past the title display)
         private const float xOffset = 50;
@@ -25,9 +31,11 @@ namespace Frog_Defense.Menus
         //the number of pixels DOWN to put between menu items
         private const float yBuffer = 10;
 
-        private Menu(String text)
+        protected Menu(String text)
         {
             mainText = text;
+            drawPosition = defaultDrawPosition;
+
             items = new List<MenuItem>();
         }
 
@@ -64,6 +72,7 @@ namespace Frog_Defense.Menus
 
             output.addItem(new NewGameButton("New Game", mediumFont));
             output.addItem(new ResumeButton("Resume Game", mediumFont));
+            output.addItem(new GoToAchievementsItem("View Achievements", mediumFont));
             output.addItem(new ExitButton("Exit Game", mediumFont));
 
             return output;
@@ -89,7 +98,20 @@ namespace Frog_Defense.Menus
             return output;
         }
 
+        public static Menu MakeAchievementMenu(GameUpdater env)
+        {
+            Menu output = new Menu("Achievements");
 
+            output.drawPosition.X = 30;
+            output.drawPosition.Y = 10;
+
+            foreach (Achievements a in Enum.GetValues(typeof(Achievements)))
+                output.addItem(new AchievementItem(a, env, smallFont));
+
+            output.addItem(new StartButton("Back to Main Menu", mediumFont));
+
+            return output;
+        }
 
         private void addItem(MenuItem item)
         {
@@ -114,7 +136,7 @@ namespace Frog_Defense.Menus
 
         public void Draw(GameTime gameTime, SpriteBatch batch)
         {
-            batch.DrawString(bigFont, mainText, drawPosition, Color.White);
+            batch.DrawString(MainFont, MainText, drawPosition, TextColor);
 
             foreach (MenuItem item in items)
             {
